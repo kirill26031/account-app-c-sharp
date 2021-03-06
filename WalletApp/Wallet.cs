@@ -12,7 +12,7 @@ namespace WalletApp
         private Guid _Guid;
         private string _Name;
         private decimal _Balance;
-        Currency _Currency;
+        //Currency _Currency;
         List<Transaction> _Transactions;
         List<Category> _Categories;
         Guid _OwnerId;
@@ -37,10 +37,10 @@ namespace WalletApp
             get => _OwnerId; 
             private set => _OwnerId = value; 
         }
-        internal Currency Currency { 
-            get => _Currency; 
-            private set => _Currency = value; 
-        }
+        //internal Currency Currency { 
+        //    get => _Currency; 
+        //    private set => _Currency = value; 
+        //}
         internal List<Transaction> Transactions { 
             get => _Transactions; 
             private set => _Transactions = value; 

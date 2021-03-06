@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace WalletApp
 {
-    public class Currency
+    public static class Currency
     {
         private static List<decimal> ExchangeRate = new List<decimal>() 
         { 
@@ -19,7 +19,7 @@ namespace WalletApp
             UAH
         }
 
-        public decimal convert(CurrencyType fromC, CurrencyType toC, decimal from)
+        public static decimal convert(CurrencyType fromC, CurrencyType toC, decimal from)
         {
             return from * ExchangeRate[(int)toC] / ExchangeRate[(int)fromC];
         }
