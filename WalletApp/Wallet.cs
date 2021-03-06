@@ -9,7 +9,7 @@ namespace WalletApp
 {
     public class Wallet
     {
-        private Guid _Guid;
+        private Guid _Id;
         private string _Name;
         private decimal _Balance;
         Currency.CurrencyType _Currency;
@@ -18,8 +18,8 @@ namespace WalletApp
         Guid _OwnerId;
 
         public Guid Guid {
-            get => _Guid; 
-            private set => _Guid = value; 
+            get => _Id; 
+            private set => _Id = value; 
         }
         public string Name {
             get => _Name; 
@@ -47,6 +47,16 @@ namespace WalletApp
             private set => _Transactions = value; 
         }
 
+        public Wallet(string name, decimal balance, Currency.CurrencyType currency, List<Category> categories, Guid ownerId)
+        {
+            _Id = Guid.NewGuid();
+            _Name = name;
+            _Balance = balance;
+            _Currency = currency;
+            _Categories = new List<Category>(categories);
+            _OwnerId = ownerId;
+        }
 
+        public
     }
 }
