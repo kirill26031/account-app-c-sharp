@@ -46,45 +46,45 @@ namespace WalletApp
 
         public List<Transaction> ShowTransactions(Wallet wallet, int startPos = 0, int amountToShow = 10)
         {
-            if (!Wallets.Contains(wallet)) throw new AccessViolationException();
+            if (!Wallets.Contains(wallet)) 
+                throw new AccessViolationException();
             return wallet.ShowTransactions(startPos, amountToShow);
         }
 
         public void DeleteTransaction(Wallet wallet, Guid idTransaction)
         {
-            if (!Wallets.Contains(wallet)) throw new AccessViolationException();
+            if (!Wallets.Contains(wallet)) 
+                throw new AccessViolationException();
             wallet.DeleteTransaction(Id, idTransaction);
         }
 
         public void UpdateTransaction(Wallet wallet, Guid idTransaction, int sum, string description, DateTimeOffset dateTime, List<File> files)
         {
-            if (!Wallets.Contains(wallet)) throw new AccessViolationException();
+            if (!Wallets.Contains(wallet)) 
+                throw new AccessViolationException();
             wallet.UpdateTransaction(Id, idTransaction, sum, description, dateTime, files);
-        }
-
-        public void UpdateSumOfTransaction(Wallet wallet, Guid idTransaction, int sum)
-        {
-            if (!Wallets.Contains(wallet)) throw new AccessViolationException();
-            wallet.UpdateSumOfTransaction(Id, idTransaction, sum);
         }
 
         //...
 
         public decimal ExpensesForLastMonth(Wallet wallet)
         {
-            if (!Wallets.Contains(wallet)) throw new AccessViolationException();
+            if (!Wallets.Contains(wallet)) 
+                throw new AccessViolationException();
             return wallet.ExpensesForLastMonth();
         }
 
         public decimal IncomeForLastMonth(Wallet wallet)
         {
-            if (!Wallets.Contains(wallet)) throw new AccessViolationException();
+            if (!Wallets.Contains(wallet)) 
+                throw new AccessViolationException();
             return wallet.IncomeForLastMonth();
         }
 
         public void ShareWallet(Wallet wallet, User user)
         {
-            if (!user.HasWallet(wallet)) user.AddWallet(wallet);
+            if (!user.HasWallet(wallet)) 
+                user.AddWallet(wallet);
         }
 
         public bool HasWallet(Wallet wallet)

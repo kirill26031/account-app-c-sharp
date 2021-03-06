@@ -58,22 +58,26 @@ namespace WalletApp
         }
 
         public bool AddTransaction(decimal sum, Category category, string description, DateTimeOffset dateTime, List<File> files) {
-            //check if enough money
             if(_Balance >= -sum)
             {
-                _Balance += sum;
-                Transaction temp = new Transaction(sum, category, _Currency, description, dateTime, files);
-                _Transactions.Add(temp);
-                return true;
+                if (Categories.Contains(category)) {
+                    _Balance += sum;
+                    Transaction temp = new Transaction(sum, category, _Currency, description, dateTime, files);
+                    _Transactions.Add(temp);
+                    return true;
+                }
+                else
+                    throw new AccessViolationException();
             }
             else
-            {
                 throw new ArithmeticException();
-            }
         }
 
         public List<Transaction> ShowTransactions(int startPos, int amountToShow)
         {
+            amountToShow %= 10;
+            if (amountToShow == 0)
+                amountToShow = 10;
             List<Transaction> temp = new List<Transaction>();
             for (var i = startPos; i < Transactions.Count() + amountToShow; i++)
             {
@@ -107,21 +111,16 @@ namespace WalletApp
 
         public bool UpdateTransaction(Guid userId, Guid idTransaction, decimal sum, string description, DateTimeOffset dateTime, List<File> files)
         {
-            return false;
-        }
-
-        public bool UpdateSumOfTransaction(Guid userId, Guid idTransaction, decimal sum)
-        {
-            Transaction Tr = Transactions.Find(Tr => Tr.Id == idTransaction);
-            if (Tr == null) throw new ArgumentException();
-            return UpdateTransaction(userId, idTransaction, sum, Tr.Description, Tr.DateTime, Tr.Files);
-        }
-
-        public bool UpdateDescriptionOfTransaction(Guid userId, Guid idTransaction, string description)
-        {
-            Transaction Tr = Transactions.Find(Tr => Tr.Id == idTransaction);
-            if (Tr == null) throw new ArgumentException();
-            return UpdateTransaction(userId, idTransaction, Tr.Sum, description, Tr.DateTime, Tr.Files);
+            if (userId != OwnerId)
+                throw new AccessViolationException();
+            foreach (Transaction transaction in Transactions)
+            {
+                if (transaction.Id == idTransaction)
+                {
+                    return transaction.UpdateTransaction(sum, description, dateTime, files);
+                }
+            }
+            throw new ArgumentException();
         }
 
         //...

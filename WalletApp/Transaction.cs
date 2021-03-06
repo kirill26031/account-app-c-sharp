@@ -18,7 +18,7 @@ namespace WalletApp
 
         public Guid Id
         {
-            get { return _Id; }
+            get => _Id;
         }
 
         public Category Category
@@ -59,12 +59,23 @@ namespace WalletApp
 
         public decimal Sum { 
             get => _Sum; 
-            set => _Sum = value; 
+            private set => _Sum = value; 
         }
         public string Description { 
             get => _Description; 
-            set => _Description = value; 
+            private set => _Description = value; 
         }
+
+        public bool UpdateTransaction(decimal sum, string description, DateTimeOffset dateTime, List<File> files)
+        {
+            _Sum = sum;
+            _Description = description;
+            DateTime = dateTime;
+            _Files = new List<File>(files);
+            return true;
+        }
+
+
 
         public override string ToString()
         {
