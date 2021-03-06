@@ -73,7 +73,7 @@ namespace WalletApp
             return temp;
         }
 
-        public bool deleteTransaction(Guid userId, Guid idTransaction)
+        public bool DeleteTransaction(Guid userId, Guid idTransaction)
         {
             if(userId != OwnerId)
             {
@@ -96,12 +96,22 @@ namespace WalletApp
             return false;
         }
 
-        public void UpdateTransaction(Guid userId, Guid idTransaction, int sum, string description, DateTimeOffset dateTime, List<File> files)
+        public bool UpdateTransaction(Guid userId, Guid idTransaction, decimal sum, string description, DateTimeOffset dateTime, List<File> files)
         {
         }
 
-        public void UpdateSumOfTransaction(Guid userId, Guid idTransaction, int sum)
+        public bool UpdateSumOfTransaction(Guid userId, Guid idTransaction, decimal sum)
         {
+            Transaction Tr = Transactions.Find(Tr => Tr.Id == idTransaction);
+            if (Tr == null) throw new ArgumentException();
+            return UpdateTransaction(userId, idTransaction, sum, Tr.Description, Tr.DateTime, Tr.Files);
+        }
+
+        public bool UpdateDescriptionOfTransaction(Guid userId, Guid idTransaction, string description)
+        {
+            Transaction Tr = Transactions.Find(Tr => Tr.Id == idTransaction);
+            if (Tr == null) throw new ArgumentException();
+            return UpdateTransaction(userId, idTransaction, Tr.Sum, description, Tr.DateTime, Tr.Files);
         }
 
         //...

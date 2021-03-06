@@ -14,11 +14,11 @@ namespace WalletApp
         }
 
         private Guid _Id;
-        private decimal Sum { get; set; }
+        public decimal Sum { get; set; }
         private Category _Category;
         private Currency.CurrencyType _CurrencyType;
-        private string Description { get; set; }
-        private DateTimeOffset DateTime { get; set; }
+        public string Description { get; set; }
+        public DateTimeOffset DateTime { get; set; }
         private List<File> _Files = new List<File>();
 
         public Guid Id
