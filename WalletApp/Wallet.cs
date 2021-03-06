@@ -57,40 +57,64 @@ namespace WalletApp
             _OwnerId = ownerId;
         }
 
-        public bool IsOwner(Guid userId) { }
+        public bool AddTransaction(decimal sum, Category category, string description, DateTimeOffset dateTime, List<File> files) {
+            //check if enough money
 
-        public bool AddTransaction(decimal sum, Category category, string description, DateTimeOffset dateTimel, List<File> files) { 
-
+            return true;
         }
 
-        public List<Transaction> ShowTransactions(int startPos = 0, int amountToShow = 10)
+        public List<Transaction> ShowTransactions(int startPos, int amountToShow)
         {
-            amountToShow = Math.Max(amountToShow, 10);
+            List<Transaction> temp = new List<Transaction>();
+            for (var i = startPos; i < Transactions.Count() + amountToShow; i++)
+            {
+                temp.Add(Transactions[i]);
+            }
+            return temp;
         }
 
         public bool deleteTransaction(Guid userId, Guid idTransaction)
         {
-
+            if(userId != OwnerId)
+            {
+                throw new AccessViolationException();
+            }
+            else
+            {
+                var i = 0;
+                foreach (Transaction transaction in Transactions)
+                {
+                    if (transaction.Id == idTransaction)
+                    {
+                        Transactions.RemoveAt(i);
+                        return true;
+                    }
+                    else
+                        i++;
+                }                
+            }
+            return false;
         }
 
-        public bool updateTransaction(Guid userId, Guid idTransaction, int sum, string description, DateTimeOffset dateTime, List<File> files)
+        public void UpdateTransaction(Guid userId, Guid idTransaction, int sum, string description, DateTimeOffset dateTime, List<File> files)
         {
-
         }
 
-        public bool updateSumOfTransaction(Guid userId, Guid idTransaction, int sum)
+        public void UpdateSumOfTransaction(Guid userId, Guid idTransaction, int sum)
         {
         }
 
         //...
 
-        public int ExpensesForLastMonth()
+        public decimal ExpensesForLastMonth()
         {
+            return 0;
 
         }
 
-        public int IncomeForLastMonth()
+        public decimal IncomeForLastMonth()
         {
+            return 0;
 
         }
     }

@@ -12,7 +12,7 @@ namespace WalletApp
         Text
     }
 
-    class File
+    public class File
     {
         public File(File Other)
         { 

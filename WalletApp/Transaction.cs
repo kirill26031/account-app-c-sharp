@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace WalletApp
 {
-    class Transaction
+    public class Transaction
     {
         Transaction()
         {
@@ -53,7 +53,7 @@ namespace WalletApp
 
         public override string ToString()
         {
-            return base.ToString();
+            return $"Transaction ${Id.ToString()} used ${Sum.ToString()} of ${_CurrencyType} at ${DateTime.ToString()}. Description: ${Description}";
         }
     }
 }
