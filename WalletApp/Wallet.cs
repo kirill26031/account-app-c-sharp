@@ -13,8 +13,8 @@ namespace WalletApp
         private string _Name;
         private decimal _Balance;
         Currency.CurrencyType _Currency;
-        private List<Transaction> _Transactions;
-        private List<Category> _Categories;
+        private List<Transaction> _Transactions = new List<Transaction>();
+        private List<Category> _Categories = new List<Category>();
         Guid _OwnerId;
 
         public Guid Guid {

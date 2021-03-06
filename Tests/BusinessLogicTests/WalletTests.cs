@@ -25,6 +25,7 @@ namespace BusinessLogicTests
                 List<Transaction> CurrentTransactions = i == 0 ? USDTransactions : UAHTransactions;
                 Currency.CurrencyType CurrencyType = i == 0 ? Currency.CurrencyType.USD : Currency.CurrencyType.UAH;
 
+                CurrentTransactions.Add(new Transaction(-200, Categories[3], CurrencyType, "Dinner", DateTimeOffset.Now.AddDays(-40), new List<File>()));
                 CurrentTransactions.Add(new Transaction(-3000, Categories[2], CurrencyType, "Lost at gambling", DateTimeOffset.Now.AddDays(-20), new List<File>() { 
                     new File(FileType.Image, "peopleindebt.com/126565/photo"),
                     new File(FileType.Text, "legalhelp24-7.com/document/454482")
@@ -35,6 +36,25 @@ namespace BusinessLogicTests
                 }));
                 CurrentTransactions.Add(new Transaction(-1000, Categories[1], CurrencyType, "Martial art academy", DateTimeOffset.Now.AddDays(-15), new List<File>()));
                 CurrentTransactions.Add(new Transaction(-50, Categories[1], CurrencyType, "Book - how to become a warrior in 10 days", DateTimeOffset.Now.AddDays(-14), new List<File>()));
+                CurrentTransactions.Add(new Transaction(5000, Categories[2], CurrencyType, "Art of communication", DateTimeOffset.Now.AddDays(-3), new List<File>()));
+                CurrentTransactions.Add(new Transaction(500, Categories[0], CurrencyType, "Sold almost new sport equipment", DateTimeOffset.Now.AddDays(-2), new List<File>()));
+            }
+        }
+
+        private Wallet InitWallet()
+        {
+            decimal InitialBalance = Convert.ToDecimal(5070.77);
+            List<Category> CategoriesCopy = new List<Category>(this.Categories);
+            Guid OwnerId = Guid.NewGuid();
+            Wallet wallet = new Wallet("Test wallet", InitialBalance, Currency.CurrencyType.UAH, CategoriesCopy, OwnerId);
+            return wallet;
+        }
+
+        private void AddTransactions(Wallet wallet, List<Transaction> transactions)
+        {
+            foreach (Transaction Tr in transactions)
+            {
+                wallet.AddTransaction(Tr.Sum, Tr.Category, Tr.Description, Tr.DateTime, Tr.Files);
             }
         }
 
@@ -45,9 +65,44 @@ namespace BusinessLogicTests
             decimal InitialBalance = Convert.ToDecimal(970.77);
             List<Category> CategoriesCopy = new List<Category>(this.Categories);
             Guid OwnerId = Guid.NewGuid();
-            Wallet wallet = new Wallet("Test wallet", InitialBalance, Currency.CurrencyType.UAH, CategoriesCopy, OwnerId);
-            Assert.Equal(InitialBalance, wallet.Balance);
+            Wallet Wallet = new Wallet("Test wallet", InitialBalance, Currency.CurrencyType.UAH, CategoriesCopy, OwnerId);
+
+            //Assert
+            Assert.Equal(InitialBalance, Wallet.Balance);
 
         }
+
+        [Fact]
+        public void ExpensesAndIncome()
+        {
+            // Setup
+            Wallet Wallet = InitWallet();
+            AddTransactions(Wallet, UAHTransactions);
+
+            //Expected
+            decimal ExpectedMonthlyExpenses = 4650;
+            decimal ExpectedMonthlyIncome = 5500;
+
+            //Assert
+            Assert.Equal(ExpectedMonthlyExpenses, Wallet.ExpensesForLastMonth());
+            Assert.Equal(ExpectedMonthlyIncome, Wallet.IncomeForLastMonth());
+
+        }
+
+        [Fact]
+        public void IllegalTransactionsAdding()
+        {
+            Wallet Wallet = InitWallet();
+            try
+            {
+
+            }
+            catch(Exception e)
+            {
+                
+            }
+
+        }
+
     }
 }

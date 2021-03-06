@@ -21,7 +21,7 @@ namespace WalletApp
 
         public static decimal convert(CurrencyType fromC, CurrencyType toC, decimal from)
         {
-            return from * ExchangeRate[(int)toC] / ExchangeRate[(int)fromC];
+            return Decimal.Divide(Decimal.Multiply(from, ExchangeRate[(int)toC]), ExchangeRate[(int)fromC]);
         }
     }
 }
