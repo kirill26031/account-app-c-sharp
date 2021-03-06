@@ -19,6 +19,7 @@ namespace WalletApp
         private Currency.CurrencyType _CurrencyType;
         private string Description { get; set; }
         private DateTimeOffset DateTime { get; set; }
+        private List<File> _Files = new List<File>();
 
         public Guid Id
         {
@@ -35,6 +36,19 @@ namespace WalletApp
         {
             get => _CurrencyType;
             private set => _CurrencyType = value;
+        }
+
+        public List<File> Files
+        {
+            get
+            {
+                List<File> copy = new List<File>();
+                foreach (File File in _Files) {
+                    copy.Add(new File(File));
+                }
+                return copy;
+            }
+            set => _Files = value;
         }
 
     }

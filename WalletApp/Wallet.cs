@@ -57,6 +57,5 @@ namespace WalletApp
             _OwnerId = ownerId;
         }
 
-        public
     }
 }
