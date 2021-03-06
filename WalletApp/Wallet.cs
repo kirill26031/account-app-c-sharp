@@ -79,7 +79,7 @@ namespace WalletApp
             if (amountToShow == 0)
                 amountToShow = 10;
             List<Transaction> temp = new List<Transaction>();
-            for (var i = startPos; i < Transactions.Count() + amountToShow; i++)
+            for (var i = startPos; i < Math.Min(Transactions.Count(), startPos + amountToShow); i++)
             {
                 temp.Add(Transactions[i]);
             }
@@ -94,19 +94,11 @@ namespace WalletApp
             }
             else
             {
-                var i = 0;
-                foreach (Transaction transaction in Transactions)
-                {
-                    if (transaction.Id == idTransaction)
-                    {
-                        Transactions.RemoveAt(i);
-                        return true;
-                    }
-                    else
-                        i++;
-                }                
+                int IndexToRemove = Transactions.FindIndex(Tr => Tr.Id == idTransaction);
+                if (IndexToRemove == -1) return false;
+                else Transactions.RemoveAt(IndexToRemove);              
             }
-            return false;
+            return true;
         }
 
         public bool UpdateTransaction(Guid userId, Guid idTransaction, decimal sum, string description, DateTimeOffset dateTime, List<File> files)
@@ -117,13 +109,15 @@ namespace WalletApp
             {
                 if (transaction.Id == idTransaction)
                 {
+                    decimal Diff = sum - transaction.Sum;
+                    decimal NewBalance = Balance + Diff;
+                    if (NewBalance < 0) return false;
+                    Balance = NewBalance;
                     return transaction.UpdateTransaction(sum, description, dateTime, files);
                 }
             }
             throw new ArgumentException();
         }
-
-        //...
 
         public decimal ExpensesForLastMonth()
         {
