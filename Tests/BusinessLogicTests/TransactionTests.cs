@@ -42,9 +42,10 @@ namespace BusinessLogicTests
                 Categories[0], "Soccers", DateTimeOffset.Now, Files);
 
             // Assert
+
+            //Math.Round //Assert fails due to 450 != 449.9999999..., division error is assumed 
             Assert.Equal(wallet_1.ShowTransactions(0,1)[0].Sum, 
-                 //Math.Round //Assert fails due to 450 != 449.9999999..., division error is assumed 
-                 (Currency.convert(Currency.CurrencyType.USD, Currency.CurrencyType.UAH, wallet_2.ShowTransactions(0,1)[0].Sum)));
+                 (Currency.convert(Currency.CurrencyType.USD, Currency.CurrencyType.UAH, wallet_2.ShowTransactions(0,1)[0].Sum)), 6);
         }
     }
 }

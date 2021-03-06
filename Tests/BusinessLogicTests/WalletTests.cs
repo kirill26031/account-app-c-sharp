@@ -95,13 +95,13 @@ namespace BusinessLogicTests
             Wallet Wallet = InitWallet();
             try
             {
-
+                Wallet.AddTransaction(-6001, Categories[0], "", DateTimeOffset.Now, new List<File>());
             }
-            catch(Exception e)
+            catch(Exception e){}
+            finally
             {
-                
+                Assert.Equal(5000, Wallet.Balance);
             }
-
         }
 
     }
