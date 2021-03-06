@@ -51,5 +51,9 @@ namespace WalletApp
             set => _Files = value;
         }
 
+        public override string ToString()
+        {
+            return base.ToString();
+        }
     }
 }
