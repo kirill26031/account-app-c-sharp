@@ -6,7 +6,22 @@ using System.Threading.Tasks;
 
 namespace WalletApp
 {
-    class Currency
+    public class Currency
     {
+        private static List<decimal> ExchangeRate = new List<decimal>() 
+        { 
+            1, 
+            Convert.ToDecimal(27.64)
+        };
+        public enum CurrencyType
+        {
+            USD,
+            UAH
+        }
+
+        public decimal convert(CurrencyType fromC, CurrencyType toC, decimal from)
+        {
+            return from * ExchangeRate[(int)toC] / ExchangeRate[(int)fromC];
+        }
     }
 }
