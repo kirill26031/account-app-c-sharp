@@ -36,5 +36,7 @@ namespace WalletApp
             get => _Categories;
             set => _Categories = value; 
         }
+
+
     }
 }

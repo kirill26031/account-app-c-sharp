@@ -59,11 +59,11 @@ namespace WalletApp
 
         public bool IsOwner(Guid userId) { }
 
-        public bool AddTransaction(Guid userId, decimal sum, Category category, string description, DateTimeOffset dateTimel, List<File> files) { 
+        public bool AddTransaction(decimal sum, Category category, string description, DateTimeOffset dateTimel, List<File> files) { 
 
         }
 
-        public List<Transaction> ShowTransactions(Guid userId, int startPos = 0, int amountToShow = 10)
+        public List<Transaction> ShowTransactions(int startPos = 0, int amountToShow = 10)
         {
             amountToShow = Math.Max(amountToShow, 10);
         }
@@ -84,12 +84,12 @@ namespace WalletApp
 
         //...
 
-        public int ExpensesForLastMonth(Guid userId)
+        public int ExpensesForLastMonth()
         {
 
         }
 
-        public int IncomeForLastMonth(Guid userId)
+        public int IncomeForLastMonth()
         {
 
         }
