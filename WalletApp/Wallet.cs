@@ -135,7 +135,7 @@ namespace WalletApp
                     var expense = transaction.Sum;
                     if (expense < 0)
                     {
-                        sum += expense;
+                        sum -= expense;
                     }
                 }
             }
