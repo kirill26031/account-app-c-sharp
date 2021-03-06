@@ -14,6 +14,11 @@ namespace WalletApp
 
     public class File
     {
+        public File(FileType fileType, string fileLocation)
+        {
+            FileType = fileType;
+            FileLocation = fileLocation;
+        }
         public File(File Other)
         { 
             FileType = Other.FileType;
