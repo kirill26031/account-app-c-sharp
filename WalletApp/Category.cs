@@ -35,13 +35,13 @@ namespace WalletApp
             private set => _IconRef = value; 
         }
 
-        public Category(string name, string desciption, string color = "#000000", string iconRef)
+        public Category(string name, string desciption, string iconRef, string color = "#000000")
         {
             _Id = Guid.NewGuid();
             _Name = name;
             _Description = desciption;
-            _Color = color;
             _IconRef = iconRef;
+            _Color = color;
         }
     }
 }
