@@ -8,18 +8,13 @@ namespace WalletApp
 {
     public class Transaction
     {
-        Transaction()
-        {
-            _Id = Guid.NewGuid();
-        }
-
         private Guid _Id;
         public decimal Sum { get; set; }
         private Category _Category;
         private Currency.CurrencyType _CurrencyType;
         public string Description { get; set; }
         public DateTimeOffset DateTime { get; set; }
-        private List<File> _Files = new List<File>();
+        private List<File> _Files;
 
         public Guid Id
         {
@@ -36,6 +31,17 @@ namespace WalletApp
         {
             get => _CurrencyType;
             private set => _CurrencyType = value;
+        }
+
+        public Transaction(decimal sum, Category category, Currency.CurrencyType currencyType, string descriprion, DateTimeOffset dateTime, List<File> files)
+        {
+            _Id = Guid.NewGuid();
+            Sum = sum;
+            _Category = category;
+            _CurrencyType = currencyType;
+            Description = descriprion;
+            DateTime = dateTime;
+            _Files = new List<File>(files);
         }
 
         public List<File> Files

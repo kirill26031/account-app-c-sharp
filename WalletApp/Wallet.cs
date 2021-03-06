@@ -57,10 +57,18 @@ namespace WalletApp
             _OwnerId = ownerId;
         }
 
-        public bool AddTransaction(decimal sum, Category category, string description, DateTimeOffset dateTime, List<File> files) {
+        public void AddTransaction(decimal sum, Category category, string description, DateTimeOffset dateTime, List<File> files) {
             //check if enough money
-
-            return true;
+            if(_Balance >= -sum)
+            {
+                _Balance += sum;
+                Transaction temp = new Transaction(sum, category, _Currency, description, dateTime, files);
+                _Transactions.Add(temp);
+            }
+            else
+            {
+                throw new ArithmeticException();
+            }
         }
 
         public List<Transaction> ShowTransactions(int startPos, int amountToShow)
@@ -98,6 +106,7 @@ namespace WalletApp
 
         public bool UpdateTransaction(Guid userId, Guid idTransaction, decimal sum, string description, DateTimeOffset dateTime, List<File> files)
         {
+            return false;
         }
 
         public bool UpdateSumOfTransaction(Guid userId, Guid idTransaction, decimal sum)
@@ -118,14 +127,36 @@ namespace WalletApp
 
         public decimal ExpensesForLastMonth()
         {
-            return 0;
-
+            decimal sum = 0;
+            foreach(Transaction transaction in Transactions)
+            {
+                if (DateTimeOffset.Compare(DateTimeOffset.Now.AddMonths(-1), transaction.DateTime) <= 0)
+                {
+                    var expense = transaction.Sum;
+                    if (expense < 0)
+                    {
+                        sum += expense;
+                    }
+                }
+            }
+            return sum;
         }
 
         public decimal IncomeForLastMonth()
         {
-            return 0;
-
+            decimal sum = 0;
+            foreach (Transaction transaction in Transactions)
+            {
+                if (DateTimeOffset.Compare(DateTimeOffset.Now.AddMonths(-1), transaction.DateTime) <= 0)
+                {
+                    var expense = transaction.Sum;
+                    if (expense >= 0)
+                    {
+                        sum += expense;
+                    }
+                }
+            }
+            return sum;
         }
     }
 }
