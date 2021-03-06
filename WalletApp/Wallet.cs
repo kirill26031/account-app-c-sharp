@@ -57,13 +57,14 @@ namespace WalletApp
             _OwnerId = ownerId;
         }
 
-        public void AddTransaction(decimal sum, Category category, string description, DateTimeOffset dateTime, List<File> files) {
+        public bool AddTransaction(decimal sum, Category category, string description, DateTimeOffset dateTime, List<File> files) {
             //check if enough money
             if(_Balance >= -sum)
             {
                 _Balance += sum;
                 Transaction temp = new Transaction(sum, category, _Currency, description, dateTime, files);
                 _Transactions.Add(temp);
+                return true;
             }
             else
             {

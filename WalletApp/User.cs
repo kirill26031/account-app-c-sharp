@@ -39,7 +39,8 @@ namespace WalletApp
 
         public bool AddTransaction(Wallet wallet, decimal sum, Category category, string description, DateTimeOffset dateTime, List<File> files)
         {
-            if (!Wallets.Contains(wallet)) throw new AccessViolationException();
+            if (!Wallets.Contains(wallet)) 
+                throw new AccessViolationException();
             return wallet.AddTransaction(sum, category, description, dateTime, files);
         }
 

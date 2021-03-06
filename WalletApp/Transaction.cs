@@ -9,10 +9,10 @@ namespace WalletApp
     public class Transaction
     {
         private Guid _Id;
-        public decimal Sum { get; set; }
+        private decimal _Sum;
         private Category _Category;
         private Currency.CurrencyType _CurrencyType;
-        public string Description { get; set; }
+        private string _Description;
         public DateTimeOffset DateTime { get; set; }
         private List<File> _Files;
 
@@ -55,6 +55,15 @@ namespace WalletApp
                 return copy;
             }
             set => _Files = value;
+        }
+
+        public decimal Sum { 
+            get => _Sum; 
+            set => _Sum = value; 
+        }
+        public string Description { 
+            get => _Description; 
+            set => _Description = value; 
         }
 
         public override string ToString()
