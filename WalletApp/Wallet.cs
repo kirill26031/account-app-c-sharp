@@ -13,8 +13,8 @@ namespace WalletApp
         private string _Name;
         private decimal _Balance;
         Currency.CurrencyType _Currency;
-        List<Transaction> _Transactions;
-        List<Category> _Categories;
+        private List<Transaction> _Transactions;
+        private List<Category> _Categories;
         Guid _OwnerId;
 
         public Guid Guid {
@@ -37,14 +37,16 @@ namespace WalletApp
             get => _OwnerId; 
             private set => _OwnerId = value; 
         }
-        internal Currency.CurrencyType Currency
+        Currency.CurrencyType Currency
         {
+            // They have private accessibility level
             get => _Currency;
-            private set => _Currency = value;
+            set => _Currency = value;
         }
-        internal List<Transaction> Transactions { 
-            get => _Transactions; 
-            private set => _Transactions = value; 
+        List<Transaction> Transactions {
+            // They have private accessibility level
+            get => _Transactions;
+            set => _Transactions = value; 
         }
 
         public Wallet(string name, decimal balance, Currency.CurrencyType currency, List<Category> categories, Guid ownerId)
