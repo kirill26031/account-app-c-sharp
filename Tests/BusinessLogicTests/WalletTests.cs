@@ -7,9 +7,9 @@ namespace BusinessLogicTests
 {
     public class WalletTests
     {
-        List<Category> Categories;
-        List<Transaction> UAHTransactions;
-        List<Transaction> USDTransactions;
+        public List<Category> Categories;
+        public List<Transaction> UAHTransactions;
+        public List<Transaction> USDTransactions;
         public WalletTests()
         {
             Categories = new List<Category>();
@@ -119,6 +119,60 @@ namespace BusinessLogicTests
             finally
             {
                 Assert.Equal(TransactionsAmount, Wallet.ShowTransactions(0, 10).Count);
+            }
+        }
+
+        [Fact]
+        public void IllegalTryToDeleteTransaction()
+        {
+            Wallet Wallet = InitWallet();
+            AddTransactions(Wallet, UAHTransactions);
+            int TransactionsAmount = UAHTransactions.Count;
+            try
+            {
+                Wallet.DeleteTransaction(Guid.NewGuid(), UAHTransactions[0].Id);
+            }
+            catch (Exception e) { }
+            finally
+            {
+                Assert.Equal(TransactionsAmount, Wallet.ShowTransactions(0, 10).Count);
+            }
+
+            try
+            {
+                Wallet.DeleteTransaction(Wallet.OwnerId, Guid.NewGuid());
+            }
+            catch (Exception e) { }
+            finally
+            {
+                Assert.Equal(TransactionsAmount, Wallet.ShowTransactions(0, 10).Count);
+            }
+        }
+
+        [Fact]
+        public void IllegalTryToUpdateTransaction()
+        {
+            Wallet Wallet = InitWallet();
+            AddTransactions(Wallet, UAHTransactions);
+            decimal Balance = Wallet.Balance;
+            try
+            {
+                Wallet.UpdateTransaction(Guid.NewGuid(), UAHTransactions[0].Id, 199, "", DateTimeOffset.Now, new List<File>());
+            }
+            catch (Exception e) { }
+            finally
+            {
+                Assert.Equal(Balance, Wallet.Balance);
+            }
+
+            try
+            {
+                Wallet.UpdateTransaction(Wallet.OwnerId, Guid.NewGuid(), 199, "", DateTimeOffset.Now, new List<File>());
+            }
+            catch (Exception e) { }
+            finally
+            {
+                Assert.Equal(Balance, Wallet.Balance);
             }
         }
 

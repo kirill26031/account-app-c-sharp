@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace WalletApp
 {
-    class User
+    public class User
     {
         Guid _Id;
         string _Name;
@@ -65,8 +65,6 @@ namespace WalletApp
             wallet.UpdateTransaction(Id, idTransaction, sum, description, dateTime, files);
         }
 
-        //...
-
         public decimal ExpensesForLastMonth(Wallet wallet)
         {
             if (!Wallets.Contains(wallet)) 
@@ -83,7 +81,7 @@ namespace WalletApp
 
         public void ShareWallet(Wallet wallet, User user)
         {
-            if (!user.HasWallet(wallet)) 
+            if (!user.HasWallet(wallet) && HasWallet(wallet)) 
                 user.AddWallet(wallet);
         }
 
@@ -92,7 +90,7 @@ namespace WalletApp
             return Wallets.Contains(wallet);
         }
 
-        public void AddWallet(Wallet wallet)
+        private void AddWallet(Wallet wallet)
         {
             Wallets.Add(wallet);
         }
