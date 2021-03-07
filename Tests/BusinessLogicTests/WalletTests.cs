@@ -90,18 +90,127 @@ namespace BusinessLogicTests
         }
 
         [Fact]
-        public void IllegalTransactionsAdding()
+        public void IllegallyBigTransaction()
         {
             Wallet Wallet = InitWallet();
+            decimal Balance = Wallet.Balance;
             try
             {
-                Wallet.AddTransaction(-6001, Categories[0], "", DateTimeOffset.Now, new List<File>());
+                Wallet.AddTransaction(-Balance-100, Categories[0], "", DateTimeOffset.Now, new List<File>());
             }
             catch(Exception e){}
             finally
             {
-                Assert.Equal(5000, Wallet.Balance);
+                Assert.Equal(Balance, Wallet.Balance);
             }
+        }
+
+        [Fact]
+        public void IllegallCategoryTransaction()
+        {
+            Wallet Wallet = InitWallet();
+            AddTransactions(Wallet, UAHTransactions);
+            int TransactionsAmount = UAHTransactions.Count;
+            try
+            {
+                Wallet.AddTransaction(100,new Category("", "", ""), "", DateTimeOffset.Now, new List<File>());
+            }
+            catch (Exception e) { }
+            finally
+            {
+                Assert.Equal(TransactionsAmount, Wallet.ShowTransactions(0, 10).Count);
+            }
+        }
+
+        [Fact]
+        public void AddingTransactions()
+        {
+            Wallet Wallet = InitWallet();
+            decimal Balance = Wallet.Balance;
+            foreach(Transaction Tr in UAHTransactions)
+            {
+                Wallet.AddTransaction(Tr.Sum, Tr.Category, Tr.Description, Tr.DateTime, Tr.Files);
+                Balance += Tr.Sum;
+                Assert.Equal(Balance, Wallet.Balance, 6);
+            }
+        }
+
+        [Fact]
+        public void ShowTransactions()
+        {
+            Wallet Wallet = InitWallet();
+            decimal Balance = Wallet.Balance;
+            Random Random = new Random();
+            DateTimeOffset DateTime = DateTimeOffset.Now;
+            for (int i=0; i<50; i++)
+            {
+                Wallet.AddTransaction(i, Categories[0], "", DateTime, new List<File>());
+            }
+            for(int i = 8; i<=10; ++i)
+            {
+                for (int j = 0; j < 7; ++j)
+                {
+                    int StartIndex = j * 5 + i;
+                    List<Transaction> Transactions = Wallet.ShowTransactions(StartIndex, i);
+                    Assert.Equal(i, Transactions.Count);
+                    for(int k=0; k<i; ++k)
+                    {
+                        Assert.Equal(StartIndex+k, Transactions[k].Sum);
+                    }
+                }
+            }
+        }
+
+        [Fact]
+        public void DeleteTransactions()
+        {
+            Wallet Wallet = InitWallet();
+            DateTimeOffset DateTime = DateTimeOffset.Now;
+            List<Guid> NegativeIds = new List<Guid>();
+            Random Random = new Random();
+            decimal Sum = Wallet.Balance;
+            for (int i=0; i<20; i++)
+            {
+                int Next = Random.Next(-100, 100);
+                Wallet.AddTransaction(Next, Categories[0], "", DateTime, new List<File>());
+                Wallet.AddTransaction(-Next, Categories[0], "", DateTime, new List<File>());
+                if (Next < 0) NegativeIds.Add(Wallet.ShowTransactions(i*2, 1)[0].Id);
+                else NegativeIds.Add(Wallet.ShowTransactions(i * 2+1, 1)[0].Id);
+                Sum += Math.Abs(Next);
+            }
+            foreach(Guid Id in NegativeIds)
+            {
+                Wallet.DeleteTransaction(Wallet.OwnerId, Id);
+            }
+
+            // Assert
+            Assert.Equal(Sum, Wallet.Balance);
+        }
+
+        [Fact]
+        public void UpdateTransactions()
+        {
+            Wallet Wallet = InitWallet();
+            DateTimeOffset DateTime = DateTimeOffset.Now;
+            List<Guid> NegativeIds = new List<Guid>();
+            Random Random = new Random();
+            decimal Sum = Wallet.Balance;
+            for (int i = 0; i < 20; i++)
+            {
+                int Next = Random.Next(-100, 100);
+                Wallet.AddTransaction(Next, Categories[0], "", DateTime, new List<File>());
+                Wallet.AddTransaction(-Next, Categories[0], "", DateTime, new List<File>());
+                if (Next < 0) NegativeIds.Add(Wallet.ShowTransactions(i * 2, 1)[0].Id);
+                else NegativeIds.Add(Wallet.ShowTransactions(i * 2 + 1, 1)[0].Id);
+                Sum += Math.Abs(Next);
+            }
+            foreach (Guid Id in NegativeIds)
+            {
+                Wallet.UpdateTransaction(Wallet.OwnerId, Id, 100, "", DateTime, new List<File>());
+            }
+
+            // Assert
+            Assert.Equal(Sum+NegativeIds.Count*100, Wallet.Balance);
         }
 
     }

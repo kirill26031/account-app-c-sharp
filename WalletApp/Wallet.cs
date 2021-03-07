@@ -98,7 +98,9 @@ namespace WalletApp
             {
                 int IndexToRemove = Transactions.FindIndex(Tr => Tr.Id == idTransaction);
                 if (IndexToRemove == -1) return false;
-                else Transactions.RemoveAt(IndexToRemove);              
+                Transaction Tr = Transactions[IndexToRemove];
+                Balance -= Tr.Sum;
+                Transactions.RemoveAt(IndexToRemove);              
             }
             return true;
         }
