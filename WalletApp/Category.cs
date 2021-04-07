@@ -8,40 +8,40 @@ namespace WalletApp
 {
     public class Category
     {
-        Guid _Id;
-        string _Name;
-        string _Description;
-        string _Color;
-        string _IconRef;
+        Guid _id;
+        string _name;
+        string _description;
+        string _color;
+        string _iconRef;
 
         public Guid Id { 
-            get => _Id; 
-            private set => _Id = value; 
+            get => _id; 
+            private set => _id = value; 
         }
         public string Name { 
-            get => _Name; 
-            private set => _Name = value; 
+            get => _name; 
+            private set => _name = value; 
         }
         public string Description { 
-            get => _Description; 
-            private set => _Description = value; 
+            get => _description; 
+            private set => _description = value; 
         }
         public string Color { 
-            get => _Color; 
-            private set => _Color = value; 
+            get => _color; 
+            private set => _color = value; 
         }
         public string IconRef { 
-            get => _IconRef; 
-            private set => _IconRef = value; 
+            get => _iconRef; 
+            private set => _iconRef = value; 
         }
 
         public Category(string name, string desciption, string iconRef, string color = "#000000")
         {
-            _Id = Guid.NewGuid();
-            _Name = name;
-            _Description = desciption;
-            _IconRef = iconRef;
-            _Color = color;
+            _id = Guid.NewGuid();
+            _name = name;
+            _description = desciption;
+            _iconRef = iconRef;
+            _color = color;
         }
     }
 }

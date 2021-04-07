@@ -7,49 +7,47 @@ namespace BusinessLogicTests
 {
     public class UserTests
     {
-        public List<Category> Categories;
-        public List<Transaction> UAHTransactions;
-        public List<Transaction> USDTransactions;
+        private List<Category> categories;
 
         public UserTests()
         {
             WalletTests Wt = new WalletTests();
-            Categories = Wt.Categories;
-            UAHTransactions = Wt.UAHTransactions;
-            USDTransactions = Wt.USDTransactions;
+            categories = Wt.categories;
         }
 
         [Fact]
         public void SimpleSharingWallet()
         {
-            decimal InitialBalance = 500;
-            decimal Number1 = 100;
-            decimal Number2 = -50;
-            User First = new User() { Categories = Categories };
-            Wallet Wallet = new Wallet("Test wallet of user 1", InitialBalance, Currency.CurrencyType.USD, Categories, First.Id);
-            First.Wallets.Add(Wallet);
-            User Second = new User() { Categories = Categories };
-            First.ShareWallet(Wallet, Second);
-            First.AddTransaction(Wallet, Number1, Categories[0], "", DateTimeOffset.Now, new List<File>());
-            Second.AddTransaction(Wallet, Number2, Categories[0], "", DateTimeOffset.Now, new List<File>());
-            Assert.Equal(InitialBalance + Number1 + Number2, Wallet.Balance);
+            decimal initialBalance = 500;
+            decimal sum1 = 100;
+            decimal sum2 = -50;
+            User user1 = new User() { Categories = categories };
+            string description = "desc";
+            Wallet wallet = new Wallet("Test wallet of user 1", initialBalance, Currency.currencyType.USD, categories, user1.Id, description);
+            user1.Wallets.Add(wallet);
+            User user2 = new User() { Categories = categories };
+            user1.ShareWallet(wallet, user2);
+            user1.AddTransaction(wallet, sum1, categories[0], "", DateTimeOffset.Now, new List<File>());
+            user2.AddTransaction(wallet, sum2, categories[0], "", DateTimeOffset.Now, new List<File>());
+            Assert.Equal(initialBalance + sum1 + sum2, wallet.Balance);
         }
 
         [Fact]
         public void TryToUseWalletWithoutAccess()
         {
-            User First = new User() { Categories = Categories };
-            Wallet Wallet = new Wallet("Test wallet of user 1", 500, Currency.CurrencyType.USD, Categories, First.Id);
-            First.Wallets.Add(Wallet);
-            User Second = new User() { Categories = Categories };
+            User user1 = new User() { Categories = categories };
+            string description = "desc";
+            Wallet wallet = new Wallet("Test wallet of user 1", 500, Currency.currencyType.USD, categories, user1.Id, description);
+            user1.Wallets.Add(wallet);
+            User user2 = new User() { Categories = categories };
             try
             {
-                Second.AddTransaction(Wallet, 89, Categories[0], "", DateTimeOffset.Now, new List<File>());
+                user2.AddTransaction(wallet, 89, categories[0], "", DateTimeOffset.Now, new List<File>());
             }
             catch (AccessViolationException e) { }
             finally
             {
-                Assert.Equal(500, Wallet.Balance);
+                Assert.Equal(500, wallet.Balance);
             }
         }
     }
