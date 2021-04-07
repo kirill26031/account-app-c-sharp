@@ -44,7 +44,10 @@ namespace BusinessLogicTests
             {
                 user2.AddTransaction(wallet, 89, categories[0], "", DateTimeOffset.Now, new List<File>());
             }
-            catch (AccessViolationException e) { }
+            catch (AccessViolationException e)
+            {
+                Console.WriteLine(e.ToString());
+            }
             finally
             {
                 Assert.Equal(500, wallet.Balance);

@@ -102,7 +102,10 @@ namespace BusinessLogicTests
             {
                 wallet.AddTransaction(-balance-100, categories[0], "", DateTimeOffset.Now, new List<File>(), ownerId1);
             }
-            catch(Exception e){}
+            catch(Exception e)
+            {
+                Console.WriteLine(e.ToString());
+            }
             finally
             {
                 Assert.Equal(balance, wallet.Balance);
@@ -120,7 +123,9 @@ namespace BusinessLogicTests
             {
                 wallet.AddTransaction(100,new Category("", "", ""), "", DateTimeOffset.Now, new List<File>(), ownerId1);
             }
-            catch (Exception e) { }
+            catch (Exception e) { 
+                Console.WriteLine(e.ToString()); 
+            }
             finally
             {
                 Assert.Equal(transactionsAmount, wallet.ShowTransactions(0, 10).Count);
@@ -137,7 +142,10 @@ namespace BusinessLogicTests
             {
                 wallet.DeleteTransaction(Guid.NewGuid(), transactionsUAH[0].Id);
             }
-            catch (Exception e) { }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.ToString());
+            }
             finally
             {
                 Assert.Equal(transactionsAmount, wallet.ShowTransactions(0, 10).Count);
@@ -147,7 +155,10 @@ namespace BusinessLogicTests
             {
                 wallet.DeleteTransaction(wallet.OwnerId, Guid.NewGuid());
             }
-            catch (Exception e) { }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.ToString());
+            }
             finally
             {
                 Assert.Equal(transactionsAmount, wallet.ShowTransactions(0, 10).Count);
@@ -164,7 +175,10 @@ namespace BusinessLogicTests
             {
                 wallet.UpdateTransaction(Guid.NewGuid(), transactionsUAH[0].Id, 199, "", DateTimeOffset.Now, new List<File>());
             }
-            catch (Exception e) { }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.ToString());
+            }
             finally
             {
                 Assert.Equal(balance, wallet.Balance);
@@ -174,7 +188,10 @@ namespace BusinessLogicTests
             {
                 wallet.UpdateTransaction(wallet.OwnerId, Guid.NewGuid(), 199, "", DateTimeOffset.Now, new List<File>());
             }
-            catch (Exception e) { }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.ToString());
+            }
             finally
             {
                 Assert.Equal(balance, wallet.Balance);
