@@ -26,6 +26,8 @@ namespace WalletApp.WalletAppWPF.Authentication
         {
             get
             {
+                try { }
+                catch { }
                 return _regUser.Login;
             }
             set
