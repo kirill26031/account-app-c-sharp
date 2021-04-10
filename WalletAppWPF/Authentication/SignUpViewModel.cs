@@ -26,6 +26,8 @@ namespace WalletApp.WalletAppWPF.Authentication
         {
             get
             {
+                try { }
+                catch { }
                 return _regUser.Login;
             }
             set
@@ -56,6 +58,23 @@ namespace WalletApp.WalletAppWPF.Authentication
             }
         }
 
+        public string FirstName
+        {
+            get
+            {
+                return _regUser.FirstName;
+            }
+            set
+            {
+                if (_regUser.FirstName != value)
+                {
+                    _regUser.FirstName = value;
+                    OnPropertyChanged();
+                    SignUpCommand.RaiseCanExecuteChanged();
+                }
+            }
+        }
+        
         public string LastName
         {
             get
@@ -67,6 +86,23 @@ namespace WalletApp.WalletAppWPF.Authentication
                 if (_regUser.LastName != value)
                 {
                     _regUser.LastName = value;
+                    OnPropertyChanged();
+                    SignUpCommand.RaiseCanExecuteChanged();
+                }
+            }
+        }
+
+        public string Email
+        {
+            get
+            {
+                return _regUser.Email;
+            }
+            set
+            {
+                if (_regUser.Email != value)
+                {
+                    _regUser.Email = value;
                     OnPropertyChanged();
                     SignUpCommand.RaiseCanExecuteChanged();
                 }
@@ -105,7 +141,9 @@ namespace WalletApp.WalletAppWPF.Authentication
 
         private bool IsSignUpEnabled()
         {
-            return !String.IsNullOrWhiteSpace(Login) && !String.IsNullOrWhiteSpace(Password) && !String.IsNullOrWhiteSpace(LastName);
+            return !String.IsNullOrWhiteSpace(Login) && !String.IsNullOrWhiteSpace(Password) 
+                && !String.IsNullOrWhiteSpace(FirstName) && !String.IsNullOrWhiteSpace(LastName)
+                && !String.IsNullOrWhiteSpace(Email);
         }
 
         public void ClearSensitiveData()
