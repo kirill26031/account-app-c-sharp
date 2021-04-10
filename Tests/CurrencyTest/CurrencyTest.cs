@@ -10,50 +10,50 @@ namespace CurrencyTest
         public void ConvertFromUAHtoUSD()
         {
             // arrange
-            decimal ValInUAH = 100;
-            Currency.CurrencyType type = Currency.CurrencyType.UAH;
+            decimal valInUAH = 100;
+            Currency.currencyType type = Currency.currencyType.UAH;
 
             // expected
-            decimal ValInUSD = Decimal.Divide(ValInUAH, Convert.ToDecimal(27.64));
+            decimal valInUSD = Decimal.Divide(valInUAH, Convert.ToDecimal(27.64));
 
             // assert
-            Assert.Equal(Currency.convert(type, Currency.CurrencyType.USD, ValInUAH), ValInUSD);
+            Assert.Equal(Currency.Convert(type, Currency.currencyType.USD, valInUAH), valInUSD);
         }
 
         [Fact]
         public void ConvertFromUSDtoUAH()
         {
             // arrange
-            decimal ValInUSD = 100;
-            Currency.CurrencyType type = Currency.CurrencyType.USD;
+            decimal valInUSD = 100;
+            Currency.currencyType type = Currency.currencyType.USD;
 
             // expected
-            decimal ValInUAH = ValInUSD * Convert.ToDecimal(27.64);
+            decimal valInUAH = valInUSD * Convert.ToDecimal(27.64);
 
             // assert
-            Assert.Equal(Currency.convert(type, Currency.CurrencyType.UAH, ValInUSD), ValInUAH);
+            Assert.Equal(Currency.Convert(type, Currency.currencyType.UAH, valInUSD), valInUAH);
         }
 
         [Fact]
         public void ConvertFromUSDtoUSD()
         {
             // arrange
-            decimal ValInUSD = 100;
-            Currency.CurrencyType type = Currency.CurrencyType.USD;
+            decimal valInUSD = 100;
+            Currency.currencyType type = Currency.currencyType.USD;
 
             // assert
-            Assert.Equal(Currency.convert(type, Currency.CurrencyType.USD, ValInUSD), ValInUSD);
+            Assert.Equal(Currency.Convert(type, Currency.currencyType.USD, valInUSD), valInUSD);
         }
 
         [Fact]
         public void ConvertFromUAHtoUAH()
         {
             // arrange
-            decimal ValInUAH = 100;
-            Currency.CurrencyType type = Currency.CurrencyType.USD;
+            decimal valInUAH = 100;
+            Currency.currencyType type = Currency.currencyType.USD;
 
             // assert
-            Assert.Equal(Currency.convert(type, Currency.CurrencyType.USD, ValInUAH), ValInUAH);
+            Assert.Equal(Currency.Convert(type, Currency.currencyType.USD, valInUAH), valInUAH);
         }
     }
 }
