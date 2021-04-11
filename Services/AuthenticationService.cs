@@ -34,12 +34,14 @@ namespace WalletApp.WalletAppWPF.Services
                 || String.IsNullOrWhiteSpace(regUser.LastName) || String.IsNullOrWhiteSpace(regUser.FirstName)
                 || String.IsNullOrWhiteSpace(regUser.Email))
                 throw new ArgumentException("Login, Password or personal information is Empty");
-            if (!IsValidEmail(regUser.Email))
-                throw new ArgumentException("Email is Invalid");
+            if (regUser.FirstName.Any(char.IsDigit) || regUser.LastName.Any(char.IsDigit))
+                throw new ArgumentException("First and Last Names cannot contain numbers");
             if (2 <= regUser.FirstName.Length && regUser.FirstName.Length <= 18)
                 throw new ArgumentException("First Name length is Invalid");
             if (2 <= regUser.LastName.Length && regUser.LastName.Length <= 20)
                 throw new ArgumentException("Last Name length is Invalid");
+            if (!IsValidEmail(regUser.Email))
+                throw new ArgumentException("Email is Invalid");
             dbUser = new DBUser(regUser.FirstName, regUser.LastName, regUser.Email,
                 regUser.Login, regUser.Password);
             await _storage.AddOrUpdateAsync(dbUser);
