@@ -10,14 +10,14 @@ namespace CurrencyTest
         public void ConvertFromUAHtoUSD()
         {
             // arrange
-            decimal ValInUAH = 100;
+            decimal valInUAH = 100;
             Currency.currencyType type = Currency.currencyType.UAH;
 
             // expected
-            decimal valInUSD = Decimal.Divide(ValInUAH, Convert.ToDecimal(27.64));
+            decimal valInUSD = Decimal.Divide(valInUAH, Convert.ToDecimal(27.64));
 
             // assert
-            Assert.Equal(Currency.Convert(type, Currency.currencyType.USD, ValInUAH), valInUSD);
+            Assert.Equal(Currency.Convert(type, Currency.currencyType.USD, valInUAH), valInUSD);
         }
 
         [Fact]

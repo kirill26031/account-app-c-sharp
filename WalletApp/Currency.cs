@@ -8,7 +8,7 @@ namespace WalletApp
 {
     public static class Currency
     {
-        private static List<decimal> ExchangeRate = new List<decimal>() 
+        private static List<decimal> exchangeRate = new List<decimal>() 
         { 
             1,
             System.Convert.ToDecimal(27.64)
@@ -21,7 +21,7 @@ namespace WalletApp
 
         public static decimal Convert(currencyType fromC, currencyType toC, decimal from)
         {
-            return Decimal.Divide(Decimal.Multiply(from, ExchangeRate[(int)toC]), ExchangeRate[(int)fromC]);
+            return Decimal.Divide(Decimal.Multiply(from, exchangeRate[(int)toC]), exchangeRate[(int)fromC]);
         }
     }
 }

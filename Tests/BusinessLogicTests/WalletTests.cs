@@ -257,7 +257,7 @@ namespace BusinessLogicTests
                 else negativeIds.Add(wallet.ShowTransactions(i * 2 + 1, 1)[0].Id);
                 sum += Math.Abs(next);
             }
-            foreach (Guid id in negativeIds)
+            foreach(Guid id in negativeIds)
             {
                 wallet.DeleteTransaction(wallet.OwnerId, id);
             }
