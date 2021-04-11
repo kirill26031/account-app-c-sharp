@@ -9,63 +9,78 @@ namespace WalletApp
 {
     public class Wallet
     {
-        private Guid _Id;
-        private string _Name;
-        private decimal _Balance;
-        Currency.CurrencyType _Currency;
-        private List<Transaction> _Transactions = new List<Transaction>();
-        private List<Category> _Categories = new List<Category>();
-        Guid _OwnerId;
+        private Guid _id;
+        private string _name;
+        private decimal _balance;
+        Currency.currencyType _currency;
+        private List<Transaction> _transactions = new List<Transaction>();
+        private List<Category> _categories = new List<Category>();
+        Guid _ownerId;
+        string _description;
 
-        public Guid Guid {
-            get => _Id; 
-            private set => _Id = value; 
+        public Guid Guid
+        {
+            get => _id;
+            private set => _id = value;
         }
-        public string Name {
-            get => _Name; 
-            private set => _Name = value; 
+        public string Name
+        {
+            get => _name;
+            private set => _name = value;
         }
-        public decimal Balance { 
-            get => _Balance; 
-            private set => _Balance = value; 
+        public decimal Balance
+        {
+            get => _balance;
+            private set => _balance = value;
         }
-        public List<Category> Categories { 
-            get => _Categories; 
-            private set => _Categories = value; 
+        public List<Category> Categories
+        {
+            get => _categories;
+            private set => _categories = value;
         }
-        public Guid OwnerId { 
-            get => _OwnerId; 
-            private set => _OwnerId = value; 
+        public Guid OwnerId
+        {
+            get => _ownerId;
+            private set => _ownerId = value;
         }
-        Currency.CurrencyType Currency
+        public string Description
+        {
+            get => Description;
+            private set => Description = value;
+        }
+        Currency.currencyType Currency
         {
             // They have private accessibility level
-            get => _Currency;
-            set => _Currency = value;
+            get => _currency;
+            set => _currency = value;
         }
-        List<Transaction> Transactions {
-            // They have private accessibility level
-            get => _Transactions;
-            set => _Transactions = value; 
-        }
-
-        public Wallet(string name, decimal balance, Currency.CurrencyType currency, List<Category> categories, Guid ownerId)
+        List<Transaction> Transactions
         {
-            _Id = Guid.NewGuid();
-            _Name = name;
-            _Balance = balance;
-            _Currency = currency;
-            _Categories = new List<Category>(categories);
-            _OwnerId = ownerId;
+            // They have private accessibility level
+            get => _transactions;
+            set => _transactions = value;
         }
 
-        public bool AddTransaction(decimal sum, Category category, string description, DateTimeOffset dateTime, List<File> files) {
-            if(_Balance >= -sum)
+        public Wallet(string name, decimal balance, Currency.currencyType currency, List<Category> categories, Guid ownerId, string description)
+        {
+            _id = Guid.NewGuid();
+            _name = name;
+            _balance = balance;
+            _currency = currency;
+            _categories = new List<Category>(categories);
+            _ownerId = ownerId;
+            Description = description;
+        }
+
+        public bool AddTransaction(decimal sum, Category category, string description, DateTimeOffset dateTime, List<File> files, Guid userId)
+        {
+            if (_balance >= -sum)
             {
-                if (Categories.Contains(category)) {
-                    _Balance += sum;
-                    Transaction temp = new Transaction(sum, category, _Currency, description, dateTime, files);
-                    _Transactions.Add(temp);
+                if (Categories.Contains(category))
+                {
+                    _balance += sum;
+                    Transaction temp = new Transaction(sum, category, _currency, description, dateTime, files, userId);
+                    _transactions.Add(temp);
                     return true;
                 }
                 else
@@ -90,17 +105,17 @@ namespace WalletApp
 
         public bool DeleteTransaction(Guid userId, Guid idTransaction)
         {
-            if(userId != OwnerId)
+            if (userId != OwnerId)
             {
                 throw new AccessViolationException();
             }
             else
             {
-                int IndexToRemove = Transactions.FindIndex(Tr => Tr.Id == idTransaction);
-                if (IndexToRemove == -1) return false;
-                Transaction Tr = Transactions[IndexToRemove];
-                Balance -= Tr.Sum;
-                Transactions.RemoveAt(IndexToRemove);              
+                int indexToRemove = Transactions.FindIndex(Tr => Tr.Id == idTransaction);
+                if (indexToRemove == -1) return false;
+                Transaction tr = Transactions[indexToRemove];
+                Balance -= tr.Sum;
+                Transactions.RemoveAt(indexToRemove);
             }
             return true;
         }
@@ -113,44 +128,38 @@ namespace WalletApp
             {
                 if (transaction.Id == idTransaction)
                 {
-                    decimal Diff = sum - transaction.Sum;
-                    decimal NewBalance = Balance + Diff;
-                    if (NewBalance < 0) return false;
-                    Balance = NewBalance;
+                    decimal diff = sum - transaction.Sum;
+                    decimal newBalance = Balance + diff;
+                    if (newBalance < 0) return false;
+                    Balance = newBalance;
                     return transaction.UpdateTransaction(sum, description, dateTime, files);
                 }
             }
             throw new ArgumentException();
         }
 
-        public decimal ExpensesForLastMonth()
-        {
-            decimal sum = 0;
-            foreach(Transaction transaction in Transactions)
-            {
-                if (DateTimeOffset.Compare(DateTimeOffset.Now.AddMonths(-1), transaction.DateTime) <= 0)
-                {
-                    var expense = transaction.Sum;
-                    if (expense < 0)
-                    {
-                        sum -= expense;
-                    }
-                }
-            }
-            return sum;
-        }
-
-        public decimal IncomeForLastMonth()
+        //if income == true then returns income, else returns expenses
+        public decimal BalanceChangesLastMonth(bool income)
         {
             decimal sum = 0;
             foreach (Transaction transaction in Transactions)
             {
-                if (DateTimeOffset.Compare(DateTimeOffset.Now.AddMonths(-1), transaction.DateTime) <= 0)
+                if (DateTimeOffset.Compare(DateTimeOffset.Now.AddMonths(-1), transaction.dateTime) <= 0)
                 {
                     var expense = transaction.Sum;
-                    if (expense >= 0)
+                    if (income)
                     {
-                        sum += expense;
+                        if (expense >= 0)
+                        {
+                            sum += expense;
+                        }
+                    }
+                    else
+                    {
+                        if (expense < 0)
+                        {
+                            sum -= expense;
+                        }
                     }
                 }
             }

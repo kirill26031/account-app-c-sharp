@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace WalletApp
 {
-    public enum FileType
+    public enum fileType
     {
         Image,
         Text
@@ -14,18 +14,18 @@ namespace WalletApp
 
     public class File
     {
-        public File(FileType fileType, string fileLocation)
+        public File(fileType typeOfFile, string fileLocation)
         {
-            FileType = fileType;
+            FileType = typeOfFile;
             FileLocation = fileLocation;
         }
         public File(File Other)
-        { 
+        {
             FileType = Other.FileType;
             FileLocation = Other.FileLocation;
         }
 
-        public FileType FileType { get; private set; }
+        public fileType FileType { get; private set; }
         public string FileLocation { get; private set; }
 
     }
