@@ -131,7 +131,7 @@ namespace WalletApp.WalletAppWPF.Authentication
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Sign In failed: {ex.Message}");
+                MessageBox.Show($"Sign Up failed: {ex.Message}");
                 return;
             }
 
