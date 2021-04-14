@@ -9,6 +9,7 @@ using WalletApp.WalletAppWPF.Models.Categories;
 using WalletApp.WalletAppWPF.Services;
 using Prism.Commands;
 using DataStorage;
+using System.Collections.Generic;
 
 namespace WalletApp.WalletAppWPF.Authentication
 {
@@ -16,7 +17,7 @@ namespace WalletApp.WalletAppWPF.Authentication
     {
         private RegistrationUser _regUser = new RegistrationUser();
         private Action _gotoSignIn;
-        private FileDataStorage<Category> _storage = new FileDataStorage<Category>();
+        private List<Category> _categories;
 
         public AuthNavigatableTypes Type
         {
@@ -113,6 +114,13 @@ namespace WalletApp.WalletAppWPF.Authentication
             }
         }
 
+        public List<Category> Categories
+        {
+            get => _categories;
+
+        }
+        
+
         public DelegateCommand SignUpCommand { get; }
         public DelegateCommand CloseCommand { get; }
         public DelegateCommand SignInCommand { get; }
@@ -123,6 +131,16 @@ namespace WalletApp.WalletAppWPF.Authentication
             CloseCommand = new DelegateCommand(() => Environment.Exit(0));
             _gotoSignIn = gotoSignIn;
             SignInCommand = new DelegateCommand(_gotoSignIn);
+            _categories = InitializeCategories();
+        }
+
+        private List<Category> InitializeCategories()
+        {
+            _categories = new List<Category>();
+            _categories.Add(new Category("Sport", "Sport category", ""));
+            _categories.Add(new Category("Games", "Games category", "", "#222000"));
+            _categories.Add(new Category("Food", "Food category", "#222555"));
+            return _categories;
         }
 
         private async void SignUp()
