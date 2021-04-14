@@ -116,7 +116,19 @@ namespace WalletApp.WalletAppWPF.Authentication
 
         public List<Category> Categories
         {
-            get => _categories;
+            get
+            {
+                return _regUser.Categories;
+            }
+            set
+            {
+                if (_regUser.Categories != value)
+                {
+                    _regUser.Categories = value;
+                    OnPropertyChanged();
+                    SignUpCommand.RaiseCanExecuteChanged();
+                }
+            }
 
         }
         
@@ -125,7 +137,7 @@ namespace WalletApp.WalletAppWPF.Authentication
         public DelegateCommand CloseCommand { get; }
         public DelegateCommand SignInCommand { get; }
 
-        public SignUpViewModel(Action gotoSignIn)
+        private SignUpViewModel(Action gotoSignIn)
         {
             SignUpCommand = new DelegateCommand(SignUp, IsSignUpEnabled);
             CloseCommand = new DelegateCommand(() => Environment.Exit(0));
@@ -134,18 +146,21 @@ namespace WalletApp.WalletAppWPF.Authentication
             _categories = InitializeCategories();
         }
 
-        private List<Category> InitializeCategories()
+        public List<Category> InitializeCategories()
         {
-            _categories = new List<Category>();
-            _categories.Add(new Category("Sport", "Sport category", ""));
-            _categories.Add(new Category("Games", "Games category", "", "#222000"));
-            _categories.Add(new Category("Food", "Food category", "#222555"));
+            _categories = new List<Category>
+            {
+                new Category("Sport", "For sport related goods", "awesomeicons.com/12"),
+                new Category("Games", "Games category", "", "#222000"),
+                new Category("Education", "For online courses", "awesomeicons.com/13", "#222555"),
+                new Category("Gambling", "For gambling", "awesomeicons.com/14", "#131584"),
+                new Category("Food", "For food", "awesomeicons.com/15", "#223001")
+            };
             return _categories;
         }
 
         private async void SignUp()
         {
-
             var authService = new AuthenticationService();
             try
             {
