@@ -42,7 +42,7 @@
         </StackPanel>
         <StackPanel Grid.Row="5" Grid.ColumnSpan="2" Grid.Column="0">
             <TextBlock Margin="10, 10, 10, 0">Categories</TextBlock>
-            <ListBox Name="CategoriesListBox" HorizontalContentAlignment="Stretch" Height="100"
+            <ListBox Name="CategoriesListBox" HorizontalContentAlignment="Stretch" Height="100" Width="300"
                      ItemsSource="{Binding Categories}" Grid.ColumnSpan="2" SelectionMode = "Multiple" 
                      >
                 <ListBox.ItemTemplate>

@@ -44,8 +44,8 @@ namespace WalletApp.WalletAppWPF.Models.Wallets
         }
         public string Description
         {
-            get => Description;
-            set => Description = value;
+            get => _description;
+            set => _description = value;
         }
         Currency.currencyType Currency
         {
