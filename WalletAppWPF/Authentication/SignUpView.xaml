@@ -43,10 +43,12 @@
         <StackPanel Grid.Row="5" Grid.ColumnSpan="2" Grid.Column="0">
             <TextBlock Margin="10, 10, 10, 0">Categories</TextBlock>
             <ListBox Name="CategoriesListBox" HorizontalContentAlignment="Stretch" Height="100"
-                     ItemsSource="{Binding Categories}" Grid.ColumnSpan="2" SelectionMode = "Multiple">
+                     ItemsSource="{Binding Categories}" Grid.ColumnSpan="2" SelectionMode = "Multiple" 
+                     SelectionChanged="ListBox_SelectionChanged">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
-                        <TextBlock Text="{Binding Name}"></TextBlock>
+                        <TextBlock Text="{Binding Name}" 
+                                   Background="{Binding Color}"></TextBlock>
                     </DataTemplate>
                 </ListBox.ItemTemplate>
             </ListBox>

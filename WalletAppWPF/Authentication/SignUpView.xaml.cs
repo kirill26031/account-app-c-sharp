@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
 using WalletApp.WalletAppWPF.Models.Categories;
 //using WalletApp.WalletAppWPF.Authentication;
 
@@ -27,6 +28,14 @@ namespace WalletApp.WalletAppWPF.Authentication
         private void TbPassword_OnPasswordChanged(object sender, RoutedEventArgs e)
         {
             ((SignUpViewModel)DataContext).Password = TbPassword.Password;
+        }
+
+        private void ListBox_SelectionChanged(object sender, System.EventArgs e)
+        {
+            //foreach(ListBoxItem element in CategoriesListBox.Items)
+            //{
+            //    element.Background = new LinearGradientBrush(Colors.LightBlue, Colors.SlateBlue, 90);
+            //}
         }
     }
 }
