@@ -44,6 +44,19 @@
             <TextBox MinWidth="300" Margin="10" HorizontalAlignment="Stretch" Height="70"
                      Text="{Binding Description, UpdateSourceTrigger=PropertyChanged}"/>
         </StackPanel>
+        <StackPanel Grid.Row="2"  Grid.ColumnSpan="4">
+            <TextBlock Margin="10, 10, 10, 0">Currency</TextBlock>
+            <ListBox MinWidth="300" Margin="10" HorizontalAlignment="Stretch" Height="17"/>
+        </StackPanel>
+        <StackPanel Grid.Row="3"  Grid.ColumnSpan="4">
+            <TextBlock Margin="10, 10, 10, 0">Categories</TextBlock>
+            <ListBox MinWidth="300" Margin="10" HorizontalAlignment="Stretch" Height="50"/>
+        </StackPanel>
+        <StackPanel Grid.Row="4"  Grid.ColumnSpan="4">
+            <TextBlock Margin="10, 10, 10, 0">Description</TextBlock>
+            <TextBox MinWidth="300" Margin="10" HorizontalAlignment="Stretch" Height="70"
+                     Text="{Binding Description, UpdateSourceTrigger=PropertyChanged}"/>
+        </StackPanel>
         <Button Name="ViewTransactions" Grid.Column="0" Margin="10,10,10,10" 
                 Command="{Binding ViewTransactionsCommand}" Grid.Row="6">View Transactions</Button>
         <Button Name="AddWallet" Grid.Column="1" Margin="10,10,10,10" 
