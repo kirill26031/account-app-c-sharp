@@ -36,9 +36,9 @@ namespace WalletApp.WalletAppWPF.Services
                 throw new ArgumentException("Login, Password or personal information is Empty");
             if (!IsValidEmail(regUser.Email))
                 throw new ArgumentException("Email is Invalid");
-            if (2 <= regUser.FirstName.Length && regUser.FirstName.Length <= 18)
+            if (!(2 <= regUser.FirstName.Length && regUser.FirstName.Length <= 18))
                 throw new ArgumentException("First Name length is Invalid");
-            if (2 <= regUser.LastName.Length && regUser.LastName.Length <= 20)
+            if (!(2 <= regUser.LastName.Length && regUser.LastName.Length <= 20))
                 throw new ArgumentException("Last Name length is Invalid");
             dbUser = new DBUser(regUser.FirstName, regUser.LastName, regUser.Email,
                 regUser.Login, regUser.Password);
