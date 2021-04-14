@@ -20,30 +20,31 @@ namespace WalletApp.WalletAppWPF.Models.Transactions
         public Guid CreatorId
         {
             get => _creatorId;
+            set => _creatorId = value;
         }
 
         public Category Category
         {
             get => _category;
-            private set => _category = value;
+            set => _category = value;
         }
 
         public Currency.currencyType CurrencyType
         {
             get => _currencyType;
-            private set => _currencyType = value;
+            set => _currencyType = value;
         }
 
-        public Transaction(decimal sum, Category category, Currency.currencyType currencyType, string descriprion, DateTimeOffset dateTime, List<File> files, Guid userId)
+        public Transaction(decimal sum, Category category, Currency.currencyType currencyType, string description, DateTimeOffset dateTime, List<File> files, Guid creatorId)
         {
             Guid = Guid.NewGuid();
             Sum = sum;
-            _category = category;
-            _currencyType = currencyType;
-            Description = descriprion;
-            this.dateTime = dateTime;
-            _files = new List<File>(files);
-            _creatorId = userId;
+            Category = category;
+            CurrencyType = currencyType;
+            Description = description;
+            DateTime = dateTime;
+            Files = new List<File>(files);
+            CreatorId = creatorId;
         }
 
         public List<File> Files
@@ -70,6 +71,7 @@ namespace WalletApp.WalletAppWPF.Models.Transactions
             get => _description;
             private set => _description = value;
         }
+        public DateTimeOffset DateTime { get; private set; }
 
         public bool UpdateTransaction(decimal sum, string description, DateTimeOffset dateTime, List<File> files)
         {

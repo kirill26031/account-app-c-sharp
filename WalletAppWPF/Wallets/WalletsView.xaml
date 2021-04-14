@@ -18,8 +18,15 @@
             <ColumnDefinition Width="3*"></ColumnDefinition>
         </Grid.ColumnDefinitions>
 <!--Menu-->
-        <ListView Grid.RowSpan="2" ItemsSource="{Binding Wallets}" 
-                  DisplayMemberPath="DisplayName" SelectedItem="{Binding CurrentWallet}"></ListView>
+        <ListView Grid.RowSpan="2" ItemsSource="{Binding Wallets}"  
+                  SelectedItem="{Binding CurrentWallet}">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding DisplayName}">
+                    </TextBlock>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
 
         <GridSplitter Grid.Column="1" HorizontalAlignment="Stretch"></GridSplitter>
 <!--Content-->
