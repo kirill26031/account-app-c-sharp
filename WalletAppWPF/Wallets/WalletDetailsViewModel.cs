@@ -31,11 +31,6 @@ namespace WalletApp.WalletAppWPF.Wallets
             {
                 return _wallet.Balance;
             }
-            set
-            {
-                _wallet.Balance = value;
-                RaisePropertyChanged(nameof(DisplayName));
-            }
         }
 
         public string DisplayName

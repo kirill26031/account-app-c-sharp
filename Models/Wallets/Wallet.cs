@@ -30,7 +30,7 @@ namespace WalletApp.WalletAppWPF.Models.Wallets
         public decimal Balance
         {
             get => _balance;
-            set => _balance = value;
+            private set => _balance = value;
         }
         public List<Category> Categories
         {
