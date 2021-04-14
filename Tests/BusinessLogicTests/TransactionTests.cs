@@ -39,12 +39,12 @@ namespace BusinessLogicTests
             // Act
             wallet_1.AddTransaction(450, categories[0], "Soccers", DateTimeOffset.Now, files, ownerId_1);
             wallet_2.AddTransaction(
-                Currency.Convert(Currency.currencyType.UAH, Currency.currencyType.USD, 450), 
+                Currency.Convert(Currency.currencyType.UAH, Currency.currencyType.USD, 450),
                 categories[0], "Soccers", DateTimeOffset.Now, files, ownerId_2);
 
             // Assert
-            Assert.Equal(wallet_1.ShowTransactions(0,1)[0].Sum, 
-                 (Currency.Convert(Currency.currencyType.USD, Currency.currencyType.UAH, wallet_2.ShowTransactions(0,1)[0].Sum)), 6);
+            Assert.Equal(wallet_1.ShowTransactions(0, 1)[0].Sum,
+                 (Currency.Convert(Currency.currencyType.USD, Currency.currencyType.UAH, wallet_2.ShowTransactions(0, 1)[0].Sum)), 6);
         }
     }
 }

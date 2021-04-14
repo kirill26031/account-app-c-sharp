@@ -28,7 +28,7 @@ namespace WalletApp
 
         public Category Category
         {
-            get => _category; 
+            get => _category;
             private set => _category = value;
         }
 
@@ -55,7 +55,8 @@ namespace WalletApp
             get
             {
                 List<File> copy = new List<File>();
-                foreach (File File in _files) {
+                foreach (File File in _files)
+                {
                     copy.Add(new File(File));
                 }
                 return copy;
@@ -63,13 +64,15 @@ namespace WalletApp
             set => _files = value;
         }
 
-        public decimal Sum { 
-            get => _sum; 
-            private set => _sum = value; 
+        public decimal Sum
+        {
+            get => _sum;
+            private set => _sum = value;
         }
-        public string Description { 
-            get => _description; 
-            private set => _description = value; 
+        public string Description
+        {
+            get => _description;
+            private set => _description = value;
         }
 
         public bool UpdateTransaction(decimal sum, string description, DateTimeOffset dateTime, List<File> files)

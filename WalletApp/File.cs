@@ -20,7 +20,7 @@ namespace WalletApp
             FileLocation = fileLocation;
         }
         public File(File Other)
-        { 
+        {
             FileType = Other.FileType;
             FileLocation = Other.FileLocation;
         }

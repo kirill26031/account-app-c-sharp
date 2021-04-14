@@ -13,7 +13,7 @@ namespace WalletApp.WalletAppWPF.Authentication
     {
         private RegistrationUser _regUser = new RegistrationUser();
         private Action _gotoSignIn;
-        
+
         public AuthNavigatableTypes Type
         {
             get
@@ -74,7 +74,7 @@ namespace WalletApp.WalletAppWPF.Authentication
                 }
             }
         }
-        
+
         public string LastName
         {
             get
@@ -131,7 +131,7 @@ namespace WalletApp.WalletAppWPF.Authentication
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Sign In failed: {ex.Message}");
+                MessageBox.Show($"Sign Up failed: {ex.Message}");
                 return;
             }
 
@@ -141,7 +141,7 @@ namespace WalletApp.WalletAppWPF.Authentication
 
         private bool IsSignUpEnabled()
         {
-            return !String.IsNullOrWhiteSpace(Login) && !String.IsNullOrWhiteSpace(Password) 
+            return !String.IsNullOrWhiteSpace(Login) && !String.IsNullOrWhiteSpace(Password)
                 && !String.IsNullOrWhiteSpace(FirstName) && !String.IsNullOrWhiteSpace(LastName)
                 && !String.IsNullOrWhiteSpace(Email);
         }

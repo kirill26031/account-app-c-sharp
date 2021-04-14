@@ -18,25 +18,30 @@ namespace WalletApp
         Guid _ownerId;
         string _description;
 
-        public Guid Guid {
-            get => _id; 
-            private set => _id = value; 
+        public Guid Guid
+        {
+            get => _id;
+            private set => _id = value;
         }
-        public string Name {
-            get => _name; 
-            private set => _name = value; 
+        public string Name
+        {
+            get => _name;
+            private set => _name = value;
         }
-        public decimal Balance { 
-            get => _balance; 
-            private set => _balance = value; 
+        public decimal Balance
+        {
+            get => _balance;
+            private set => _balance = value;
         }
-        public List<Category> Categories { 
-            get => _categories; 
-            private set => _categories = value; 
+        public List<Category> Categories
+        {
+            get => _categories;
+            private set => _categories = value;
         }
-        public Guid OwnerId { 
-            get => _ownerId; 
-            private set => _ownerId = value; 
+        public Guid OwnerId
+        {
+            get => _ownerId;
+            private set => _ownerId = value;
         }
         public string Description
         {
@@ -49,10 +54,11 @@ namespace WalletApp
             get => _currency;
             set => _currency = value;
         }
-        List<Transaction> Transactions {
+        List<Transaction> Transactions
+        {
             // They have private accessibility level
             get => _transactions;
-            set => _transactions = value; 
+            set => _transactions = value;
         }
 
         public Wallet(string name, decimal balance, Currency.currencyType currency, List<Category> categories, Guid ownerId, string description)
@@ -66,10 +72,12 @@ namespace WalletApp
             Description = description;
         }
 
-        public bool AddTransaction(decimal sum, Category category, string description, DateTimeOffset dateTime, List<File> files, Guid userId) {
-            if(_balance >= -sum)
+        public bool AddTransaction(decimal sum, Category category, string description, DateTimeOffset dateTime, List<File> files, Guid userId)
+        {
+            if (_balance >= -sum)
             {
-                if (Categories.Contains(category)) {
+                if (Categories.Contains(category))
+                {
                     _balance += sum;
                     Transaction temp = new Transaction(sum, category, _currency, description, dateTime, files, userId);
                     _transactions.Add(temp);
@@ -97,7 +105,7 @@ namespace WalletApp
 
         public bool DeleteTransaction(Guid userId, Guid idTransaction)
         {
-            if(userId != OwnerId)
+            if (userId != OwnerId)
             {
                 throw new AccessViolationException();
             }
@@ -107,7 +115,7 @@ namespace WalletApp
                 if (indexToRemove == -1) return false;
                 Transaction tr = Transactions[indexToRemove];
                 Balance -= tr.Sum;
-                Transactions.RemoveAt(indexToRemove);              
+                Transactions.RemoveAt(indexToRemove);
             }
             return true;
         }
@@ -134,19 +142,19 @@ namespace WalletApp
         public decimal BalanceChangesLastMonth(bool income)
         {
             decimal sum = 0;
-            foreach(Transaction transaction in Transactions)
+            foreach (Transaction transaction in Transactions)
             {
                 if (DateTimeOffset.Compare(DateTimeOffset.Now.AddMonths(-1), transaction.dateTime) <= 0)
                 {
                     var expense = transaction.Sum;
-                    if (income) 
+                    if (income)
                     {
                         if (expense >= 0)
                         {
                             sum += expense;
                         }
                     }
-                    else 
+                    else
                     {
                         if (expense < 0)
                         {

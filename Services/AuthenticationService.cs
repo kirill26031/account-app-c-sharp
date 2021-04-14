@@ -17,7 +17,7 @@ namespace WalletApp.WalletAppWPF.Services
             if (String.IsNullOrWhiteSpace(authUser.Login) || String.IsNullOrWhiteSpace(authUser.Password))
                 throw new ArgumentException("Login or Password is Empty");
             var users = await _storage.GetAllAsync();
-            var dbUser = users.FirstOrDefault(user => user.Login == authUser.Login && user.Password == authUser.Password);
+            var dbUser = users.FirstOrDefault(user => user.Login == authUser.Login && user.Password == EncryptPassword(authUser.Password));
             if (dbUser == null)
                 throw new Exception("Wrong Login or Password");
             return new User(dbUser.Guid, dbUser.FirstName, dbUser.LastName, dbUser.Email, dbUser.Login);
@@ -34,14 +34,16 @@ namespace WalletApp.WalletAppWPF.Services
                 || String.IsNullOrWhiteSpace(regUser.LastName) || String.IsNullOrWhiteSpace(regUser.FirstName)
                 || String.IsNullOrWhiteSpace(regUser.Email))
                 throw new ArgumentException("Login, Password or personal information is Empty");
-            if (!IsValidEmail(regUser.Email))
-                throw new ArgumentException("Email is Invalid");
+            if (regUser.FirstName.Any(char.IsDigit) || regUser.LastName.Any(char.IsDigit))
+                throw new ArgumentException("First and Last Names cannot contain numbers");
             if (!(2 <= regUser.FirstName.Length && regUser.FirstName.Length <= 18))
                 throw new ArgumentException("First Name length is Invalid");
             if (!(2 <= regUser.LastName.Length && regUser.LastName.Length <= 20))
                 throw new ArgumentException("Last Name length is Invalid");
+            if (!IsValidEmail(regUser.Email))
+                throw new ArgumentException("Email is Invalid");
             dbUser = new DBUser(regUser.FirstName, regUser.LastName, regUser.Email,
-                regUser.Login, regUser.Password);
+                regUser.Login, EncryptPassword(regUser.Password));
             await _storage.AddOrUpdateAsync(dbUser);
             return true;
         }
@@ -58,5 +60,15 @@ namespace WalletApp.WalletAppWPF.Services
                 return false;
             }
         }
-    }
+
+        private static String EncryptPassword(String inputString)
+        {
+            byte[] data = System.Text.Encoding.ASCII.GetBytes(inputString);
+            data = new System.Security.Cryptography.SHA256Managed().ComputeHash(data);
+            String hash = System.Text.Encoding.ASCII.GetString(data);
+            return hash;
+        }
+     
+
+}
 }
