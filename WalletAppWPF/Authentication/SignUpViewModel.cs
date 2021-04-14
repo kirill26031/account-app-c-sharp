@@ -4,8 +4,11 @@ using System.Runtime.CompilerServices;
 using System.Windows;
 using WalletApp.WalletAppWPF.Navigation;
 using WalletApp.WalletAppWPF.Models.Users;
+using WalletApp.WalletAppWPF.Models.Categories;
+
 using WalletApp.WalletAppWPF.Services;
 using Prism.Commands;
+using DataStorage;
 
 namespace WalletApp.WalletAppWPF.Authentication
 {
@@ -13,6 +16,7 @@ namespace WalletApp.WalletAppWPF.Authentication
     {
         private RegistrationUser _regUser = new RegistrationUser();
         private Action _gotoSignIn;
+        private FileDataStorage<Category> _storage = new FileDataStorage<Category>();
 
         public AuthNavigatableTypes Type
         {
@@ -136,6 +140,7 @@ namespace WalletApp.WalletAppWPF.Authentication
             }
 
             MessageBox.Show($"User successfully registered, please Sign In");
+            ClearSensitiveData();
             _gotoSignIn.Invoke();
         }
 

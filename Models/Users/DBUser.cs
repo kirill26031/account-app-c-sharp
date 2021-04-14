@@ -12,16 +12,16 @@ namespace WalletApp.WalletAppWPF.Models.Users
 
         public string Email { get;}
         public string Login { get;}
-        public string Password { get;}
+        public string Hash { get;}
 
-        public DBUser(string firstName, string lastName, string email, string login, string password)
+        public DBUser(string firstName, string lastName, string email, string login, string hash)
         {
             Guid = Guid.NewGuid();
             FirstName = firstName;
             LastName = lastName;
             Email = email;
             Login = login;
-            Password = password;
+            Hash = hash;
         }
 
     }

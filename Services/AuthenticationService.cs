@@ -17,7 +17,7 @@ namespace WalletApp.WalletAppWPF.Services
             if (String.IsNullOrWhiteSpace(authUser.Login) || String.IsNullOrWhiteSpace(authUser.Password))
                 throw new ArgumentException("Login or Password is Empty");
             var users = await _storage.GetAllAsync();
-            var dbUser = users.FirstOrDefault(user => user.Login == authUser.Login && user.Password == EncryptPassword(authUser.Password));
+            var dbUser = users.FirstOrDefault(user => user.Login == authUser.Login && user.Hash == EncryptPassword(authUser.Password));
             if (dbUser == null)
                 throw new Exception("Wrong Login or Password");
             return new User(dbUser.Guid, dbUser.FirstName, dbUser.LastName, dbUser.Email, dbUser.Login);
