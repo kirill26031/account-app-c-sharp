@@ -44,11 +44,11 @@
             <TextBlock Margin="10, 10, 10, 0">Categories</TextBlock>
             <ListBox Name="CategoriesListBox" HorizontalContentAlignment="Stretch" Height="100"
                      ItemsSource="{Binding Categories}" Grid.ColumnSpan="2" SelectionMode = "Multiple" 
-                     SelectionChanged="ListBox_SelectionChanged">
+                     >
                 <ListBox.ItemTemplate>
                     <DataTemplate>
-                        <TextBlock Text="{Binding Name}" 
-                                   Background="{Binding Color}"></TextBlock>
+                        <CheckBox x:Name="CategoryCheckBox" Content="{Binding Name}" Background="{Binding Color}" Checked="Checked_CategoryCheckBox"
+                                  IsChecked="{Binding RelativeSource={RelativeSource AncestorType={x:Type ListBoxItem}}, Path=IsSelected}"></CheckBox>
                     </DataTemplate>
                 </ListBox.ItemTemplate>
             </ListBox>

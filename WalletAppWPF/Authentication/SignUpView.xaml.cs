@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -30,12 +31,14 @@ namespace WalletApp.WalletAppWPF.Authentication
             ((SignUpViewModel)DataContext).Password = TbPassword.Password;
         }
 
-        private void ListBox_SelectionChanged(object sender, System.EventArgs e)
+        private void Checked_CategoryCheckBox(object sender, System.EventArgs e)
         {
-            //foreach(ListBoxItem element in CategoriesListBox.Items)
-            //{
-            //    element.Background = new LinearGradientBrush(Colors.LightBlue, Colors.SlateBlue, 90);
-            //}
+            List<Category> categories = new List<Category>();
+            foreach(Category category in CategoriesListBox.SelectedItems)
+            {
+                categories.Add(category);
+            }
+            ((SignUpViewModel)DataContext).Categories = categories;
         }
     }
 }
