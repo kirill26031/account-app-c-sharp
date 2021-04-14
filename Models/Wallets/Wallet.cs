@@ -8,6 +8,7 @@ using WalletApp.WalletAppWPF.Models.Transactions;
 using WalletApp.WalletAppWPF.Models.Common;
 using WalletApp.WalletAppWPF.Models.Categories;
 using DataStorage;
+using System.Text.Json.Serialization;
 
 namespace WalletApp.WalletAppWPF.Models.Wallets
 {
@@ -16,9 +17,9 @@ namespace WalletApp.WalletAppWPF.Models.Wallets
         public Guid Guid { get; }
         private string _name;
         private decimal _balance;
-        Currency.currencyType _currency;
-        private List<Transaction> _transactions = new List<Transaction>();
-        private List<Category> _categories = new List<Category>();
+        public Currency.currencyType _currency;
+        public List<Transaction> _transactions = new List<Transaction>();
+        public List<Category> _categories = new List<Category>();
         Guid _ownerId;
         string _description;
 
@@ -30,22 +31,22 @@ namespace WalletApp.WalletAppWPF.Models.Wallets
         public decimal Balance
         {
             get => _balance;
-            private set => _balance = value;
+            set => _balance = value;
         }
         public List<Category> Categories
         {
             get => _categories;
-            private set => _categories = value;
+            set => _categories = value;
         }
         public Guid OwnerId
         {
             get => _ownerId;
-            private set => _ownerId = value;
+            set => _ownerId = value;
         }
         public string Description
         {
-            get => Description;
-            set => Description = value;
+            get => _description;
+            set => _description = value;
         }
         Currency.currencyType Currency
         {
@@ -60,14 +61,36 @@ namespace WalletApp.WalletAppWPF.Models.Wallets
             set => _transactions = value;
         }
 
+
         public Wallet(string name, decimal balance, Currency.currencyType currency, List<Category> categories, Guid ownerId, string description)
         {
             Guid = Guid.NewGuid();
-            _name = name;
-            _balance = balance;
-            _currency = currency;
-            _categories = new List<Category>(categories);
-            _ownerId = ownerId;
+            Name = name;
+            Balance = balance;
+            Currency = currency;
+            Categories = new List<Category>(categories);
+            OwnerId = ownerId;
+            Description = description;
+        }
+
+        public Wallet(string name, decimal balance, Currency.currencyType currency, List<Category> categories, List<Transaction> transactions, Guid ownerId, string description)
+        {
+            Guid = Guid.NewGuid();
+            Name = name;
+            Balance = balance;
+            Currency = currency;
+            Categories = new List<Category>(categories);
+            OwnerId = ownerId;
+            Description = description;
+            Transactions = transactions;
+        }
+
+        [JsonConstructor]
+        public Wallet(string name, decimal balance, Guid ownerId, string description)
+        {
+            Guid = Guid.NewGuid();
+            Name = name;
+            OwnerId = ownerId;
             Description = description;
         }
 

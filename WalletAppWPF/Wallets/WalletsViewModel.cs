@@ -34,12 +34,17 @@ namespace WalletApp.WalletAppWPF.Wallets
         {
             _service = new WalletService();
             Wallets = new ObservableCollection<WalletDetailsViewModel>();
-            foreach (var wallet in _service.GetWallets())
+            FillWallets();
+        }
+
+        private async void  FillWallets()
+        {
+
+            foreach(var wallet in await _service.GetWallets())
             {
                 Wallets.Add(new WalletDetailsViewModel(wallet));
             }
         }
-
 
         public MainNavigatableTypes Type 
         {

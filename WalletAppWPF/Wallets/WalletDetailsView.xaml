@@ -13,13 +13,13 @@
         </Grid.RowDefinitions>
         <StackPanel Grid.Row="0" >
             <TextBlock Margin="10, 10, 10, 0">Name</TextBlock>
-            <TextBox MinWidth="300" Margin="10" HorizontalAlignment="Stretch" 
-                     Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}"></TextBox>
+            <TextBlock MinWidth="300" Margin="10" HorizontalAlignment="Stretch" 
+                     Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}"></TextBlock>
         </StackPanel>
         <StackPanel Grid.Row="1" >
             <TextBlock Margin="10, 10, 10, 0">Balance</TextBlock>
-            <TextBox MinWidth="300" Margin="10" HorizontalAlignment="Stretch" 
-                     Text="{Binding Balance, UpdateSourceTrigger=PropertyChanged}"></TextBox>
+            <TextBlock MinWidth="300" Margin="10" HorizontalAlignment="Stretch" 
+                     Text="{Binding Balance, UpdateSourceTrigger=PropertyChanged}"></TextBlock>
         </StackPanel>
     </Grid>
 </UserControl>

@@ -5,7 +5,9 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:WalletApp.WalletAppWPF.Wallets"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+             Height="450" Width="800">
+             <!--d:DesignHeight="450" d:DesignWidth="800"-->
+    
     <UserControl.Resources>
         <DataTemplate DataType="{ x:Type local:WalletDetailsViewModel}">
             <local:WalletDetailsView></local:WalletDetailsView>
@@ -18,8 +20,15 @@
             <ColumnDefinition Width="3*"></ColumnDefinition>
         </Grid.ColumnDefinitions>
 <!--Menu-->
-        <ListView Grid.RowSpan="2" ItemsSource="{Binding Wallets}" 
-                  DisplayMemberPath="DisplayName" SelectedItem="{Binding CurrentWallet}"></ListView>
+        <ListView Grid.RowSpan="2" ItemsSource="{Binding Wallets}"  
+                  SelectedItem="{Binding CurrentWallet}">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding DisplayName}">
+                    </TextBlock>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
 
         <GridSplitter Grid.Column="1" HorizontalAlignment="Stretch"></GridSplitter>
 <!--Content-->

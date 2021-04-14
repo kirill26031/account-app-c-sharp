@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DataStorage;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -10,13 +11,12 @@ namespace WalletApp.WalletAppWPF.Services
 {
     public class WalletService
     {
-        private static List<Wallet> Users = new List<Wallet>()
-        {
-        };
+        private FileDataStorage<Wallet> _storage = new FileDataStorage<Wallet>();
 
-        public List<Wallet> GetWallets()
+        public async Task<List<Wallet>> GetWallets()
         {
-            return Users.ToList();
+            await _storage.AddOrUpdateAsync(new Wallet("Name", 100, Models.Common.Currency.currencyType.UAH, new List<Models.Categories.Category>(), new Guid(), "Descr"));
+            return await _storage.GetAllAsync();
         }
     }
 }
