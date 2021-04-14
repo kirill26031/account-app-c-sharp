@@ -37,7 +37,7 @@ namespace WalletApp.WalletAppWPF.Wallets
         {
             get
             {
-                return $"{_wallet.Name} (${_wallet.Balance})";
+                return $"{_wallet.Name} ({_wallet.Balance} {WalletApp.WalletAppWPF.Models.Common.Currency.PrintCurrency(_wallet._currency)})";
             }
         }
 
