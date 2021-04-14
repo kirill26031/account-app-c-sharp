@@ -118,7 +118,8 @@ namespace WalletApp.WalletAppWPF.Authentication
         {
             get
             {
-                return _regUser.Categories;
+                return _categories;
+                //return _regUser.Categories;
             }
             set
             {
@@ -137,7 +138,7 @@ namespace WalletApp.WalletAppWPF.Authentication
         public DelegateCommand CloseCommand { get; }
         public DelegateCommand SignInCommand { get; }
 
-        private SignUpViewModel(Action gotoSignIn)
+        public SignUpViewModel(Action gotoSignIn)
         {
             SignUpCommand = new DelegateCommand(SignUp, IsSignUpEnabled);
             CloseCommand = new DelegateCommand(() => Environment.Exit(0));
