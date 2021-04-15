@@ -16,17 +16,18 @@ namespace WalletApp.WalletAppWPF.Wallets
         private Wallet _wallet;
         private System.Collections.ObjectModel.ObservableCollection<WalletDetailsViewModel> _wallets;
         private WalletService _service;
+        private string _name;
+        private string _description;
 
         public string Name
         {
             get
             {
-                return _wallet.Name;
+                return _name;
             }
             set
             {
-                _wallet.Name = value;
-                RaisePropertyChanged(nameof(DisplayName));
+                _name = value;
             }
         }
 
@@ -34,12 +35,11 @@ namespace WalletApp.WalletAppWPF.Wallets
         {
             get
             {
-                return _wallet.Description;
+                return _description;
             }
             set
             {
-                _wallet.Description = value;
-                RaisePropertyChanged(nameof(DisplayName));
+                _description = value;
             }
         }
 
@@ -86,10 +86,15 @@ namespace WalletApp.WalletAppWPF.Wallets
             _service = new WalletService();
             ConfirmEditCommand = new DelegateCommand(ConfirmEdit);
             DeleteWalletCommand = new DelegateCommand(DeleteWallet);
+            _name = _wallet.Name;
+            _description = _wallet.Description;
         }
 
         private async void ConfirmEdit()
         {
+            _wallet.Name = _name;
+            _wallet.Description = _description;
+            RaisePropertyChanged(nameof(DisplayName));
             _service.AddOrUpdate(_wallet);
         }
 

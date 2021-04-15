@@ -11,7 +11,7 @@
             <local:WalletDetailsView></local:WalletDetailsView>
         </DataTemplate>
     </UserControl.Resources>
-    <Grid>
+    <Grid MinWidth="800" MinHeight="600">
         <Grid.ColumnDefinitions>
             <ColumnDefinition MinWidth="100"></ColumnDefinition>
             <ColumnDefinition Width="2"></ColumnDefinition>
