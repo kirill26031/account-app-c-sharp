@@ -42,7 +42,7 @@ namespace WalletApp.WalletAppWPF.Wallets
 
             foreach(var wallet in await _service.GetWallets())
             {
-                Wallets.Add(new WalletDetailsViewModel(wallet));
+                Wallets.Add(new WalletDetailsViewModel(wallet, Wallets));
             }
         }
 

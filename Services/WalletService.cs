@@ -30,9 +30,9 @@ namespace WalletApp.WalletAppWPF.Services
             await _storage.AddOrUpdateAsync(wallet);
         }
 
-        public async void Delete(Wallet wallet)
+        public async Task<List<Wallet>> Delete(Wallet wallet)
         {
-            _storage.Delete(wallet.Guid);
+            return await _storage.Delete(wallet.Guid);
         }
     }
 }

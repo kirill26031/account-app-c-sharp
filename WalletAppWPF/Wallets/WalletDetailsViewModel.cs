@@ -14,6 +14,7 @@ namespace WalletApp.WalletAppWPF.Wallets
     public class WalletDetailsViewModel : BindableBase
     {
         private Wallet _wallet;
+        private System.Collections.ObjectModel.ObservableCollection<WalletDetailsViewModel> _wallets;
         private WalletService _service;
 
         public string Name
@@ -78,9 +79,10 @@ namespace WalletApp.WalletAppWPF.Wallets
         public DelegateCommand AddWalletCommand { get; }
         public DelegateCommand DeleteWalletCommand { get; }
 
-        public WalletDetailsViewModel(Wallet wallet)
+        public WalletDetailsViewModel(Wallet wallet, System.Collections.ObjectModel.ObservableCollection<WalletDetailsViewModel> wallets)
         {
             _wallet = wallet;
+            _wallets = wallets;
             _service = new WalletService();
             ConfirmEditCommand = new DelegateCommand(ConfirmEdit);
             DeleteWalletCommand = new DelegateCommand(DeleteWallet);
@@ -93,7 +95,12 @@ namespace WalletApp.WalletAppWPF.Wallets
 
         private async void DeleteWallet()
         {
-            _service.Delete(_wallet);
+            var walletsLeft = await _service.Delete(_wallet);
+            _wallets.Remove(this);
+
+            //RaisePropertyChanged(nameof(DisplayName));
+            RaisePropertyChanged("Wallets");
+            RaisePropertyChanged("CurrentWallet");
         }
     }
 }
