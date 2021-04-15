@@ -23,34 +23,27 @@
         </Grid.ColumnDefinitions>
         <StackPanel Grid.Row="0" Grid.ColumnSpan="4">
             <TextBlock Margin="10, 10, 10, 0">Name</TextBlock>
-            <TextBlock MinWidth="300" Margin="10" HorizontalAlignment="Stretch" 
-                     Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}"></TextBlock>
+            <TextBox MinWidth="300" Margin="10" HorizontalAlignment="Stretch" 
+                     Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}"></TextBox>
         </StackPanel>
         <StackPanel Grid.Row="1"  Grid.ColumnSpan="4">
             <TextBlock Margin="10, 10, 10, 0">Balance</TextBlock>
             <TextBlock MinWidth="300" Margin="10" HorizontalAlignment="Stretch" 
-                     Text="{Binding Balance, UpdateSourceTrigger=PropertyChanged}"></TextBlock>
+                     Text="{Binding Balance}"></TextBlock>
         </StackPanel>
         <StackPanel Grid.Row="2"  Grid.ColumnSpan="4">
             <TextBlock Margin="10, 10, 10, 0">Currency</TextBlock>
-            <ListBox MinWidth="300" Margin="10" HorizontalAlignment="Stretch" Height="17"/>
+            <TextBlock Text="{Binding Currency}" MinWidth="300" Margin="10" HorizontalAlignment="Stretch" Height="17"/>
         </StackPanel>
         <StackPanel Grid.Row="3"  Grid.ColumnSpan="4">
             <TextBlock Margin="10, 10, 10, 0">Categories</TextBlock>
-            <ListBox MinWidth="300" Margin="10" HorizontalAlignment="Stretch" Height="50"/>
-        </StackPanel>
-        <StackPanel Grid.Row="4"  Grid.ColumnSpan="4">
-            <TextBlock Margin="10, 10, 10, 0">Description</TextBlock>
-            <TextBox MinWidth="300" Margin="10" HorizontalAlignment="Stretch" Height="70"
-                     Text="{Binding Description, UpdateSourceTrigger=PropertyChanged}"/>
-        </StackPanel>
-        <StackPanel Grid.Row="2"  Grid.ColumnSpan="4">
-            <TextBlock Margin="10, 10, 10, 0">Currency</TextBlock>
-            <ListBox MinWidth="300" Margin="10" HorizontalAlignment="Stretch" Height="17"/>
-        </StackPanel>
-        <StackPanel Grid.Row="3"  Grid.ColumnSpan="4">
-            <TextBlock Margin="10, 10, 10, 0">Categories</TextBlock>
-            <ListBox MinWidth="300" Margin="10" HorizontalAlignment="Stretch" Height="50"/>
+            <ListBox MinWidth="300" Margin="10" HorizontalAlignment="Stretch" Height="50" ItemsSource="{Binding Categories}">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Name}" Background="{Binding Color}"/>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
         </StackPanel>
         <StackPanel Grid.Row="4"  Grid.ColumnSpan="4">
             <TextBlock Margin="10, 10, 10, 0">Description</TextBlock>
@@ -60,10 +53,10 @@
         <Button Name="ViewTransactions" Grid.Column="0" Margin="10,10,10,10" 
                 Command="{Binding ViewTransactionsCommand}" Grid.Row="6">View Transactions</Button>
         <Button Name="AddWallet" Grid.Column="1" Margin="10,10,10,10" 
-                Command="{Binding ViewTransactionsCommand}" Grid.Row="6">Add Wallet</Button>
-        <Button Name="EditWallet" Grid.Column="2" Margin="10,10,10,10" 
-                Command="{Binding ViewTransactionsCommand}" Grid.Row="6">Edit Wallet</Button>
+                Command="{Binding AddWalletCommand}" Grid.Row="6">Add Wallet</Button>
+        <Button Name="Confirm_Editing" Grid.Column="2" Margin="10,10,10,10" 
+                Command="{Binding ConfirmEditCommand}" Grid.Row="6">Edit Wallet</Button>
         <Button Name="DeleteWallet" Grid.Column="3" Margin="10,10,10,10" 
-                Command="{Binding ViewTransactionsCommand}" Grid.Row="6">Delete Wallet</Button>
+                Command="{Binding DeleteWalletCommand}" Grid.Row="6">Delete Wallet</Button>
     </Grid>
 </UserControl>

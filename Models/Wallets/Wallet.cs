@@ -18,6 +18,7 @@ namespace WalletApp.WalletAppWPF.Models.Wallets
         private string _name;
         private decimal _balance;
         public Currency.currencyType _currency;
+        
         public List<Transaction> _transactions = new List<Transaction>();
         public List<Category> _categories = new List<Category>();
         Guid _ownerId;
@@ -48,12 +49,12 @@ namespace WalletApp.WalletAppWPF.Models.Wallets
             get => _description;
             set => _description = value;
         }
-        Currency.currencyType Currency
+        public Currency.currencyType Currency
         {
-            // They have private accessibility level
             get => _currency;
             set => _currency = value;
         }
+        [JsonIgnore]
         List<Transaction> Transactions
         {
             // They have private accessibility level
@@ -61,7 +62,7 @@ namespace WalletApp.WalletAppWPF.Models.Wallets
             set => _transactions = value;
         }
 
-
+        [JsonConstructor]
         public Wallet(string name, decimal balance, Currency.currencyType currency, List<Category> categories, Guid ownerId, string description)
         {
             Guid = Guid.NewGuid();
@@ -73,6 +74,7 @@ namespace WalletApp.WalletAppWPF.Models.Wallets
             Description = description;
         }
 
+        
         public Wallet(string name, decimal balance, Currency.currencyType currency, List<Category> categories, List<Transaction> transactions, Guid ownerId, string description)
         {
             Guid = Guid.NewGuid();
@@ -85,7 +87,6 @@ namespace WalletApp.WalletAppWPF.Models.Wallets
             Transactions = transactions;
         }
 
-        [JsonConstructor]
         public Wallet(string name, decimal balance, Guid ownerId, string description)
         {
             Guid = Guid.NewGuid();

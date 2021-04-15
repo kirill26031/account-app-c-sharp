@@ -8,7 +8,7 @@ namespace DataStorage
 {
     public class FileDataStorage<TObject> where TObject : class, IStorable
     {
-        private static readonly string BaseFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "WalletsStorage_Kom_Sob_", typeof(TObject).Name);
+        private static readonly string BaseFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "WalletsStorage_Kom_Sobol", typeof(TObject).Name);
 
         public FileDataStorage()
         {

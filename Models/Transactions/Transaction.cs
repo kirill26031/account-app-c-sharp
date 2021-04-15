@@ -9,13 +9,13 @@ namespace WalletApp.WalletAppWPF.Models.Transactions
     public class Transaction : IStorable
     {
         public Guid Guid { get;}
-        private decimal _sum;
-        private Category _category;
-        private Currency.currencyType _currencyType;
-        private string _description;
+        decimal _sum;
+        Category _category;
+        Currency.currencyType _currencyType;
+        string _description;
         public DateTimeOffset dateTime { get; set; }
-        private List<File> _files;
-        private Guid _creatorId;
+        List<File> _files;
+        Guid _creatorId;
 
         public Guid CreatorId
         {
@@ -64,12 +64,12 @@ namespace WalletApp.WalletAppWPF.Models.Transactions
         public decimal Sum
         {
             get => _sum;
-            private set => _sum = value;
+            set => _sum = value;
         }
         public string Description
         {
             get => _description;
-            private set => _description = value;
+            set => _description = value;
         }
         public DateTimeOffset DateTime { get; private set; }
 

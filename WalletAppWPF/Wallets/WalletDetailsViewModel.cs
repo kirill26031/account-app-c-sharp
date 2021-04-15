@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using WalletApp.WalletAppWPF.Models.Wallets;
 using Prism.Mvvm;
+using WalletApp.WalletAppWPF.Models.Categories;
 
 namespace WalletApp.WalletAppWPF.Wallets
 {
@@ -25,11 +26,40 @@ namespace WalletApp.WalletAppWPF.Wallets
             }
         }
 
+        public string Description
+        {
+            get
+            {
+                return _wallet.Description;
+            }
+            set
+            {
+                _wallet.Description = value;
+                RaisePropertyChanged(nameof(DisplayName));
+            }
+        }
+
         public decimal Balance
         {
             get
             {
                 return _wallet.Balance;
+            }
+        }
+
+        public string Currency
+        {
+            get
+            {
+                return Models.Common.Currency.PrintCurrency(_wallet.Currency);
+            }
+        }
+
+        public List<Category> Categories
+        {
+            get
+            {
+                return _wallet.Categories;
             }
         }
 
