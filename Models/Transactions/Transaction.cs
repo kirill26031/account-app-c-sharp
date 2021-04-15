@@ -1,53 +1,50 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using WalletApp.WalletAppWPF.Models.Common;
+using WalletApp.WalletAppWPF.Models.Categories;
+using DataStorage;
 
-namespace WalletApp
+namespace WalletApp.WalletAppWPF.Models.Transactions
 {
-    public class Transaction
+    public class Transaction : IStorable
     {
-        private Guid _id;
-        private decimal _sum;
-        private Category _category;
-        private Currency.currencyType _currencyType;
-        private string _description;
+        public Guid Guid { get;}
+        decimal _sum;
+        Category _category;
+        Currency.currencyType _currencyType;
+        string _description;
         public DateTimeOffset dateTime { get; set; }
-        private List<File> _files;
-        private Guid _creatorId;
+        List<File> _files;
+        Guid _creatorId;
 
-        public Guid Id
-        {
-            get => _id;
-        }
         public Guid CreatorId
         {
             get => _creatorId;
+            set => _creatorId = value;
         }
 
         public Category Category
         {
             get => _category;
-            private set => _category = value;
+            set => _category = value;
         }
 
         public Currency.currencyType CurrencyType
         {
             get => _currencyType;
-            private set => _currencyType = value;
+            set => _currencyType = value;
         }
 
-        public Transaction(decimal sum, Category category, Currency.currencyType currencyType, string descriprion, DateTimeOffset dateTime, List<File> files, Guid userId)
+        public Transaction(decimal sum, Category category, Currency.currencyType currencyType, string description, DateTimeOffset dateTime, List<File> files, Guid creatorId)
         {
-            _id = Guid.NewGuid();
+            Guid = Guid.NewGuid();
             Sum = sum;
-            _category = category;
-            _currencyType = currencyType;
-            Description = descriprion;
-            this.dateTime = dateTime;
-            _files = new List<File>(files);
-            _creatorId = userId;
+            Category = category;
+            CurrencyType = currencyType;
+            Description = description;
+            DateTime = dateTime;
+            Files = new List<File>(files);
+            CreatorId = creatorId;
         }
 
         public List<File> Files
@@ -67,13 +64,14 @@ namespace WalletApp
         public decimal Sum
         {
             get => _sum;
-            private set => _sum = value;
+            set => _sum = value;
         }
         public string Description
         {
             get => _description;
-            private set => _description = value;
+            set => _description = value;
         }
+        public DateTimeOffset DateTime { get; private set; }
 
         public bool UpdateTransaction(decimal sum, string description, DateTimeOffset dateTime, List<File> files)
         {
@@ -88,7 +86,7 @@ namespace WalletApp
 
         public override string ToString()
         {
-            return $"Transaction ${Id.ToString()} used ${Sum.ToString()} of ${_currencyType} at ${dateTime.ToString()}. Description: ${Description}";
+            return $"Transaction ${Guid.ToString()} used ${Sum.ToString()} of ${_currencyType} at ${dateTime.ToString()}. Description: ${Description}";
         }
     }
 }

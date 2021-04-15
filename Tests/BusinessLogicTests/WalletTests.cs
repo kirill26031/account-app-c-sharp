@@ -21,13 +21,13 @@ namespace BusinessLogicTests
             transactionsUAH = new List<Transaction>();
             transactionsUSD = new List<Transaction>();
             Guid ownerId_1 = Guid.NewGuid();
-            for (int i=0; i<2; ++i)
+            for (int i = 0; i < 2; ++i)
             {
                 List<Transaction> CurrentTransactions = i == 0 ? transactionsUSD : transactionsUAH;
                 Currency.currencyType CurrencyType = i == 0 ? Currency.currencyType.USD : Currency.currencyType.UAH;
 
                 CurrentTransactions.Add(new Transaction(-200, categories[3], CurrencyType, "Dinner", DateTimeOffset.Now.AddDays(-40), new List<File>(), ownerId_1));
-                CurrentTransactions.Add(new Transaction(-3000, categories[2], CurrencyType, "Lost at gambling", DateTimeOffset.Now.AddDays(-20), new List<File>() { 
+                CurrentTransactions.Add(new Transaction(-3000, categories[2], CurrencyType, "Lost at gambling", DateTimeOffset.Now.AddDays(-20), new List<File>() {
                     new File(fileType.Image, "peopleindebt.com/126565/photo"),
                     new File(fileType.Text, "legalhelp24-7.com/document/454482")
                 }, ownerId_1));
@@ -100,9 +100,9 @@ namespace BusinessLogicTests
             Guid ownerId1 = Guid.NewGuid();
             try
             {
-                wallet.AddTransaction(-balance-100, categories[0], "", DateTimeOffset.Now, new List<File>(), ownerId1);
+                wallet.AddTransaction(-balance - 100, categories[0], "", DateTimeOffset.Now, new List<File>(), ownerId1);
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 Console.WriteLine(e.ToString());
             }
@@ -121,10 +121,11 @@ namespace BusinessLogicTests
             Guid ownerId1 = Guid.NewGuid();
             try
             {
-                wallet.AddTransaction(100,new Category("", "", ""), "", DateTimeOffset.Now, new List<File>(), ownerId1);
+                wallet.AddTransaction(100, new Category("", "", ""), "", DateTimeOffset.Now, new List<File>(), ownerId1);
             }
-            catch (Exception e) { 
-                Console.WriteLine(e.ToString()); 
+            catch (Exception e)
+            {
+                Console.WriteLine(e.ToString());
             }
             finally
             {
@@ -203,7 +204,7 @@ namespace BusinessLogicTests
         {
             Wallet wallet = InitWallet();
             decimal balance = wallet.Balance;
-            foreach(Transaction tr in transactionsUAH)
+            foreach (Transaction tr in transactionsUAH)
             {
                 wallet.AddTransaction(tr.Sum, tr.Category, tr.Description, tr.dateTime, tr.Files, tr.CreatorId);
                 balance += tr.Sum;
@@ -219,20 +220,20 @@ namespace BusinessLogicTests
             Random random = new Random();
             DateTimeOffset dateTime = DateTimeOffset.Now;
             Guid ownerId1 = Guid.NewGuid();
-            for (int i=0; i<50; i++)
+            for (int i = 0; i < 50; i++)
             {
                 wallet.AddTransaction(i, categories[0], "", dateTime, new List<File>(), ownerId1);
             }
-            for(int i = 8; i<=10; ++i)
+            for (int i = 8; i <= 10; ++i)
             {
                 for (int j = 0; j < 7; ++j)
                 {
                     int startIndex = j * 5 + i;
                     List<Transaction> Transactions = wallet.ShowTransactions(startIndex, i);
                     Assert.Equal(i, Transactions.Count);
-                    for(int k=0; k<i; ++k)
+                    for (int k = 0; k < i; ++k)
                     {
-                        Assert.Equal(startIndex+k, Transactions[k].Sum);
+                        Assert.Equal(startIndex + k, Transactions[k].Sum);
                     }
                 }
             }
@@ -247,13 +248,13 @@ namespace BusinessLogicTests
             Random random = new Random();
             decimal sum = wallet.Balance;
             Guid ownerId1 = Guid.NewGuid();
-            for (int i=0; i<20; i++)
+            for (int i = 0; i < 20; i++)
             {
                 int next = random.Next(-100, 100);
                 wallet.AddTransaction(next, categories[0], "", dateTime, new List<File>(), ownerId1);
                 wallet.AddTransaction(-next, categories[0], "", dateTime, new List<File>(), ownerId1);
-                if (next < 0) negativeIds.Add(wallet.ShowTransactions(i*2, 1)[0].Id);
-                else negativeIds.Add(wallet.ShowTransactions(i * 2+1, 1)[0].Id);
+                if (next < 0) negativeIds.Add(wallet.ShowTransactions(i * 2, 1)[0].Id);
+                else negativeIds.Add(wallet.ShowTransactions(i * 2 + 1, 1)[0].Id);
                 sum += Math.Abs(next);
             }
             foreach(Guid id in negativeIds)
@@ -289,7 +290,7 @@ namespace BusinessLogicTests
             }
 
             // Assert
-            Assert.Equal(sum+negativeIds.Count*100, wallet.Balance);
+            Assert.Equal(sum + negativeIds.Count * 100, wallet.Balance);
         }
 
     }

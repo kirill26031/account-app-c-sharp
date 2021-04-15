@@ -4,56 +4,57 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using WalletApp.WalletAppWPF.Models.Transactions;
+using WalletApp.WalletAppWPF.Models.Common;
+using WalletApp.WalletAppWPF.Models.Categories;
+using DataStorage;
+using System.Text.Json.Serialization;
 
-namespace WalletApp
+namespace WalletApp.WalletAppWPF.Models.Wallets
 {
-    public class Wallet
+    public class Wallet : IStorable
     {
-        private Guid _id;
+        public Guid Guid { get; }
         private string _name;
         private decimal _balance;
-        Currency.currencyType _currency;
-        private List<Transaction> _transactions = new List<Transaction>();
-        private List<Category> _categories = new List<Category>();
+        public Currency.currencyType _currency;
+        
+        public List<Transaction> _transactions = new List<Transaction>();
+        public List<Category> _categories = new List<Category>();
         Guid _ownerId;
         string _description;
 
-        public Guid Guid
-        {
-            get => _id;
-            private set => _id = value;
-        }
         public string Name
         {
             get => _name;
-            private set => _name = value;
+            set => _name = value;
         }
         public decimal Balance
         {
             get => _balance;
-            private set => _balance = value;
+            set => _balance = value;
         }
         public List<Category> Categories
         {
             get => _categories;
-            private set => _categories = value;
+            set => _categories = value;
         }
         public Guid OwnerId
         {
             get => _ownerId;
-            private set => _ownerId = value;
+            set => _ownerId = value;
         }
         public string Description
         {
-            get => Description;
-            private set => Description = value;
+            get => _description;
+            set => _description = value;
         }
-        Currency.currencyType Currency
+        public Currency.currencyType Currency
         {
-            // They have private accessibility level
             get => _currency;
             set => _currency = value;
         }
+        [JsonIgnore]
         List<Transaction> Transactions
         {
             // They have private accessibility level
@@ -61,14 +62,36 @@ namespace WalletApp
             set => _transactions = value;
         }
 
+        [JsonConstructor]
         public Wallet(string name, decimal balance, Currency.currencyType currency, List<Category> categories, Guid ownerId, string description)
         {
-            _id = Guid.NewGuid();
-            _name = name;
-            _balance = balance;
-            _currency = currency;
-            _categories = new List<Category>(categories);
-            _ownerId = ownerId;
+            Guid = Guid.NewGuid();
+            Name = name;
+            Balance = balance;
+            Currency = currency;
+            Categories = new List<Category>(categories);
+            OwnerId = ownerId;
+            Description = description;
+        }
+
+        
+        public Wallet(string name, decimal balance, Currency.currencyType currency, List<Category> categories, List<Transaction> transactions, Guid ownerId, string description)
+        {
+            Guid = Guid.NewGuid();
+            Name = name;
+            Balance = balance;
+            Currency = currency;
+            Categories = new List<Category>(categories);
+            OwnerId = ownerId;
+            Description = description;
+            Transactions = transactions;
+        }
+
+        public Wallet(string name, decimal balance, Guid ownerId, string description)
+        {
+            Guid = Guid.NewGuid();
+            Name = name;
+            OwnerId = ownerId;
             Description = description;
         }
 
@@ -111,7 +134,7 @@ namespace WalletApp
             }
             else
             {
-                int indexToRemove = Transactions.FindIndex(Tr => Tr.Id == idTransaction);
+                int indexToRemove = Transactions.FindIndex(Tr => Tr.Guid == idTransaction);
                 if (indexToRemove == -1) return false;
                 Transaction tr = Transactions[indexToRemove];
                 Balance -= tr.Sum;
@@ -126,7 +149,7 @@ namespace WalletApp
                 throw new AccessViolationException();
             foreach (Transaction transaction in Transactions)
             {
-                if (transaction.Id == idTransaction)
+                if (transaction.Guid == idTransaction)
                 {
                     decimal diff = sum - transaction.Sum;
                     decimal newBalance = Balance + diff;
@@ -164,6 +187,11 @@ namespace WalletApp
                 }
             }
             return sum;
+        }
+
+        public override string ToString()
+        {
+            return _ownerId + " " + _name + " " + _balance;
         }
     }
 }

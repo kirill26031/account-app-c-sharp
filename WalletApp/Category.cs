@@ -14,25 +14,30 @@ namespace WalletApp
         string _color;
         string _iconRef;
 
-        public Guid Id { 
-            get => _id; 
-            private set => _id = value; 
+        public Guid Id
+        {
+            get => _id;
+            private set => _id = value;
         }
-        public string Name { 
-            get => _name; 
-            private set => _name = value; 
+        public string Name
+        {
+            get => _name;
+            private set => _name = value;
         }
-        public string Description { 
-            get => _description; 
-            private set => _description = value; 
+        public string Description
+        {
+            get => _description;
+            private set => _description = value;
         }
-        public string Color { 
-            get => _color; 
-            private set => _color = value; 
+        public string Color
+        {
+            get => _color;
+            private set => _color = value;
         }
-        public string IconRef { 
-            get => _iconRef; 
-            private set => _iconRef = value; 
+        public string IconRef
+        {
+            get => _iconRef;
+            private set => _iconRef = value;
         }
 
         public Category(string name, string desciption, string iconRef, string color = "#000000")
