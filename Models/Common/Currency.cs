@@ -27,6 +27,11 @@ namespace WalletApp.WalletAppWPF.Models.Common
         {
             return (currency == Currency.currencyType.UAH) ? "UAH" : "USD";
         }
+
+        public static List<Currency.currencyType> AllCurrencies()
+        {
+            return new List<currencyType>() { Currency.currencyType.UAH, Currency.currencyType.USD };
+        }
     }
 
 

@@ -12,4 +12,10 @@
         Wallets,
         Transactions
     }
+
+    public enum WalletNavigatableTypes
+    {
+        AddWallet,
+        Wallets
+    }
 }

@@ -12,13 +12,17 @@
         </DataTemplate>
     </UserControl.Resources>
     <Grid MinWidth="800" MinHeight="600">
+        <Grid.RowDefinitions>
+            <RowDefinition></RowDefinition>
+            <RowDefinition Height="50"></RowDefinition>
+        </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition MinWidth="100"></ColumnDefinition>
             <ColumnDefinition Width="2"></ColumnDefinition>
             <ColumnDefinition Width="3*"></ColumnDefinition>
         </Grid.ColumnDefinitions>
 <!--Menu-->
-        <ListView Grid.RowSpan="2" ItemsSource="{Binding Wallets}"  
+        <ListView Grid.Row="0" Grid.RowSpan="2" ItemsSource="{Binding Wallets}"  
                   SelectedItem="{Binding CurrentWallet}">
             <ListView.ItemTemplate>
                 <DataTemplate>
@@ -28,8 +32,10 @@
             </ListView.ItemTemplate>
         </ListView>
 
-        <GridSplitter Grid.Column="1" HorizontalAlignment="Stretch"></GridSplitter>
+        <GridSplitter Grid.Row="0" Grid.Column="1" HorizontalAlignment="Stretch"></GridSplitter>
 <!--Content-->
-        <ContentControl Grid.Column="2" Content="{Binding CurrentWallet}"></ContentControl>
+        <ContentControl Grid.Row="0" Grid.Column="2" Content="{Binding CurrentWallet}"></ContentControl>
+        <Button Name="AddWallet" Grid.Row="1" Grid.ColumnSpan="3"  Margin="10,10,10,10" 
+                Command="{Binding AddWalletCommand}">Add Wallet</Button>
     </Grid>
 </UserControl>

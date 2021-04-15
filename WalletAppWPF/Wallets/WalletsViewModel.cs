@@ -8,13 +8,15 @@ using WalletApp.WalletAppWPF.Navigation;
 using WalletApp.WalletAppWPF.Models.Wallets;
 using WalletApp.WalletAppWPF.Services;
 using Prism.Mvvm;
+using Prism.Commands;
 
 namespace WalletApp.WalletAppWPF.Wallets
 {
-    public class WalletsViewModel : BindableBase, INavigatable<MainNavigatableTypes>
+    public class WalletsViewModel : BindableBase, INavigatable<WalletNavigatableTypes>
     {
         private WalletService _service;
         private WalletDetailsViewModel _currentWallet;
+        private Action _goto;
         public ObservableCollection<WalletDetailsViewModel> Wallets { get; set; }
 
         public WalletDetailsViewModel CurrentWallet
@@ -29,11 +31,15 @@ namespace WalletApp.WalletAppWPF.Wallets
                 RaisePropertyChanged();
             }
         }
+        
+        public DelegateCommand AddWalletCommand { get; }
 
-        public WalletsViewModel()
+        public WalletsViewModel(Action goTo)
         {
+            _goto = goTo;
             _service = new WalletService();
             Wallets = new ObservableCollection<WalletDetailsViewModel>();
+            AddWalletCommand = new DelegateCommand(_goto);
             FillWallets();
         }
 
@@ -46,11 +52,11 @@ namespace WalletApp.WalletAppWPF.Wallets
             }
         }
 
-        public MainNavigatableTypes Type 
+        public WalletNavigatableTypes Type 
         {
             get
             {
-                return MainNavigatableTypes.Wallets;
+                return WalletNavigatableTypes.Wallets;
             }
         }
         public void ClearSensitiveData()

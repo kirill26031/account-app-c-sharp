@@ -34,5 +34,18 @@ namespace WalletApp.WalletAppWPF.Services
         {
             return await _storage.Delete(wallet.Guid);
         }
+
+        public static List<Category> AllCategories()
+        {
+            List<Category> categories = new List<Category>
+            {
+                new Category("Sport", "For sport related goods", "awesomeicons.com/12", "#ebeb34"),
+                new Category("Games", "Games category", "", "#dbdb7f"),
+                new Category("Education", "For online courses", "awesomeicons.com/13", "#58e8d7"),
+                new Category("Gambling", "For gambling", "awesomeicons.com/14", "#eb1738"),
+                new Category("Food", "For food", "awesomeicons.com/15", "#223001")
+            };
+            return categories;
+        }
     }
 }

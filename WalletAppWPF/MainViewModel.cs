@@ -19,7 +19,7 @@ namespace WalletApp.WalletAppWPF
             }
             else
             {
-                return new WalletsViewModel();
+                return new WalletViewModel();
             }
         }
     }
