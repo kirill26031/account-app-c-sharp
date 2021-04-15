@@ -42,6 +42,15 @@ namespace DataStorage
             return JsonSerializer.Deserialize<TObject>(stringObj);
         }
 
+        public async void Delete(Guid guid)
+        {
+            string filePath = Path.Combine(BaseFolder, guid.ToString("N"));
+            if (File.Exists(filePath))
+            {
+                File.Delete(filePath);
+            }
+        }
+
         public async Task<List<TObject>> GetAllAsync()
         {
             var res = new List<TObject>();
