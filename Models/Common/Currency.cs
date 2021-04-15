@@ -23,5 +23,11 @@ namespace WalletApp.WalletAppWPF.Models.Common
         {
             return Decimal.Divide(Decimal.Multiply(from, exchangeRate[(int)toC]), exchangeRate[(int)fromC]);
         }
+        public static string PrintCurrency(Currency.currencyType currency)
+        {
+            return (currency == Currency.currencyType.UAH) ? "UAH" : "USD";
+        }
     }
+
+
 }
