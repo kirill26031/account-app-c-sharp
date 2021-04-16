@@ -10,12 +10,12 @@ namespace WalletApp.WalletAppWPF.Models.Users
     public class User
     {
         public Guid Guid { get; }
-        string _name;
-        string _login;
-        string _surname;
-        string _email;
-        List<Wallet> _wallets = new List<Wallet>();
-        List<Category> _categories = new List<Category>();
+        private string _name;
+        private string _login;
+        private string _surname;
+        private string _email;
+        private List<Wallet> _wallets = new List<Wallet>();
+        private List<Category> _categories = new List<Category>();
 
         public User(Guid guid, string firstName, string lastName, string email, string login, List<Category> categories, List<Wallet> wallets)
         {
@@ -100,6 +100,11 @@ namespace WalletApp.WalletAppWPF.Models.Users
             wallet.UpdateTransaction(Guid, idTransaction, sum, description, dateTime, files);
         }
 
+        public void DeleteWallet(Wallet wallet)
+        {
+            _wallets.RemoveAll(w => w.Guid == wallet.Guid);
+        }
+
         public decimal ExpensesForLastMonth(Wallet wallet)
         {
             if (!Wallets.Contains(wallet))
@@ -125,7 +130,7 @@ namespace WalletApp.WalletAppWPF.Models.Users
             return Wallets.Contains(wallet);
         }
 
-        private void AddWallet(Wallet wallet)
+        public void AddWallet(Wallet wallet)
         {
             Wallets.Add(wallet);
         }

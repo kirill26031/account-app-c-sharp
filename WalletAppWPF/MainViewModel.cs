@@ -1,6 +1,7 @@
 ﻿using Prism.Commands;
 using System;
 using WalletApp.WalletAppWPF.Authentication;
+using WalletApp.WalletAppWPF.Models.Users;
 using WalletApp.WalletAppWPF.Navigation;
 using WalletApp.WalletAppWPF.Wallets;
 
@@ -8,10 +9,10 @@ namespace WalletApp.WalletAppWPF
 {
     public class MainViewModel : NavigationBase<MainNavigatableTypes>
     {
-        Guid _userGuid;
+        User _user;
         public MainViewModel()
         {
-            SetUserGUID = (guid) => SetUserGuid(guid);
+            SetUser = (u) => SetUSER(u);
             Navigate(MainNavigatableTypes.Auth);
         }
         
@@ -19,18 +20,18 @@ namespace WalletApp.WalletAppWPF
         {
             if (type == MainNavigatableTypes.Auth)
             {
-                return new AuthViewModel(() => Navigate(MainNavigatableTypes.Wallets), SetUserGUID);
+                return new AuthViewModel(() => Navigate(MainNavigatableTypes.Wallets), SetUser);
             }
             else
             {
-                return new WalletViewModel(_userGuid);
+                return new WalletViewModel(_user);
             }
         }
 
-        public Action<Guid> SetUserGUID { get; }
-        public void SetUserGuid(Guid guid)
+        public Action<User> SetUser { get; }
+        public void SetUSER(User user)
         {
-            _userGuid = guid;
+            _user = user;
         }
     }
 }

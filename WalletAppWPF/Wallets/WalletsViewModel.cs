@@ -9,6 +9,7 @@ using WalletApp.WalletAppWPF.Models.Wallets;
 using WalletApp.WalletAppWPF.Services;
 using Prism.Mvvm;
 using Prism.Commands;
+using WalletApp.WalletAppWPF.Models.Users;
 
 namespace WalletApp.WalletAppWPF.Wallets
 {
@@ -17,6 +18,7 @@ namespace WalletApp.WalletAppWPF.Wallets
         private WalletService _service;
         private WalletDetailsViewModel _currentWallet;
         private Action _goto;
+        private User _user;
         public ObservableCollection<WalletDetailsViewModel> Wallets { get; set; }
 
         public WalletDetailsViewModel CurrentWallet
@@ -34,25 +36,26 @@ namespace WalletApp.WalletAppWPF.Wallets
         
         public DelegateCommand AddWalletCommand { get; }
 
-        public Action ShouldUpdate => new Action(async () => {
-            await FillWallets();
+        public Action ShouldUpdate => new Action(() => {
+            FillWallets(_user.Wallets);
             CurrentWallet = null;
         });
-        public WalletsViewModel(Action goTo, Guid _ownerId)
+        public WalletsViewModel(Action goTo, User user)
         {
             _goto = goTo;
             _service = new WalletService();
             Wallets = new ObservableCollection<WalletDetailsViewModel>();
             AddWalletCommand = new DelegateCommand(_goto);
-            FillWallets();
+            _user = user;
+            FillWallets(user.Wallets);
         }
 
-        private async Task FillWallets()
+        private void FillWallets(List<Wallet> wallets)
         {
             Wallets.Clear();
-            foreach (var wallet in await _service.GetWallets())
+            foreach (var wallet in wallets)
             {
-                Wallets.Add(new WalletDetailsViewModel(wallet, ShouldUpdate));
+                Wallets.Add(new WalletDetailsViewModel(wallet, ShouldUpdate, _user));
             }
         }
 

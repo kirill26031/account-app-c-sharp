@@ -35,6 +35,11 @@ namespace WalletApp.WalletAppWPF.Services
             return await _storage.Delete(wallet.Guid);
         }
 
+        internal async Task<List<Wallet>> WalletsByGuids(List<Guid> walletGuids)
+        {
+            return (from wallet in (await _storage.GetAllAsync()) where walletGuids.Contains(wallet.Guid) select wallet).ToList();
+        }
+
         public static List<Category> AllCategories()
         {
             List<Category> categories = new List<Category>
@@ -46,6 +51,11 @@ namespace WalletApp.WalletAppWPF.Services
                 new Category("Food", "For food", "awesomeicons.com/15", "#223001")
             };
             return categories;
+        }
+
+        internal async Task<Wallet> GetWallet(Guid guid)
+        {
+            return await _storage.GetAsync(guid);
         }
     }
 }

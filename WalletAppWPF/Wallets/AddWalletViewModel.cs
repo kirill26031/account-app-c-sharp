@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using WalletApp.WalletAppWPF.Models.Categories;
 using WalletApp.WalletAppWPF.Models.Common;
+using WalletApp.WalletAppWPF.Models.Users;
 using WalletApp.WalletAppWPF.Models.Wallets;
 using WalletApp.WalletAppWPF.Navigation;
 using WalletApp.WalletAppWPF.Services;
@@ -28,9 +29,9 @@ namespace WalletApp.WalletAppWPF.Wallets
         private string _name;
         private decimal _balance;
         private string _description;
-        private Guid _ownerId;
+        private User _user;
 
-        public AddWalletViewModel(Action goTo, Guid ownerId, Action shouldUpdate)
+        public AddWalletViewModel(Action goTo, User user, Action shouldUpdate)
         {
             _goto = goTo;
             _shouldUpdate = shouldUpdate;
@@ -40,13 +41,13 @@ namespace WalletApp.WalletAppWPF.Wallets
             _confirmCreationCommand = new DelegateCommand(Confirm, CanConfirm);
             _goBackCommand = new DelegateCommand(() => _goto.Invoke());
             _balance = 0;
-            _ownerId = ownerId;
+            _user = user;
             _ = FillAllCategories();
         }
 
         private async Task FillAllCategories()
         {
-            _allCategories = await _userService.GetCategoriesForUser(_ownerId);
+            _allCategories = await _userService.GetCategoriesForUser(_user.Guid);
             RaisePropertyChanged(nameof(Categories));
         }
 
@@ -127,8 +128,10 @@ namespace WalletApp.WalletAppWPF.Wallets
 
         public async void Confirm()
         {
-            Wallet wallet = new Wallet(Guid.NewGuid(), Name, Balance, _currency, _categories, _ownerId, Description);
+            Wallet wallet = new Wallet(Guid.NewGuid(), Name, Balance, _currency, _categories, _user.Guid, Description);
             await _walletService.AddOrUpdate(wallet);
+            _user.AddWallet(wallet);
+            await _userService.UpdateUser(_user);
             _shouldUpdate.Invoke();
             _goto.Invoke();
         }

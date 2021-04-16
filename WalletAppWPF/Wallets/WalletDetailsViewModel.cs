@@ -9,6 +9,7 @@ using WalletApp.WalletAppWPF.Models.Categories;
 using Prism.Commands;
 using WalletApp.WalletAppWPF.Services;
 using WalletApp.WalletAppWPF.Navigation;
+using WalletApp.WalletAppWPF.Models.Users;
 
 namespace WalletApp.WalletAppWPF.Wallets
 {
@@ -16,9 +17,11 @@ namespace WalletApp.WalletAppWPF.Wallets
     {
         private Wallet _wallet;
         private Action _shouldUpdate;
-        private WalletService _service;
+        private WalletService _walletService;
+        private AuthenticationService _userService;
         private string _name;
         private string _description;
+        private User _user;
 
         public string Name
         {
@@ -82,15 +85,17 @@ namespace WalletApp.WalletAppWPF.Wallets
 
         public WalletNavigatableTypes Type => WalletNavigatableTypes.Wallets;
 
-        public WalletDetailsViewModel(Wallet wallet, Action shouldUpdate)
+        public WalletDetailsViewModel(Wallet wallet, Action shouldUpdate, User user)
         {
             _wallet = wallet;
             _shouldUpdate = shouldUpdate;
-            _service = new WalletService();
+            _userService = new AuthenticationService();
+            _walletService = new WalletService();
             ConfirmEditCommand = new DelegateCommand(ConfirmEdit);
             DeleteWalletCommand = new DelegateCommand(DeleteWallet);
             _name = _wallet.Name;
             _description = _wallet.Description;
+            _user = user;
         }
 
         private async void ConfirmEdit()
@@ -98,12 +103,14 @@ namespace WalletApp.WalletAppWPF.Wallets
             _wallet.Name = _name;
             _wallet.Description = _description;
             RaisePropertyChanged(nameof(DisplayName));
-            await _service.AddOrUpdate(_wallet);
+            await _walletService.AddOrUpdate(_wallet);
         }
 
         private async void DeleteWallet()
         {
-            var walletsLeft = await _service.Delete(_wallet);
+            var walletsLeft = await _walletService.Delete(_wallet);
+            _user.DeleteWallet(_wallet);
+            await _userService.UpdateUser(_user);
             _shouldUpdate.Invoke();
 
             //RaisePropertyChanged("Wallets");
