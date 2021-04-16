@@ -49,7 +49,7 @@ namespace WalletApp.WalletAppWPF.Services
                 throw new ArgumentException("Email is Invalid");
             if (regUser.Categories.Count == 0)
                 throw new ArgumentException("At least one category must be chosen");
-            dbUser = new DBUser(regUser.FirstName, regUser.LastName, regUser.Email,
+            dbUser = new DBUser(Guid.NewGuid(), regUser.FirstName, regUser.LastName, regUser.Email,
                 regUser.Login, EncryptPassword(regUser.Password), regUser.Categories, new List<Models.Wallets.Wallet>());
             await _storage.AddOrUpdateAsync(dbUser);
             return true;
@@ -95,7 +95,7 @@ namespace WalletApp.WalletAppWPF.Services
         {
             var users = await _storage.GetAllAsync();
             var currentDBUser = users.FirstOrDefault(u => user.Guid == u.Guid);
-            DBUser dbUser = new DBUser(user.FirstName, user.LastName, user.Email, user.Login, currentDBUser.Hash, user.Categories, user.Wallets);
+            DBUser dbUser = new DBUser(user.Guid, user.FirstName, user.LastName, user.Email, user.Login, currentDBUser.Hash, user.Categories, user.Wallets);
             await _storage.AddOrUpdateAsync(dbUser);
         }
     }

@@ -22,6 +22,7 @@ namespace WalletApp.WalletAppWPF.Wallets
         private string _name;
         private string _description;
         private User _user;
+        private Action<Wallet> _goToTransactions;
 
         public string Name
         {
@@ -79,13 +80,17 @@ namespace WalletApp.WalletAppWPF.Wallets
             }
         }
 
+        public DelegateCommand ViewTransactionsCommand => new DelegateCommand(() => _goToTransactions(_wallet));
+
         public DelegateCommand ConfirmEditCommand        {            get;        }
         public DelegateCommand AddWalletCommand { get; }
         public DelegateCommand DeleteWalletCommand { get; }
 
         public WalletNavigatableTypes Type => WalletNavigatableTypes.Wallets;
 
-        public WalletDetailsViewModel(Wallet wallet, Action shouldUpdate, User user)
+        public Wallet Wallet => _wallet;
+
+        public WalletDetailsViewModel(Wallet wallet, Action shouldUpdate, User user, Action<Wallet> goToTransactions)
         {
             _wallet = wallet;
             _shouldUpdate = shouldUpdate;
@@ -96,6 +101,7 @@ namespace WalletApp.WalletAppWPF.Wallets
             _name = _wallet.Name;
             _description = _wallet.Description;
             _user = user;
+            _goToTransactions = goToTransactions;
         }
 
         private async void ConfirmEdit()

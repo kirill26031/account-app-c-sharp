@@ -27,11 +27,11 @@
         </StackPanel>
         <StackPanel Grid.Row="1"  Grid.ColumnSpan="4">
             <TextBlock Margin="10, 10, 10, 0">Currency</TextBlock>
-            <ListBox MinWidth="300" Margin="10" HorizontalAlignment="Stretch" Height="17"/>
+            <TextBlock Text="{Binding Currency}" MinWidth="300" Margin="10" HorizontalAlignment="Stretch" Height="30"/>
         </StackPanel>
         <StackPanel Grid.Row="2"  Grid.ColumnSpan="4">
             <TextBlock Margin="10, 10, 10, 0">Category</TextBlock>
-            <ListBox MinWidth="300" Margin="10" HorizontalAlignment="Stretch" Height="17"/>
+            <TextBlock Text="{Binding Category}" MinWidth="300" Margin="10" HorizontalAlignment="Stretch" Height="17"/>
         </StackPanel>
         <StackPanel Grid.Row="3"  Grid.ColumnSpan="4">
             <TextBlock Margin="10, 10, 10, 0">Description</TextBlock>
@@ -41,11 +41,9 @@
 
         <Button Name="ViewTransactions" Grid.Column="0" Margin="10,10,10,10" 
                 Command="{Binding ViewTransactionsCommand}" Grid.Row="4">Back to Wallets</Button>
-        <Button Name="AddWallet" Grid.Column="1" Margin="10,10,10,10" 
-                Command="{Binding ViewTransactionsCommand}" Grid.Row="4">Add Transaction</Button>
-        <Button Name="EditWallet" Grid.Column="2" Margin="10,10,10,10" 
+        <Button Name="EditWallet" Grid.Column="1" Margin="10,10,10,10" 
                 Command="{Binding ViewTransactionsCommand}" Grid.Row="4">Save changes</Button>
-        <Button Name="DeleteWallet" Grid.Column="3" Margin="10,10,10,10" 
+        <Button Name="DeleteWallet" Grid.Column="2" Margin="10,10,10,10" 
                 Command="{Binding ViewTransactionsCommand}" Grid.Row="4">Delete Transaction</Button>
     </Grid>
 </UserControl>

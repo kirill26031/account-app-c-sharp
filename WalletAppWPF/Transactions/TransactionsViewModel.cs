@@ -10,14 +10,21 @@ using WalletApp.WalletAppWPF.Services;
 using WalletApp.WalletAppWPF.Transactions;
 using System.Collections.ObjectModel;
 using WalletApp.WalletAppWPF.Models.Wallets;
+using WalletApp.WalletAppWPF.Models.Users;
+using Prism.Commands;
 
 namespace WalletApp.WalletAppWPF.Transactions
 {
-    public class TransactionsViewModel : BindableBase, INavigatable<MainNavigatableTypes>
+    public class TransactionsViewModel : BindableBase, INavigatable<WalletNavigatableTypes>
     {
         private TransactionService _service;
         private TransactionDetailsViewModel _currentTransaction;
         Wallet _wallet;
+        private User _user;
+        private Action _goToWallets;
+        private Action _goToAddingTransaction;
+
+
         public ObservableCollection<TransactionDetailsViewModel> Transactions { get; set; }
 
         public TransactionDetailsViewModel CurrentTransaction
@@ -33,30 +40,30 @@ namespace WalletApp.WalletAppWPF.Transactions
             }
         }
 
-        public TransactionsViewModel(Wallet wallet)
+        public DelegateCommand GoToWallets => new DelegateCommand(_goToWallets);
+
+        public TransactionsViewModel(User user, Wallet wallet, Action goToWallets, Action goToAddingTransaction)
         {
+            _user = user;
+            _goToAddingTransaction = goToAddingTransaction;
+            _goToWallets = goToWallets;
             _wallet = wallet;
             _service = new TransactionService(wallet);
             Transactions = new ObservableCollection<TransactionDetailsViewModel>();
             FillTransactions();
         }
 
-        private async void FillTransactions()
+        private void FillTransactions()
         {
-
-            foreach (var wallet in await _service.GetTransactions())
+            Transactions = new ObservableCollection<TransactionDetailsViewModel>();
+            foreach (var transaction in _wallet.Transactions)
             {
-                Transactions.Add(new TransactionDetailsViewModel(wallet));
+                Transactions.Add(new TransactionDetailsViewModel(transaction));
             }
         }
 
-        public MainNavigatableTypes Type
-        {
-            get
-            {
-                return MainNavigatableTypes.Transactions;
-            }
-        }
+        WalletNavigatableTypes INavigatable<WalletNavigatableTypes>.Type => WalletNavigatableTypes.Transactions;
+
         public void ClearSensitiveData()
         {
 

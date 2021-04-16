@@ -12,13 +12,17 @@
     </DataTemplate>
     </UserControl.Resources>
     <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition></RowDefinition>
+            <RowDefinition Height="50"></RowDefinition>
+        </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition MinWidth="100"></ColumnDefinition>
             <ColumnDefinition Width="2"></ColumnDefinition>
             <ColumnDefinition Width="3*"></ColumnDefinition>
         </Grid.ColumnDefinitions>
         <!--Menu-->
-        <ListView Grid.RowSpan="2" ItemsSource="{Binding Transactions}"  
+        <ListView Grid.Row="0" Grid.RowSpan="2" ItemsSource="{Binding Transactions}"  
                   SelectedItem="{Binding CurrentTransaction}">
             <ListView.ItemTemplate>
                 <DataTemplate>
@@ -28,8 +32,18 @@
             </ListView.ItemTemplate>
         </ListView>
 
-        <GridSplitter Grid.Column="1" HorizontalAlignment="Stretch"></GridSplitter>
+        <GridSplitter Grid.Row="0" Grid.Column="1" HorizontalAlignment="Stretch"></GridSplitter>
         <!--Content-->
-        <ContentControl Grid.Column="2" Content="{Binding CurrentWallet}"></ContentControl>
+        <ContentControl Grid.Row="0" Grid.Column="2" Content="{Binding CurrentTransaction}"></ContentControl>
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center"  Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3">
+            <StackPanel.Resources>
+                <Style TargetType="{x:Type Button}">
+                    <Setter Property="Margin" Value="100 5"/>
+                    <Setter Property="Width" Value="200"/>
+                </Style>
+            </StackPanel.Resources>
+            <Button Content="Add transaction" Command="{Binding AddTransaction}"></Button>
+            <Button Content="Go back" Command="{Binding GoToWallets}"></Button>
+        </StackPanel>
     </Grid>
 </UserControl>

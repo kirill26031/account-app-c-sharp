@@ -95,6 +95,18 @@ namespace WalletApp.WalletAppWPF.Models.Wallets
             Description = description;
         }
 
+        public Wallet(Wallet wallet)
+        {
+            _balance = wallet._balance;
+            _categories = wallet._categories;
+            Guid = wallet.Guid;
+            _currency = wallet._currency;
+            _description = wallet._description;
+            _name = wallet._name;
+            _ownerId = wallet._ownerId;
+            _transactions = wallet._transactions;
+        }
+
         public bool AddTransaction(decimal sum, Category category, string description, DateTimeOffset dateTime, List<File> files, Guid userId)
         {
             if (_balance >= -sum)

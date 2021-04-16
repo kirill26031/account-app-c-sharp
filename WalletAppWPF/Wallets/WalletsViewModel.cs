@@ -17,8 +17,10 @@ namespace WalletApp.WalletAppWPF.Wallets
     {
         private WalletService _service;
         private WalletDetailsViewModel _currentWallet;
+        private Action<Wallet> _goToTransactions;
         private Action _goto;
         private User _user;
+        private Action<Wallet> _currentWalletChanged;
         public ObservableCollection<WalletDetailsViewModel> Wallets { get; set; }
 
         public WalletDetailsViewModel CurrentWallet
@@ -40,13 +42,14 @@ namespace WalletApp.WalletAppWPF.Wallets
             FillWallets(_user.Wallets);
             CurrentWallet = null;
         });
-        public WalletsViewModel(Action goTo, User user)
+        public WalletsViewModel(Action goTo, User user, Action<Wallet> goToTransactions)
         {
             _goto = goTo;
             _service = new WalletService();
             Wallets = new ObservableCollection<WalletDetailsViewModel>();
             AddWalletCommand = new DelegateCommand(_goto);
             _user = user;
+            _goToTransactions = goToTransactions;
             FillWallets(user.Wallets);
         }
 
@@ -55,7 +58,7 @@ namespace WalletApp.WalletAppWPF.Wallets
             Wallets.Clear();
             foreach (var wallet in wallets)
             {
-                Wallets.Add(new WalletDetailsViewModel(wallet, ShouldUpdate, _user));
+                Wallets.Add(new WalletDetailsViewModel(wallet, ShouldUpdate, _user, _goToTransactions));
             }
         }
 

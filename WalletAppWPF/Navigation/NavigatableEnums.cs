@@ -16,6 +16,15 @@
     public enum WalletNavigatableTypes
     {
         AddWallet,
-        Wallets
+        Wallets,
+        Transactions,
+        AddTransaction
     }
+
+    //public enum WalletTransactionNavigatableTypes
+    //{
+    //    Wallets,
+    //    Transactions,
+    //    AddTransaction
+    //}
 }
