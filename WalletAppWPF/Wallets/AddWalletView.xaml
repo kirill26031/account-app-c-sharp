@@ -33,19 +33,25 @@
         </StackPanel>
         <StackPanel Grid.Row="2"  Grid.ColumnSpan="4">
             <TextBlock Margin="10, 10, 10, 0">Currency</TextBlock>
-            <ListBox x:Name="Currencies" MinWidth="300" Margin="10" 
+            <!--<ListBox x:Name="Currencies" MinWidth="300" Margin="10" 
                      HorizontalAlignment="Stretch" 
                      ItemsSource="{Binding AllCurrencies}">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
-                        <CheckBox Content="{Binding}"></CheckBox>
+                        
                     </DataTemplate>
                 </ListBox.ItemTemplate>
-            </ListBox>
+            </ListBox>-->
+            <RadioButton Content="UAH" Name="rbUAH" 
+                         Command="{Binding RadioBtnChanged}"
+                         CommandParameter="{Binding ElementName=rbUAH, Path=Content}"/>
+            <RadioButton Content="USD" Name="rbUSD"
+                         Command="{Binding RadioBtnChanged}"
+                         CommandParameter="{Binding ElementName=rbUSD, Path=Content}"/>
         </StackPanel>
         <StackPanel Grid.Row="3"  Grid.ColumnSpan="4">
             <TextBlock Margin="10, 10, 10, 0">Categories</TextBlock>
-            <ListBox x:Name="CategoriesListBox" MinWidth="300" Margin="10" HorizontalAlignment="Stretch" Height="50" ItemsSource="{Binding Categories}" SelectionMode="Multiple">
+            <ListBox x:Name="CategoriesListBox" MinWidth="300" Margin="10" HorizontalAlignment="Stretch" MinHeight="50" ItemsSource="{Binding Categories}" SelectionMode="Multiple">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <CheckBox Content="{Binding Name}" Background="{Binding Color}" Checked="Checked_CategoryCheckBox" 

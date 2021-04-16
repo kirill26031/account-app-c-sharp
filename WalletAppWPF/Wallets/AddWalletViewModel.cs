@@ -104,6 +104,13 @@ namespace WalletApp.WalletAppWPF.Wallets
         public DelegateCommand ConfirmCreationCommand => _confirmCreationCommand;
         public DelegateCommand GoBackCommand => _goBackCommand;
 
+        public DelegateCommand<string> RadioBtnChanged => new DelegateCommand<string>((content) => HandleRadioBtn(content));
+
+        private void HandleRadioBtn(string content)
+        {
+            Currency = content;
+        }
+
         public async void Confirm()
         {
             Wallet wallet = new Wallet(Guid.NewGuid(), Name, Balance, _currency, _categories, _ownerId, Description);

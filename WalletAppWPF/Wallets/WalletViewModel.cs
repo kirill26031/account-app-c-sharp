@@ -16,7 +16,6 @@ namespace WalletApp.WalletAppWPF.Wallets
         public WalletViewModel(Guid ownerId)
         {
             _ownerId = ownerId;
-            MessageBox.Show("User id: "+ownerId);
             Navigate(WalletNavigatableTypes.Wallets);
         }
 
