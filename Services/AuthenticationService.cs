@@ -5,12 +5,15 @@ using System.Threading;
 using System.Threading.Tasks;
 using WalletApp.WalletAppWPF.Models.Users;
 using DataStorage;
+using WalletApp.WalletAppWPF.Models.Categories;
+using WalletApp.WalletAppWPF.Models.Wallets;
 
 namespace WalletApp.WalletAppWPF.Services
 {
     public class AuthenticationService
     {
         private FileDataStorage<DBUser> _storage = new FileDataStorage<DBUser>();
+        private WalletService _walletService = new WalletService();
 
         public async Task<User> AuthenticateAsync(AuthenticationUser authUser)
         {
@@ -20,8 +23,11 @@ namespace WalletApp.WalletAppWPF.Services
             var dbUser = users.FirstOrDefault(user => user.Login == authUser.Login && user.Hash == EncryptPassword(authUser.Password));
             if (dbUser == null)
                 throw new Exception("Wrong Login or Password");
-            return new User(dbUser.Guid, dbUser.FirstName, dbUser.LastName, dbUser.Email, dbUser.Login);
+            return new User(dbUser.Guid, dbUser.FirstName, dbUser.LastName, dbUser.Email, dbUser.Login, dbUser.Categories,
+                await _walletService.WalletsByGuids(dbUser.WalletGuids)) ;
         }
+
+
 
         public async Task<bool> RegisterUserAsync(RegistrationUser regUser)
         {
@@ -42,10 +48,27 @@ namespace WalletApp.WalletAppWPF.Services
                 throw new ArgumentException("Last Name length is Invalid");
             if (!IsValidEmail(regUser.Email))
                 throw new ArgumentException("Email is Invalid");
+            if (regUser.Categories.Count == 0)
+                throw new ArgumentException("At least one category must be chosen");
             dbUser = new DBUser(regUser.FirstName, regUser.LastName, regUser.Email,
-                regUser.Login, EncryptPassword(regUser.Password));
+                regUser.Login, EncryptPassword(regUser.Password), regUser.Categories, new List<Models.Wallets.Wallet>());
             await _storage.AddOrUpdateAsync(dbUser);
             return true;
+        }
+
+        public async Task<User> FindUser(Guid guid)
+        {
+            var users = await _storage.GetAllAsync();
+            var dbUser = users.FirstOrDefault(user => user.Guid == guid);
+            if (dbUser == null) return null;
+            return new User(dbUser.Guid, dbUser.FirstName, dbUser.LastName, dbUser.Email, dbUser.Login, dbUser.Categories, new List<Models.Wallets.Wallet>());
+        }
+
+        public async Task<List<Category>> GetCategoriesForUser(Guid ownerId)
+        {
+            var user = await FindUser(ownerId);
+            if (user == null || user.Categories.Count == 0) return new List<Category>();
+            return user.Categories;
         }
 
         bool IsValidEmail(string email)
@@ -68,7 +91,13 @@ namespace WalletApp.WalletAppWPF.Services
             String hash = System.Text.Encoding.ASCII.GetString(data);
             return hash;
         }
-     
 
-}
+        public async Task UpdateUser(User user)
+        {
+            var users = await _storage.GetAllAsync();
+            var currentDBUser = users.FirstOrDefault(u => user.Guid == u.Guid);
+            DBUser dbUser = new DBUser(user.FirstName, user.LastName, user.Email, user.Login, currentDBUser.Hash, user.Categories, user.Wallets);
+            await _storage.AddOrUpdateAsync(dbUser);
+        }
+    }
 }

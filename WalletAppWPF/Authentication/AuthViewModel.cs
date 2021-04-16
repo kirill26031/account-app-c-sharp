@@ -1,4 +1,5 @@
 ﻿using System;
+using WalletApp.WalletAppWPF.Models.Users;
 using WalletApp.WalletAppWPF.Navigation;
 
 namespace WalletApp.WalletAppWPF.Authentication
@@ -6,10 +7,13 @@ namespace WalletApp.WalletAppWPF.Authentication
     public class AuthViewModel : NavigationBase<AuthNavigatableTypes>, INavigatable<MainNavigatableTypes>
     {
         private Action _signInSuccess;
-        
-        public AuthViewModel(Action signInSuccess)
+        private Action<User> _setUser;
+
+
+        public AuthViewModel(Action signInSuccess, Action<User> setUser)
         {
             _signInSuccess = signInSuccess;
+            _setUser = setUser;
             Navigate(AuthNavigatableTypes.SignIn);
         }
         
@@ -17,7 +21,7 @@ namespace WalletApp.WalletAppWPF.Authentication
         {
             if (type == AuthNavigatableTypes.SignIn)
             {
-                return new SignInViewModel(() => Navigate(AuthNavigatableTypes.SignUp), _signInSuccess);
+                return new SignInViewModel(() => Navigate(AuthNavigatableTypes.SignUp), _signInSuccess, _setUser);
             }
             else
             {

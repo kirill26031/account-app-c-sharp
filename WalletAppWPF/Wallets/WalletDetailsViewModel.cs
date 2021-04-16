@@ -8,24 +8,30 @@ using Prism.Mvvm;
 using WalletApp.WalletAppWPF.Models.Categories;
 using Prism.Commands;
 using WalletApp.WalletAppWPF.Services;
+using WalletApp.WalletAppWPF.Navigation;
+using WalletApp.WalletAppWPF.Models.Users;
 
 namespace WalletApp.WalletAppWPF.Wallets
 {
-    public class WalletDetailsViewModel : BindableBase
+    public class WalletDetailsViewModel : BindableBase, INavigatable<WalletNavigatableTypes>
     {
         private Wallet _wallet;
-        private WalletService _service;
+        private Action _shouldUpdate;
+        private WalletService _walletService;
+        private AuthenticationService _userService;
+        private string _name;
+        private string _description;
+        private User _user;
 
         public string Name
         {
             get
             {
-                return _wallet.Name;
+                return _name;
             }
             set
             {
-                _wallet.Name = value;
-                RaisePropertyChanged(nameof(DisplayName));
+                _name = value;
             }
         }
 
@@ -33,12 +39,11 @@ namespace WalletApp.WalletAppWPF.Wallets
         {
             get
             {
-                return _wallet.Description;
+                return _description;
             }
             set
             {
-                _wallet.Description = value;
-                RaisePropertyChanged(nameof(DisplayName));
+                _description = value;
             }
         }
 
@@ -78,22 +83,44 @@ namespace WalletApp.WalletAppWPF.Wallets
         public DelegateCommand AddWalletCommand { get; }
         public DelegateCommand DeleteWalletCommand { get; }
 
-        public WalletDetailsViewModel(Wallet wallet)
+        public WalletNavigatableTypes Type => WalletNavigatableTypes.Wallets;
+
+        public WalletDetailsViewModel(Wallet wallet, Action shouldUpdate, User user)
         {
             _wallet = wallet;
-            _service = new WalletService();
+            _shouldUpdate = shouldUpdate;
+            _userService = new AuthenticationService();
+            _walletService = new WalletService();
             ConfirmEditCommand = new DelegateCommand(ConfirmEdit);
             DeleteWalletCommand = new DelegateCommand(DeleteWallet);
+            _name = _wallet.Name;
+            _description = _wallet.Description;
+            _user = user;
         }
 
         private async void ConfirmEdit()
         {
-            _service.AddOrUpdate(_wallet);
+            _wallet.Name = _name;
+            _wallet.Description = _description;
+            RaisePropertyChanged(nameof(DisplayName));
+            await _walletService.AddOrUpdate(_wallet);
         }
 
         private async void DeleteWallet()
         {
-            _service.Delete(_wallet);
+            var walletsLeft = await _walletService.Delete(_wallet);
+            _user.DeleteWallet(_wallet);
+            await _userService.UpdateUser(_user);
+            _shouldUpdate.Invoke();
+
+            //RaisePropertyChanged("Wallets");
+            //RaisePropertyChanged("CurrentWallet");
+        }
+
+        public void ClearSensitiveData()
+        {
+            _name = _wallet.Name;
+            _description = _wallet.Description;
         }
     }
 }

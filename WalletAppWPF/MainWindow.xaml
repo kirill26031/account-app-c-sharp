@@ -11,8 +11,8 @@
         <DataTemplate DataType="{ x:Type authentication:AuthViewModel}">
             <authentication:AuthView></authentication:AuthView>
         </DataTemplate>
-        <DataTemplate DataType="{ x:Type wallets:WalletsViewModel}">
-            <wallets:WalletsView></wallets:WalletsView>
+        <DataTemplate DataType="{ x:Type wallets:WalletViewModel}">
+            <wallets:WalletView></wallets:WalletView>
         </DataTemplate>
     </Window.Resources>
     <ContentControl Content="{Binding CurrentViewModel}"></ContentControl>

@@ -36,5 +36,10 @@ namespace WalletApp.WalletAppWPF.Navigation
         }
 
         protected abstract INavigatable<TObject> CreateViewModel(TObject type);
+
+        public void DeleteAllOtherViewModels()
+        {
+            _viewModels = new List<INavigatable<TObject>>() { CurrentViewModel };
+        }
     }
 }

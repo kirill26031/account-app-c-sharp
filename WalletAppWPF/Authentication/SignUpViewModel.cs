@@ -144,20 +144,7 @@ namespace WalletApp.WalletAppWPF.Authentication
             CloseCommand = new DelegateCommand(() => Environment.Exit(0));
             _gotoSignIn = gotoSignIn;
             SignInCommand = new DelegateCommand(_gotoSignIn);
-            _categories = InitializeCategories();
-        }
-
-        public List<Category> InitializeCategories()
-        {
-            _categories = new List<Category>
-            {
-                new Category("Sport", "For sport related goods", "awesomeicons.com/12", "#ebeb34"),
-                new Category("Games", "Games category", "", "#dbdb7f"),
-                new Category("Education", "For online courses", "awesomeicons.com/13", "#58e8d7"),
-                new Category("Gambling", "For gambling", "awesomeicons.com/14", "#eb1738"),
-                new Category("Food", "For food", "awesomeicons.com/15", "#223001")
-            };
-            return _categories;
+            _categories = WalletService.AllCategories();
         }
 
         private async void SignUp()
@@ -182,7 +169,7 @@ namespace WalletApp.WalletAppWPF.Authentication
         {
             return !String.IsNullOrWhiteSpace(Login) && !String.IsNullOrWhiteSpace(Password)
                 && !String.IsNullOrWhiteSpace(FirstName) && !String.IsNullOrWhiteSpace(LastName)
-                && !String.IsNullOrWhiteSpace(Email);
+                && !String.IsNullOrWhiteSpace(Email) && _regUser.Categories != null && _regUser.Categories.Count != 0;
         }
 
         public void ClearSensitiveData()

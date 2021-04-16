@@ -63,9 +63,9 @@ namespace WalletApp.WalletAppWPF.Models.Wallets
         }
 
         [JsonConstructor]
-        public Wallet(string name, decimal balance, Currency.currencyType currency, List<Category> categories, Guid ownerId, string description)
+        public Wallet(Guid guid, string name, decimal balance, Currency.currencyType currency, List<Category> categories, Guid ownerId, string description)
         {
-            Guid = Guid.NewGuid();
+            Guid = guid;
             Name = name;
             Balance = balance;
             Currency = currency;
