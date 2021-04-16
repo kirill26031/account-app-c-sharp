@@ -15,6 +15,7 @@ namespace WalletApp.WalletAppWPF.Wallets
     class AddWalletViewModel : INavigatable<WalletNavigatableTypes>
     {
         private Action _goto;
+        private Action _shouldUpdate;
         private WalletService _walletService;
         private List<string> _allCurrencies;
         private List<Category> _categories;
@@ -26,14 +27,15 @@ namespace WalletApp.WalletAppWPF.Wallets
         private string _description;
         private Guid _ownerId;
 
-        public AddWalletViewModel(Action goTo, Guid ownerId)
+        public AddWalletViewModel(Action goTo, Guid ownerId, Action shouldUpdate)
         {
             _goto = goTo;
+            _shouldUpdate = shouldUpdate;
             _walletService = new WalletService();
             _allCurrencies = (from currency in Models.Common.Currency.AllCurrencies() select Models.Common.Currency.PrintCurrency(currency)).ToList();
             _categories = WalletService.AllCategories();
             _confirmCreationCommand = new DelegateCommand(Confirm, CanConfirm);
-            _goBackCommand = new DelegateCommand(_goto);
+            _goBackCommand = new DelegateCommand(() => _goto.Invoke());
             _currency = Models.Common.Currency.currencyType.UAH;
             _balance = 0;
             _ownerId = ownerId;
@@ -104,8 +106,10 @@ namespace WalletApp.WalletAppWPF.Wallets
 
         public async void Confirm()
         {
-            Wallet wallet = new Wallet(Name, Balance, _ownerId, Description);
+            Wallet wallet = new Wallet(Guid.NewGuid(), Name, Balance, _currency, _categories, _ownerId, Description);
             await _walletService.AddOrUpdate(wallet);
+            _shouldUpdate.Invoke();
+            _goto.Invoke();
         }
 
         public bool CanConfirm()

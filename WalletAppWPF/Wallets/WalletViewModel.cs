@@ -31,7 +31,7 @@ namespace WalletApp.WalletAppWPF.Wallets
         {
             _currentViewModel = ( type == WalletNavigatableTypes.Wallets ? 
                 new WalletsViewModel(() => Navigate(WalletNavigatableTypes.AddWallet), _ownerId) : 
-                new AddWalletViewModel(() => Navigate(WalletNavigatableTypes.Wallets), _ownerId));
+                new AddWalletViewModel(() => Navigate(WalletNavigatableTypes.Wallets), _ownerId, new Action(DeleteAllOtherViewModels)));
             return _currentViewModel;
         }
 

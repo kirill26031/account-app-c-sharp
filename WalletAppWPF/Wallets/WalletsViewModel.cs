@@ -34,6 +34,10 @@ namespace WalletApp.WalletAppWPF.Wallets
         
         public DelegateCommand AddWalletCommand { get; }
 
+        public Action ShouldUpdate => new Action(async () => {
+            await FillWallets();
+            CurrentWallet = null;
+        });
         public WalletsViewModel(Action goTo, Guid _ownerId)
         {
             _goto = goTo;
@@ -43,12 +47,12 @@ namespace WalletApp.WalletAppWPF.Wallets
             FillWallets();
         }
 
-        private async void  FillWallets()
+        private async Task FillWallets()
         {
-
-            foreach(var wallet in await _service.GetWallets())
+            Wallets.Clear();
+            foreach (var wallet in await _service.GetWallets())
             {
-                Wallets.Add(new WalletDetailsViewModel(wallet, Wallets));
+                Wallets.Add(new WalletDetailsViewModel(wallet, ShouldUpdate));
             }
         }
 

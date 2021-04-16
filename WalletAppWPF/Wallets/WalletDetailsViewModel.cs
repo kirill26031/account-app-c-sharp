@@ -15,7 +15,7 @@ namespace WalletApp.WalletAppWPF.Wallets
     public class WalletDetailsViewModel : BindableBase, INavigatable<WalletNavigatableTypes>
     {
         private Wallet _wallet;
-        private System.Collections.ObjectModel.ObservableCollection<WalletDetailsViewModel> _wallets;
+        private Action _shouldUpdate;
         private WalletService _service;
         private string _name;
         private string _description;
@@ -82,10 +82,10 @@ namespace WalletApp.WalletAppWPF.Wallets
 
         public WalletNavigatableTypes Type => WalletNavigatableTypes.Wallets;
 
-        public WalletDetailsViewModel(Wallet wallet, System.Collections.ObjectModel.ObservableCollection<WalletDetailsViewModel> wallets)
+        public WalletDetailsViewModel(Wallet wallet, Action shouldUpdate)
         {
             _wallet = wallet;
-            _wallets = wallets;
+            _shouldUpdate = shouldUpdate;
             _service = new WalletService();
             ConfirmEditCommand = new DelegateCommand(ConfirmEdit);
             DeleteWalletCommand = new DelegateCommand(DeleteWallet);
@@ -98,17 +98,16 @@ namespace WalletApp.WalletAppWPF.Wallets
             _wallet.Name = _name;
             _wallet.Description = _description;
             RaisePropertyChanged(nameof(DisplayName));
-            _service.AddOrUpdate(_wallet);
+            await _service.AddOrUpdate(_wallet);
         }
 
         private async void DeleteWallet()
         {
             var walletsLeft = await _service.Delete(_wallet);
-            _wallets.Remove(this);
+            _shouldUpdate.Invoke();
 
-            //RaisePropertyChanged(nameof(DisplayName));
-            RaisePropertyChanged("Wallets");
-            RaisePropertyChanged("CurrentWallet");
+            //RaisePropertyChanged("Wallets");
+            //RaisePropertyChanged("CurrentWallet");
         }
 
         public void ClearSensitiveData()

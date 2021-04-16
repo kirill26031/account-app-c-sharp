@@ -28,7 +28,7 @@
         </StackPanel>
         <StackPanel Grid.Row="1"  Grid.ColumnSpan="4">
             <TextBlock Margin="10, 10, 10, 0">Balance</TextBlock>
-            <TextBlock MinWidth="300" Margin="10" HorizontalAlignment="Stretch" 
+            <TextBox MinWidth="300" Margin="10" HorizontalAlignment="Stretch" 
                      Text="{Binding Balance}" />
         </StackPanel>
         <StackPanel Grid.Row="2"  Grid.ColumnSpan="4">
@@ -60,8 +60,8 @@
                      Text="{Binding Description, UpdateSourceTrigger=PropertyChanged}"/>
         </StackPanel>
         <Button Name="ConfirmWalletCreation" Grid.Column="0" Margin="10,10,10,10" 
-                Command="{Binding ConfirmWalletCreation}" Grid.ColumnSpan="2" Grid.Row="6">Confirm wallet creation</Button>
+                Command="{Binding ConfirmCreationCommand}" Grid.ColumnSpan="2" Grid.Row="6">Confirm wallet creation</Button>
         <Button Name="GoBack" Grid.Column="2" Margin="10,10,10,10" 
-                Command="{Binding GoToWallets}" Grid.ColumnSpan="2" Grid.Row="6">Go back</Button>
+                Command="{Binding GoBackCommand}" Grid.ColumnSpan="2" Grid.Row="6">Go back</Button>
     </Grid>
 </UserControl>
