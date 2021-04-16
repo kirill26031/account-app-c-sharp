@@ -28,22 +28,14 @@
         </StackPanel>
         <StackPanel Grid.Row="1"  Grid.ColumnSpan="4">
             <TextBlock Margin="10, 10, 10, 0">Balance</TextBlock>
-            <TextBox MinWidth="300" Margin="10" HorizontalAlignment="Stretch" 
+            <TextBox Name="Balance" PreviewTextInput="NumberValidationTextBox" MinWidth="300" Margin="10" HorizontalAlignment="Stretch" 
                      Text="{Binding Balance}" />
         </StackPanel>
         <StackPanel Grid.Row="2"  Grid.ColumnSpan="4">
             <TextBlock Margin="10, 10, 10, 0">Currency</TextBlock>
-            <!--<ListBox x:Name="Currencies" MinWidth="300" Margin="10" 
-                     HorizontalAlignment="Stretch" 
-                     ItemsSource="{Binding AllCurrencies}">
-                <ListBox.ItemTemplate>
-                    <DataTemplate>
-                        
-                    </DataTemplate>
-                </ListBox.ItemTemplate>
-            </ListBox>-->
             <RadioButton Content="UAH" Name="rbUAH" 
                          Command="{Binding RadioBtnChanged}"
+                         IsChecked="True"
                          CommandParameter="{Binding ElementName=rbUAH, Path=Content}"/>
             <RadioButton Content="USD" Name="rbUSD"
                          Command="{Binding RadioBtnChanged}"

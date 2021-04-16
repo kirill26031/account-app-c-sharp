@@ -33,10 +33,8 @@ namespace WalletApp.WalletAppWPF.Wallets
             _shouldUpdate = shouldUpdate;
             _walletService = new WalletService();
             _allCurrencies = (from currency in Models.Common.Currency.AllCurrencies() select Models.Common.Currency.PrintCurrency(currency)).ToList();
-            _categories = WalletService.AllCategories();
             _confirmCreationCommand = new DelegateCommand(Confirm, CanConfirm);
             _goBackCommand = new DelegateCommand(() => _goto.Invoke());
-            _currency = Models.Common.Currency.currencyType.UAH;
             _balance = 0;
             _ownerId = ownerId;
         } 
@@ -63,6 +61,7 @@ namespace WalletApp.WalletAppWPF.Wallets
             get => _balance;
             set
             {
+                
                 _balance = value;
                 ConfirmCreationCommand.RaiseCanExecuteChanged();
             }
@@ -83,12 +82,17 @@ namespace WalletApp.WalletAppWPF.Wallets
           
         public List<Category> Categories
         {
-            get => _categories;
+            get => _categories == null ? AllCategories : _categories;
             set
             {
                 _categories = value;
                 ConfirmCreationCommand.RaiseCanExecuteChanged();
             }
+        }
+
+        public List<Category> AllCategories
+        {
+            get => WalletService.AllCategories();
         }
 
         public string Description
@@ -121,7 +125,8 @@ namespace WalletApp.WalletAppWPF.Wallets
 
         public bool CanConfirm()
         {
-            return true;
+            return Balance > 0 && !String.IsNullOrWhiteSpace(Name) && !String.IsNullOrWhiteSpace(Description) && _categories != null &&
+                _categories.Count != 0;
         }
 
         public void ClearSensitiveData()
