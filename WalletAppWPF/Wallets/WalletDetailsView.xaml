@@ -37,21 +37,19 @@
         </StackPanel>
         <StackPanel Grid.Row="3"  Grid.ColumnSpan="4">
             <TextBlock Margin="10, 10, 10, 0">Categories</TextBlock>
-            <ListBox MinWidth="300" Margin="10" HorizontalAlignment="Stretch" Height="50" ItemsSource="{Binding Categories}" SelectionMode="Multiple">
+            <ListBox ItemsSource="{Binding Categories}" MinWidth="300" Margin="10" HorizontalAlignment="Stretch" MinHeight="50">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
-                        <!--Checked="Checked_CategoryCheckBox"-->
-                        <CheckBox x:Name="CategoryCheckBox" Content="{Binding Name}" Background="{Binding Color}" 
-                                  
-                                  IsChecked="{Binding RelativeSource={RelativeSource AncestorType={x:Type ListBoxItem}}, Path=IsSelected}"></CheckBox>
+                        <TextBlock Text="{Binding Name}" Background="{Binding Color}"></TextBlock>
                     </DataTemplate>
                 </ListBox.ItemTemplate>
             </ListBox>
         </StackPanel>
         <StackPanel Grid.Row="4"  Grid.ColumnSpan="4">
             <TextBlock Margin="10, 10, 10, 0">Description</TextBlock>
-            <TextBox MinWidth="300" Margin="10" HorizontalAlignment="Stretch" Height="70"
-                     Text="{Binding Description, UpdateSourceTrigger=PropertyChanged}"/>
+            <TextBox MinWidth="300" Margin="10" HorizontalAlignment="Stretch" MinHeight="70"
+                     Text="{Binding Description, UpdateSourceTrigger=PropertyChanged}"
+                     MaxHeight="200" TextWrapping="Wrap"  AcceptsReturn="True"  VerticalScrollBarVisibility="Visible"/>
         </StackPanel>
         <Button Name="ViewTransactions" Grid.Column="0" Margin="10,10,10,10" 
                 Command="{Binding ViewTransactionsCommand}" Grid.Row="6">View Transactions</Button>
