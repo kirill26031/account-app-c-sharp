@@ -17,10 +17,10 @@ namespace WalletApp.WalletAppWPF.Models.Wallets
         public Guid Guid { get; }
         private string _name;
         private decimal _balance;
-        public Currency.currencyType _currency;
+        private Currency.currencyType _currency;
         
-        public List<Transaction> _transactions = new List<Transaction>();
-        public List<Category> _categories = new List<Category>();
+        private List<Transaction> _transactions = new List<Transaction>();
+        private List<Category> _categories = new List<Category>();
         Guid _ownerId;
         string _description;
 
@@ -54,15 +54,14 @@ namespace WalletApp.WalletAppWPF.Models.Wallets
             get => _currency;
             set => _currency = value;
         }
-        [JsonIgnore]
-        List<Transaction> Transactions
+        public List<Transaction> Transactions
         {
             // They have private accessibility level
             get => _transactions;
             set => _transactions = value;
         }
 
-        [JsonConstructor]
+        
         public Wallet(Guid guid, string name, decimal balance, Currency.currencyType currency, List<Category> categories, Guid ownerId, string description)
         {
             Guid = guid;
@@ -70,14 +69,15 @@ namespace WalletApp.WalletAppWPF.Models.Wallets
             Balance = balance;
             Currency = currency;
             Categories = new List<Category>(categories);
+            Transactions = new List<Transaction>();
             OwnerId = ownerId;
             Description = description;
         }
 
-        
-        public Wallet(string name, decimal balance, Currency.currencyType currency, List<Category> categories, List<Transaction> transactions, Guid ownerId, string description)
+        [JsonConstructor]
+        public Wallet(Guid guid, string name, decimal balance, Currency.currencyType currency, List<Category> categories, List<Transaction> transactions, Guid ownerId, string description)
         {
-            Guid = Guid.NewGuid();
+            Guid = guid;
             Name = name;
             Balance = balance;
             Currency = currency;
@@ -167,7 +167,7 @@ namespace WalletApp.WalletAppWPF.Models.Wallets
             decimal sum = 0;
             foreach (Transaction transaction in Transactions)
             {
-                if (DateTimeOffset.Compare(DateTimeOffset.Now.AddMonths(-1), transaction.dateTime) <= 0)
+                if (DateTimeOffset.Compare(DateTimeOffset.Now.AddMonths(-1), transaction.DateTime) <= 0)
                 {
                     var expense = transaction.Sum;
                     if (income)

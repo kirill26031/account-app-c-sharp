@@ -9,6 +9,7 @@ using WalletApp.WalletAppWPF.Models.Transactions;
 using WalletApp.WalletAppWPF.Services;
 using WalletAppWPF.Transactions;
 using System.Collections.ObjectModel;
+using WalletApp.WalletAppWPF.Models.Wallets;
 
 namespace WalletApp.WalletAppWPF.Transactions
 {
@@ -16,6 +17,7 @@ namespace WalletApp.WalletAppWPF.Transactions
     {
         private TransactionService _service;
         private TransactionDetailsViewModel _currentTransaction;
+        Wallet _wallet;
         public ObservableCollection<TransactionDetailsViewModel> Transactions { get; set; }
 
         public TransactionDetailsViewModel CurrentTransaction
@@ -31,9 +33,10 @@ namespace WalletApp.WalletAppWPF.Transactions
             }
         }
 
-        public TransactionsViewModel()
+        public TransactionsViewModel(Wallet wallet)
         {
-            _service = new TransactionService();
+            _wallet = wallet;
+            _service = new TransactionService(wallet);
             Transactions = new ObservableCollection<TransactionDetailsViewModel>();
             FillTransactions();
         }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using WalletApp.WalletAppWPF.Models.Common;
 using WalletApp.WalletAppWPF.Models.Categories;
 using DataStorage;
+using System.Text.Json.Serialization;
 
 namespace WalletApp.WalletAppWPF.Models.Transactions
 {
@@ -13,7 +14,6 @@ namespace WalletApp.WalletAppWPF.Models.Transactions
         Category _category;
         Currency.currencyType _currencyType;
         string _description;
-        public DateTimeOffset dateTime { get; set; }
         List<File> _files;
         Guid _creatorId;
 
@@ -38,6 +38,19 @@ namespace WalletApp.WalletAppWPF.Models.Transactions
         public Transaction(decimal sum, Category category, Currency.currencyType currencyType, string description, DateTimeOffset dateTime, List<File> files, Guid creatorId)
         {
             Guid = Guid.NewGuid();
+            Sum = sum;
+            Category = category;
+            CurrencyType = currencyType;
+            Description = description;
+            DateTime = dateTime;
+            Files = new List<File>(files);
+            CreatorId = creatorId;
+        }
+
+        [JsonConstructor]
+        public Transaction(Guid guid, decimal sum, Category category, Currency.currencyType currencyType, string description, DateTimeOffset dateTime, List<File> files, Guid creatorId)
+        {
+            Guid = guid;
             Sum = sum;
             Category = category;
             CurrencyType = currencyType;
@@ -77,7 +90,7 @@ namespace WalletApp.WalletAppWPF.Models.Transactions
         {
             _sum = sum;
             _description = description;
-            this.dateTime = dateTime;
+            DateTime = dateTime;
             _files = new List<File>(files);
             return true;
         }
@@ -86,7 +99,7 @@ namespace WalletApp.WalletAppWPF.Models.Transactions
 
         public override string ToString()
         {
-            return $"Transaction ${Guid.ToString()} used ${Sum.ToString()} of ${_currencyType} at ${dateTime.ToString()}. Description: ${Description}";
+            return $"Transaction ${Guid.ToString()} used ${Sum.ToString()} of ${_currencyType} at ${DateTime.ToString()}. Description: ${Description}";
         }
     }
 }

@@ -31,7 +31,6 @@ namespace WalletApp.WalletAppWPF.Services
 
         public async Task<bool> RegisterUserAsync(RegistrationUser regUser)
         {
-            Thread.Sleep(2000);
             var users = await _storage.GetAllAsync();
             var dbUser = users.FirstOrDefault(user => user.Login == regUser.Login);
             if (dbUser != null)

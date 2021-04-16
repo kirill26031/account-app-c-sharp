@@ -14,9 +14,9 @@ namespace WalletApp.WalletAppWPF.Models.Common
 
     public class File
     {
-        public File(fileType typeOfFile, string fileLocation)
+        public File(fileType fileType, string fileLocation)
         {
-            FileType = typeOfFile;
+            FileType = fileType;
             FileLocation = fileLocation;
         }
         public File(File Other)
