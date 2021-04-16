@@ -9,15 +9,6 @@ namespace WalletApp.WalletAppWPF.Models.Users
 {
     public class User
     {
-        public User(Guid guid, string firstName, string lastName, string email, string login)
-        {
-            Guid = guid;
-            _name = firstName;
-            _surname = lastName;
-            Email = email;
-            Login = login;
-        }
-
         public Guid Guid { get; }
         string _name;
         string _login;
@@ -26,6 +17,25 @@ namespace WalletApp.WalletAppWPF.Models.Users
         List<Wallet> _wallets = new List<Wallet>();
         List<Category> _categories = new List<Category>();
 
+        public User(Guid guid, string firstName, string lastName, string email, string login, List<Category> categories, List<Wallet> wallets)
+        {
+            Guid = guid;
+            _name = firstName;
+            _surname = lastName;
+            Email = email;
+            Login = login;
+            _categories = categories;
+            _wallets = wallets;
+        }
+
+        public User(Guid guid, string firstName, string lastName, string email, string login)
+        {
+            Guid = guid;
+            _name = firstName;
+            _surname = lastName;
+            Email = email;
+            Login = login;
+        }
 
         public string FirstName
         {

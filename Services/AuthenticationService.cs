@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using WalletApp.WalletAppWPF.Models.Users;
 using DataStorage;
+using WalletApp.WalletAppWPF.Models.Categories;
 
 namespace WalletApp.WalletAppWPF.Services
 {
@@ -42,10 +43,27 @@ namespace WalletApp.WalletAppWPF.Services
                 throw new ArgumentException("Last Name length is Invalid");
             if (!IsValidEmail(regUser.Email))
                 throw new ArgumentException("Email is Invalid");
+            if (regUser.Categories.Count == 0)
+                throw new ArgumentException("At least one category must be chosen");
             dbUser = new DBUser(regUser.FirstName, regUser.LastName, regUser.Email,
-                regUser.Login, EncryptPassword(regUser.Password));
+                regUser.Login, EncryptPassword(regUser.Password), regUser.Categories);
             await _storage.AddOrUpdateAsync(dbUser);
             return true;
+        }
+
+        public async Task<User> FindUser(Guid guid)
+        {
+            var users = await _storage.GetAllAsync();
+            var dbUser = users.FirstOrDefault(user => user.Guid == guid);
+            if (dbUser == null) return null;
+            return new User(dbUser.Guid, dbUser.FirstName, dbUser.LastName, dbUser.Email, dbUser.Login, dbUser.Categories, new List<Models.Wallets.Wallet>());
+        }
+
+        public async Task<List<Category>> GetCategoriesForUser(Guid ownerId)
+        {
+            var user = await FindUser(ownerId);
+            if (user == null || user.Categories.Count == 0) return new List<Category>();
+            return user.Categories;
         }
 
         bool IsValidEmail(string email)

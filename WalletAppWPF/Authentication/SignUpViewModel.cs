@@ -169,7 +169,7 @@ namespace WalletApp.WalletAppWPF.Authentication
         {
             return !String.IsNullOrWhiteSpace(Login) && !String.IsNullOrWhiteSpace(Password)
                 && !String.IsNullOrWhiteSpace(FirstName) && !String.IsNullOrWhiteSpace(LastName)
-                && !String.IsNullOrWhiteSpace(Email);
+                && !String.IsNullOrWhiteSpace(Email) && _regUser.Categories != null && _regUser.Categories.Count != 0;
         }
 
         public void ClearSensitiveData()

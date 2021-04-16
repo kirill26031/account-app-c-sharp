@@ -1,4 +1,5 @@
 ﻿using Prism.Commands;
+using Prism.Mvvm;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,13 +13,15 @@ using WalletApp.WalletAppWPF.Services;
 
 namespace WalletApp.WalletAppWPF.Wallets
 {
-    class AddWalletViewModel : INavigatable<WalletNavigatableTypes>
+    class AddWalletViewModel : BindableBase, INavigatable<WalletNavigatableTypes>
     {
         private Action _goto;
         private Action _shouldUpdate;
         private WalletService _walletService;
+        private AuthenticationService _userService;
         private List<string> _allCurrencies;
         private List<Category> _categories;
+        private List<Category> _allCategories;
         private DelegateCommand _confirmCreationCommand;
         private DelegateCommand _goBackCommand;
         private Currency.currencyType _currency;
@@ -32,12 +35,20 @@ namespace WalletApp.WalletAppWPF.Wallets
             _goto = goTo;
             _shouldUpdate = shouldUpdate;
             _walletService = new WalletService();
+            _userService = new AuthenticationService();
             _allCurrencies = (from currency in Models.Common.Currency.AllCurrencies() select Models.Common.Currency.PrintCurrency(currency)).ToList();
             _confirmCreationCommand = new DelegateCommand(Confirm, CanConfirm);
             _goBackCommand = new DelegateCommand(() => _goto.Invoke());
             _balance = 0;
             _ownerId = ownerId;
-        } 
+            _ = FillAllCategories();
+        }
+
+        private async Task FillAllCategories()
+        {
+            _allCategories = await _userService.GetCategoriesForUser(_ownerId);
+            RaisePropertyChanged(nameof(Categories));
+        }
 
         public WalletNavigatableTypes Type => WalletNavigatableTypes.AddWallet;
 
@@ -61,7 +72,6 @@ namespace WalletApp.WalletAppWPF.Wallets
             get => _balance;
             set
             {
-                
                 _balance = value;
                 ConfirmCreationCommand.RaiseCanExecuteChanged();
             }
@@ -82,7 +92,7 @@ namespace WalletApp.WalletAppWPF.Wallets
           
         public List<Category> Categories
         {
-            get => _categories == null ? AllCategories : _categories;
+            get => _categories == null ? _allCategories : _categories;
             set
             {
                 _categories = value;
@@ -92,7 +102,7 @@ namespace WalletApp.WalletAppWPF.Wallets
 
         public List<Category> AllCategories
         {
-            get => WalletService.AllCategories();
+            get => _allCategories;
         }
 
         public string Description

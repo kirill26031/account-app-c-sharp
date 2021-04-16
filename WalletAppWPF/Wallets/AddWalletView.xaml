@@ -31,8 +31,8 @@
             <TextBox Name="Balance" PreviewTextInput="NumberValidationTextBox" MinWidth="300" Margin="10" HorizontalAlignment="Stretch" 
                      Text="{Binding Balance}" />
         </StackPanel>
-        <StackPanel Grid.Row="2"  Grid.ColumnSpan="4">
-            <TextBlock Margin="10, 10, 10, 0">Currency</TextBlock>
+        <StackPanel Grid.Row="2" Margin="10" Grid.ColumnSpan="4">
+            <TextBlock>Currency</TextBlock>
             <RadioButton Content="UAH" Name="rbUAH" 
                          Command="{Binding RadioBtnChanged}"
                          IsChecked="True"

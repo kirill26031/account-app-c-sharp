@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Text.Json.Serialization;
 using DataStorage;
+using WalletApp.WalletAppWPF.Models.Categories;
 
 namespace WalletApp.WalletAppWPF.Models.Users
 {
@@ -15,7 +17,9 @@ namespace WalletApp.WalletAppWPF.Models.Users
         public string Login { get;}
         public string Hash { get;}
 
-        public DBUser(string firstName, string lastName, string email, string login, string hash)
+        public List<Category> Categories { get; }
+
+        public DBUser(string firstName, string lastName, string email, string login, string hash, List<Category> categories)
         {
             Guid = Guid.NewGuid();
             FirstName = firstName;
@@ -23,10 +27,11 @@ namespace WalletApp.WalletAppWPF.Models.Users
             Email = email;
             Login = login;
             Hash = hash;
+            Categories = categories;
         }
 
         [JsonConstructor]
-        public DBUser(Guid guid, string firstName, string lastName, string email, string login, string hash)
+        public DBUser(Guid guid, string firstName, string lastName, string email, string login, string hash, List<Category> categories)
         {
             Guid = guid;
             FirstName = firstName;
@@ -34,6 +39,7 @@ namespace WalletApp.WalletAppWPF.Models.Users
             Email = email;
             Login = login;
             Hash = hash;
+            Categories = categories;
         }
 
     }
