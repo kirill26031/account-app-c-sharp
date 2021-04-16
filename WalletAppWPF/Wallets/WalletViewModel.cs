@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using WalletApp.WalletAppWPF.Navigation;
 
 namespace WalletApp.WalletAppWPF.Wallets
@@ -11,8 +12,11 @@ namespace WalletApp.WalletAppWPF.Wallets
     class WalletViewModel : NavigationBase<WalletNavigatableTypes>, INavigatable<MainNavigatableTypes>
     {
         INavigatable<WalletNavigatableTypes> _currentViewModel;
-        public WalletViewModel()
+        private Guid _ownerId;
+        public WalletViewModel(Guid ownerId)
         {
+            _ownerId = ownerId;
+            MessageBox.Show("User id: "+ownerId);
             Navigate(WalletNavigatableTypes.Wallets);
         }
 
@@ -26,8 +30,8 @@ namespace WalletApp.WalletAppWPF.Wallets
         protected override INavigatable<WalletNavigatableTypes> CreateViewModel(WalletNavigatableTypes type)
         {
             _currentViewModel = ( type == WalletNavigatableTypes.Wallets ? 
-                new WalletsViewModel(() => Navigate(WalletNavigatableTypes.AddWallet)) : 
-                new AddWalletViewModel(() => Navigate(WalletNavigatableTypes.Wallets)));
+                new WalletsViewModel(() => Navigate(WalletNavigatableTypes.AddWallet), _ownerId) : 
+                new AddWalletViewModel(() => Navigate(WalletNavigatableTypes.Wallets), _ownerId));
             return _currentViewModel;
         }
 

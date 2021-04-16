@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using WalletApp.WalletAppWPF.Models.Categories;
 using WalletApp.WalletAppWPF.Models.Common;
+using WalletApp.WalletAppWPF.Models.Wallets;
 using WalletApp.WalletAppWPF.Navigation;
 using WalletApp.WalletAppWPF.Services;
 
@@ -14,27 +15,55 @@ namespace WalletApp.WalletAppWPF.Wallets
     class AddWalletViewModel : INavigatable<WalletNavigatableTypes>
     {
         private Action _goto;
+        private WalletService _walletService;
         private List<string> _allCurrencies;
         private List<Category> _categories;
         private DelegateCommand _confirmCreationCommand;
         private DelegateCommand _goBackCommand;
         private Currency.currencyType _currency;
+        private string _name;
+        private decimal _balance;
+        private string _description;
+        private Guid _ownerId;
 
-        public AddWalletViewModel(Action goTo)
+        public AddWalletViewModel(Action goTo, Guid ownerId)
         {
             _goto = goTo;
+            _walletService = new WalletService();
             _allCurrencies = (from currency in Models.Common.Currency.AllCurrencies() select Models.Common.Currency.PrintCurrency(currency)).ToList();
             _categories = WalletService.AllCategories();
             _confirmCreationCommand = new DelegateCommand(Confirm, CanConfirm);
             _goBackCommand = new DelegateCommand(_goto);
             _currency = Models.Common.Currency.currencyType.UAH;
-        }
+            _balance = 0;
+            _ownerId = ownerId;
+        } 
 
         public WalletNavigatableTypes Type => WalletNavigatableTypes.AddWallet;
 
         public List<string> AllCurrencies
         {
             get => _allCurrencies;
+        }
+
+        public string Name
+        {
+            get => _name;
+            set
+            {
+                _name = value;
+                ConfirmCreationCommand.RaiseCanExecuteChanged();
+            }
+        }
+
+        public decimal Balance
+        {
+            get => _balance;
+            set
+            {
+                _balance = value;
+                ConfirmCreationCommand.RaiseCanExecuteChanged();
+            }
         }
 
         public string Currency
@@ -60,12 +89,23 @@ namespace WalletApp.WalletAppWPF.Wallets
             }
         }
 
+        public string Description
+        {
+            get => _description;
+            set
+            {
+                _description = value;
+                ConfirmCreationCommand.RaiseCanExecuteChanged();
+            }
+        }
+
         public DelegateCommand ConfirmCreationCommand => _confirmCreationCommand;
         public DelegateCommand GoBackCommand => _goBackCommand;
 
-        public void Confirm()
+        public async void Confirm()
         {
-
+            Wallet wallet = new Wallet(Name, Balance, _ownerId, Description);
+            await _walletService.AddOrUpdate(wallet);
         }
 
         public bool CanConfirm()

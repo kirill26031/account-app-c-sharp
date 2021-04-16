@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text.Json.Serialization;
 using DataStorage;
 
 namespace WalletApp.WalletAppWPF.Models.Users
@@ -17,6 +18,17 @@ namespace WalletApp.WalletAppWPF.Models.Users
         public DBUser(string firstName, string lastName, string email, string login, string hash)
         {
             Guid = Guid.NewGuid();
+            FirstName = firstName;
+            LastName = lastName;
+            Email = email;
+            Login = login;
+            Hash = hash;
+        }
+
+        [JsonConstructor]
+        public DBUser(Guid guid, string firstName, string lastName, string email, string login, string hash)
+        {
+            Guid = guid;
             FirstName = firstName;
             LastName = lastName;
             Email = email;

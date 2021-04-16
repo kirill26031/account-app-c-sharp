@@ -25,7 +25,7 @@ namespace WalletApp.WalletAppWPF.Services
             return await _storage.GetAllAsync();
         }
 
-        public async void AddOrUpdate(Wallet wallet)
+        public async Task AddOrUpdate(Wallet wallet)
         {
             await _storage.AddOrUpdateAsync(wallet);
         }

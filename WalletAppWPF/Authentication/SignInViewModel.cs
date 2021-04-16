@@ -15,6 +15,7 @@ namespace WalletApp.WalletAppWPF.Authentication
         private AuthenticationUser _authUser = new AuthenticationUser();
         private Action _gotoSignUp;
         private Action _gotoWallets;
+        private Action<Guid> _setUserGUID;
         private bool _isEnabled = true;
 
 
@@ -75,13 +76,14 @@ namespace WalletApp.WalletAppWPF.Authentication
         public DelegateCommand CloseCommand { get; }
         public DelegateCommand SignUpCommand { get; }
 
-        public SignInViewModel(Action gotoSignUp, Action gotoWallets)
+        public SignInViewModel(Action gotoSignUp, Action gotoWallets, Action<Guid> setUserGUID)
         {
             SignInCommand = new DelegateCommand(SignIn, IsSignInEnabled);
             CloseCommand = new DelegateCommand(() => Environment.Exit(0));
             _gotoSignUp = gotoSignUp;
             SignUpCommand = new DelegateCommand(_gotoSignUp);
             _gotoWallets = gotoWallets;
+            _setUserGUID = setUserGUID;
         }
 
         private async void SignIn()
@@ -106,6 +108,7 @@ namespace WalletApp.WalletAppWPF.Authentication
                 {
                     IsEnabled = true;
                 }
+                _setUserGUID.Invoke(user.Guid);
                 MessageBox.Show($"Sign In was successful for user {user.FirstName} {user.LastName}");
                 _gotoWallets.Invoke();
             }

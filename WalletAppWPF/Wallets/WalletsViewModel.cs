@@ -34,7 +34,7 @@ namespace WalletApp.WalletAppWPF.Wallets
         
         public DelegateCommand AddWalletCommand { get; }
 
-        public WalletsViewModel(Action goTo)
+        public WalletsViewModel(Action goTo, Guid _ownerId)
         {
             _goto = goTo;
             _service = new WalletService();
