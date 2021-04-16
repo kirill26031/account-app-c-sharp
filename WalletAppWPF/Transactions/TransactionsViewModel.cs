@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using WalletApp.WalletAppWPF.Navigation;
 using WalletApp.WalletAppWPF.Models.Transactions;
 using WalletApp.WalletAppWPF.Services;
-using WalletAppWPF.Transactions;
+using WalletApp.WalletAppWPF.Transactions;
 using System.Collections.ObjectModel;
 using WalletApp.WalletAppWPF.Models.Wallets;
 

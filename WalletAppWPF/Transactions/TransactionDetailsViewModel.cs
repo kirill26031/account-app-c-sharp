@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using WalletApp.WalletAppWPF.Models.Transactions;
 using WalletApp.WalletAppWPF.Models.Common;
 
-namespace WalletAppWPF.Transactions
+namespace WalletApp.WalletAppWPF.Transactions
 {
     public class TransactionDetailsViewModel : BindableBase
     {

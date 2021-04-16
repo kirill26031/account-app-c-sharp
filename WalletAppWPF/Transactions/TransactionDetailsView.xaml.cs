@@ -13,7 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace WalletAppWPF.Transactions
+namespace WalletApp.WalletAppWPF.Transactions
 {
     /// <summary>
     /// Interaction logic for TransactionDetailsView.xaml
