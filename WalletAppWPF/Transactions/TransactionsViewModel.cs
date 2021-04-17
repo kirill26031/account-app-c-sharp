@@ -51,6 +51,7 @@ namespace WalletApp.WalletAppWPF.Transactions
             _service = new TransactionService(wallet);
             Transactions = new ObservableCollection<TransactionDetailsViewModel>();
             FillTransactions();
+            if (Transactions.Count > 0) CurrentTransaction = Transactions.First();
         }
 
         private void FillTransactions()
@@ -58,7 +59,7 @@ namespace WalletApp.WalletAppWPF.Transactions
             Transactions = new ObservableCollection<TransactionDetailsViewModel>();
             foreach (var transaction in _wallet.Transactions)
             {
-                Transactions.Add(new TransactionDetailsViewModel(transaction));
+                Transactions.Add(new TransactionDetailsViewModel(transaction, _wallet, _goToAddingTransaction, _goToWallets, new Action<Wallet>(UpdateWallet)));
             }
         }
 
@@ -67,6 +68,22 @@ namespace WalletApp.WalletAppWPF.Transactions
         public void ClearSensitiveData()
         {
 
+        }
+
+        public void UpdateWallet(Wallet wallet)
+        {
+            _wallet = wallet;
+            Guid currentGuid = CurrentTransaction.Transaction.Guid;
+            FillTransactions();
+            foreach(TransactionDetailsViewModel tr in Transactions)
+            {
+                if(tr.Transaction.Guid == currentGuid)
+                {
+                    CurrentTransaction = tr;
+                    break;
+                }
+            }
+            RaisePropertyChanged(nameof(Transactions));
         }
     }
 }

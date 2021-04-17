@@ -5,6 +5,9 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:WalletApp.WalletAppWPF.Transactions"
              mc:Ignorable="d" 
+             Loaded="Window_Loaded"
+             DataContextChanged="DataContextUpdated"
+             
              d:DesignHeight="450" d:DesignWidth="800" Background="Gray">
     <Grid>
         <Grid.RowDefinitions>
@@ -12,38 +15,44 @@
             <RowDefinition Height="Auto"></RowDefinition>
             <RowDefinition Height="Auto"></RowDefinition>
             <RowDefinition Height="Auto"></RowDefinition>
-            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="50"></RowDefinition>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition></ColumnDefinition>
             <ColumnDefinition></ColumnDefinition>
-            <ColumnDefinition></ColumnDefinition>
-            <ColumnDefinition></ColumnDefinition>
         </Grid.ColumnDefinitions>
-        <StackPanel Grid.Row="0" Grid.ColumnSpan="4">
+        <StackPanel Grid.Row="0" Grid.ColumnSpan="2">
             <TextBlock Margin="10, 10, 10, 0">Transaction Sum</TextBlock>
-            <TextBox MinWidth="300" Margin="10" HorizontalAlignment="Stretch" 
-                     Text="{Binding Sum, UpdateSourceTrigger=PropertyChanged}"></TextBox>
+            <TextBox Name="Sum" MinWidth="300" Margin="10" HorizontalAlignment="Stretch" 
+                     PreviewTextInput="NumberValidationTextBox" Text="{Binding Sum, UpdateSourceTrigger=PropertyChanged}"></TextBox>
         </StackPanel>
-        <StackPanel Grid.Row="1"  Grid.ColumnSpan="4">
-            <TextBlock Margin="10, 10, 10, 0">Currency</TextBlock>
-            <TextBlock Text="{Binding Currency}" MinWidth="300" Margin="10" HorizontalAlignment="Stretch" Height="30"/>
+        <StackPanel Margin="10" Grid.Row="1"  Grid.ColumnSpan="3">
+            <TextBlock>Currency</TextBlock>
+            <RadioButton Content="UAH" 
+                         IsChecked="{Binding IsUAHChecked}"/>
+            <RadioButton Content="USD" 
+                         IsChecked="{Binding IsUSDChecked}"/>
         </StackPanel>
-        <StackPanel Grid.Row="2"  Grid.ColumnSpan="4">
+        <StackPanel Grid.Row="2"  Grid.ColumnSpan="2">
             <TextBlock Margin="10, 10, 10, 0">Category</TextBlock>
-            <TextBlock Text="{Binding Category}" MinWidth="300" Margin="10" HorizontalAlignment="Stretch" Height="17"/>
+            <ListBox x:Name="CategoriesListBox" ItemsSource="{Binding Categories}" MinWidth="300" Margin="10" HorizontalAlignment="Stretch" MinHeight="50">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <CheckBox Content="{Binding Name}" Background="{Binding Color}" Checked="Checked_CategoryCheckBox" 
+                                  IsChecked="{Binding RelativeSource={RelativeSource AncestorType={x:Type ListBoxItem}}, Path=IsSelected}"/>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
         </StackPanel>
-        <StackPanel Grid.Row="3"  Grid.ColumnSpan="4">
+        <StackPanel Grid.Row="3"  Grid.ColumnSpan="2">
             <TextBlock Margin="10, 10, 10, 0">Description</TextBlock>
             <TextBox MinWidth="300" Margin="10" HorizontalAlignment="Stretch" Height="70"
                      Text="{Binding Description, UpdateSourceTrigger=PropertyChanged}"/>
         </StackPanel>
 
-        <Button Name="ViewTransactions" Grid.Column="0" Margin="10,10,10,10" 
-                Command="{Binding ViewTransactionsCommand}" Grid.Row="4">Back to Wallets</Button>
-        <Button Name="EditWallet" Grid.Column="1" Margin="10,10,10,10" 
-                Command="{Binding ViewTransactionsCommand}" Grid.Row="4">Save changes</Button>
-        <Button Name="DeleteWallet" Grid.Column="2" Margin="10,10,10,10" 
-                Command="{Binding ViewTransactionsCommand}" Grid.Row="4">Delete Transaction</Button>
+        <Button Name="EditWallet" Grid.Column="0" Margin="10,10,10,10" 
+                Command="{Binding SaveEditCommand}" Grid.Row="4">Save changes</Button>
+        <Button Name="DeleteWallet" Grid.Column="1" Margin="10,10,10,10" 
+                Command="{Binding DeleteTransactions}" Grid.Row="4">Delete Transaction</Button>
     </Grid>
 </UserControl>

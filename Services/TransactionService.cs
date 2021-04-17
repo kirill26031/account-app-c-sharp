@@ -11,25 +11,31 @@ namespace WalletApp.WalletAppWPF.Services
 {
     public class TransactionService
     {
-        Wallet _wallet;
+        public Wallet _wallet;
 
         public TransactionService(Wallet wallet)
         {
             _wallet = wallet;
         }
 
-        private FileDataStorage<Transaction> _transactionStorage = new FileDataStorage<Transaction>();
+        private WalletService _walletService = new WalletService();
 
-        private FileDataStorage<Wallet> _walletStorage = new FileDataStorage<Wallet>();
+        //public async Task<List<Transaction>> GetTransactions()
+        //{
+        //    return await _transactionStorage.GetAllAsync();
+        //}
 
-        public async Task<List<Transaction>> GetTransactions()
+        public async Task<Wallet> Add(Transaction transaction)
         {
-            return await _transactionStorage.GetAllAsync();
+            _wallet.AddTransaction(transaction.Sum, transaction.Category, transaction.Description, transaction.DateTime, transaction.Files, transaction.CreatorId);
+            await _walletService.AddOrUpdate(_wallet);
+            return _wallet;
         }
-
-        public async Task AddOrUpdate(Transaction transaction)
+        public async Task<Wallet> Update(Transaction t)
         {
-            await _transactionStorage.AddOrUpdateAsync(transaction);
+            _wallet.UpdateTransaction(t.CreatorId, t.Guid, t.Sum, t.Description, t.DateTime, t.Files);
+            await _walletService.AddOrUpdate(_wallet);
+            return _wallet;
         }
     }
 }

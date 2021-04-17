@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -12,6 +13,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using WalletApp.WalletAppWPF.Models.Categories;
 
 namespace WalletApp.WalletAppWPF.Transactions
 {
@@ -20,9 +22,46 @@ namespace WalletApp.WalletAppWPF.Transactions
     /// </summary>
     public partial class TransactionDetailsView : UserControl
     {
+        private bool IsLoaded { get; set; }
         public TransactionDetailsView()
         {
+            IsLoaded = false;
             InitializeComponent();
+        }
+
+        void Window_Loaded(object sender, RoutedEventArgs e) {
+            IsLoaded = true;
+            SetCategory();
+        }
+
+        void DataContextUpdated(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            if (IsLoaded)
+            {
+                SetCategory();
+            }
+        }
+
+        private void SetCategory()
+        {
+            int index = ((TransactionDetailsViewModel)DataContext).Categories.FindIndex(
+                    cat => cat.Name == ((TransactionDetailsViewModel)DataContext).Transaction.Category.Name);
+            CategoriesListBox.SelectedItem = CategoriesListBox.Items[index];
+        }
+
+        private void Checked_CategoryCheckBox(object sender, System.EventArgs e)
+        {
+            ((TransactionDetailsViewModel)DataContext).Categories = 
+                new() { (Category)CategoriesListBox.SelectedItem };
+        }
+
+        private void NumberValidationTextBox(object sender, TextCompositionEventArgs e)
+        {
+            Regex regex = new Regex("[0-9]+(?:\\.[0-9]*)?");
+            var possibleNext = Sum.Text + e.Text;
+            e.Handled = !(regex.IsMatch(possibleNext) &&
+                regex.Match(possibleNext).Value.Count<char>() == possibleNext.Length &&
+                regex.Matches(possibleNext).Count == 1);
         }
     }
 }

@@ -54,7 +54,7 @@
         <Button Name="ViewTransactions" Grid.Column="0" Margin="10,10,10,10" 
                 Command="{Binding ViewTransactionsCommand}" Grid.Row="6">Transactions</Button>
         <Button Name="Confirm_Editing" Grid.Column="1" Margin="10,10,10,10" 
-                Command="{Binding ConfirmEditCommand}" Grid.Row="6">Edit Wallet</Button>
+                Command="{Binding ConfirmEditCommand}" Grid.Row="6">Save changes</Button>
         <Button Name="DeleteWallet" Grid.Column="2" Margin="10,10,10,10" 
                 Command="{Binding DeleteWalletCommand}" Grid.Row="6">Delete Wallet</Button>
     </Grid>
