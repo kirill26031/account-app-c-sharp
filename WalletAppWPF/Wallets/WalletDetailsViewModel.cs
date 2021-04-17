@@ -82,7 +82,7 @@ namespace WalletApp.WalletAppWPF.Wallets
 
         public DelegateCommand ViewTransactionsCommand => new DelegateCommand(() => _goToTransactions(_wallet));
 
-        public DelegateCommand ConfirmEditCommand        {            get;        }
+        public DelegateCommand ConfirmEditCommand { get; }
         public DelegateCommand AddWalletCommand { get; }
         public DelegateCommand DeleteWalletCommand { get; }
 

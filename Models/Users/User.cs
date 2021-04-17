@@ -112,6 +112,12 @@ namespace WalletApp.WalletAppWPF.Models.Users
             return wallet.BalanceChangesLastMonth(false);
         }
 
+        public void UpdateWallet(Wallet wallet)
+        {
+            DeleteWallet(wallet);
+            AddWallet(wallet);
+        }
+
         public decimal IncomeForLastMonth(Wallet wallet)
         {
             if (!Wallets.Contains(wallet))

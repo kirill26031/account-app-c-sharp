@@ -50,6 +50,7 @@ namespace WalletApp.WalletAppWPF.Wallets
         private void _goToTransactions(Wallet wallet)
         {
             _currentWallet = wallet;
+            DeleteAllOtherViewModels();
             Navigate(WalletNavigatableTypes.Transactions);
         }
     }

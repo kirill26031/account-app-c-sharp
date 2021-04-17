@@ -34,6 +34,11 @@ namespace WalletApp.WalletAppWPF.Transactions
             SetCategory();
         }
 
+        void Window_Unloaded(object sender, RoutedEventArgs e)
+        {
+            IsLoaded = false;
+        }
+
         void DataContextUpdated(object sender, DependencyPropertyChangedEventArgs e)
         {
             if (IsLoaded)

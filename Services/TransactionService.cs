@@ -37,5 +37,12 @@ namespace WalletApp.WalletAppWPF.Services
             await _walletService.AddOrUpdate(_wallet);
             return _wallet;
         }
+
+        public async Task<Wallet> Delete(Transaction transaction)
+        {
+            _wallet.DeleteTransaction(_wallet.OwnerId, transaction.Guid);
+            await _walletService.AddOrUpdate(_wallet);
+            return _wallet;
+        }
     }
 }

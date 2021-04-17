@@ -6,6 +6,7 @@
              xmlns:local="clr-namespace:WalletApp.WalletAppWPF.Transactions"
              mc:Ignorable="d" 
              Loaded="Window_Loaded"
+             Unloaded="Window_Unloaded"
              DataContextChanged="DataContextUpdated"
              
              d:DesignHeight="450" d:DesignWidth="800" Background="Gray">
@@ -53,6 +54,6 @@
         <Button Name="EditWallet" Grid.Column="0" Margin="10,10,10,10" 
                 Command="{Binding SaveEditCommand}" Grid.Row="4">Save changes</Button>
         <Button Name="DeleteWallet" Grid.Column="1" Margin="10,10,10,10" 
-                Command="{Binding DeleteTransactions}" Grid.Row="4">Delete Transaction</Button>
+                Command="{Binding DeleteTransactionCommand}" Grid.Row="4">Delete Transaction</Button>
     </Grid>
 </UserControl>

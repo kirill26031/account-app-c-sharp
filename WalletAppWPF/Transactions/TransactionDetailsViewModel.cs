@@ -10,6 +10,7 @@ using Prism.Commands;
 using WalletApp.WalletAppWPF.Models.Categories;
 using WalletApp.WalletAppWPF.Models.Wallets;
 using WalletApp.WalletAppWPF.Services;
+using WalletApp.WalletAppWPF.Models.Users;
 
 namespace WalletApp.WalletAppWPF.Transactions
 {
@@ -17,11 +18,13 @@ namespace WalletApp.WalletAppWPF.Transactions
     {
         private Transaction _transaction;
         private readonly Wallet _wallet;
+        private User _user;
         private readonly Action<Wallet> _update;
         private List<Category> _categories;
         private List<Category> _allCategories;
         private Currency.currencyType _currency;
         private TransactionService _transactionService;
+        private AuthenticationService _userService;
 
         public string Description { get; set; }
         public decimal Sum { get; set; }
@@ -51,21 +54,39 @@ namespace WalletApp.WalletAppWPF.Transactions
             }
         }
 
-        public TransactionDetailsViewModel(Transaction transaction, Wallet wallet, Action goToAddingTransaction, Action goToWallets, Action<Wallet> update)
+        public bool IsUAHChecked
+        {
+            get => _currency == Models.Common.Currency.currencyType.UAH;
+            set => _currency = value ? Models.Common.Currency.currencyType.UAH : Models.Common.Currency.currencyType.USD;
+        }
+
+        public bool IsUSDChecked
+        {
+            get => _currency == Models.Common.Currency.currencyType.USD;
+            set => _currency = value ? Models.Common.Currency.currencyType.USD : Models.Common.Currency.currencyType.UAH;
+        }
+
+        public Transaction Transaction => _transaction;
+
+        public TransactionDetailsViewModel(Transaction transaction, Wallet wallet, User user, Action goToAddingTransaction, Action goToWallets, Action<Wallet> update)
         {
             _transaction = transaction;
+            _user = user;
             _wallet = wallet;
             _update = update;
             _allCategories = _wallet.Categories;
             _currency = transaction.CurrencyType;
             SaveEditCommand = new DelegateCommand(SaveEdit, CanSaveEdit);
             _transactionService = new TransactionService(_wallet);
+            _userService = new AuthenticationService();
             Sum = transaction.Sum;
             Description = transaction.Description;
         }
 
 
         public DelegateCommand SaveEditCommand { get; }
+
+        public DelegateCommand DeleteTransactionCommand { get => new DelegateCommand(DeleteTransaction); }
 
         private bool CanSaveEdit()
         {
@@ -81,23 +102,14 @@ namespace WalletApp.WalletAppWPF.Transactions
             _update.Invoke(await _transactionService.Update(_transaction));
         }
 
-        //public DelegateCommand<string> RadioBtnChanged => new DelegateCommand<string>((content) => HandleRadioBtn(content));
-        //private void HandleRadioBtn(string content)
-        //{
-        //    Currency = content;
-        //}
 
-        public bool IsUAHChecked
+        private async void DeleteTransaction()
         {
-            get => _currency == Models.Common.Currency.currencyType.UAH;
-            set => _currency = value ? Models.Common.Currency.currencyType.UAH : Models.Common.Currency.currencyType.USD;
-        }
+            Wallet wallet = await _transactionService.Delete(_transaction);
+            _update.Invoke(wallet);
 
-        public bool IsUSDChecked
-        {
-            get => _currency == Models.Common.Currency.currencyType.USD;
-            set => _currency = value ? Models.Common.Currency.currencyType.USD : Models.Common.Currency.currencyType.UAH;
+            //RaisePropertyChanged("Wallets");
+            //RaisePropertyChanged("CurrentWallet");
         }
-        public Transaction Transaction => _transaction;
     }
 }

@@ -49,18 +49,18 @@ namespace WalletApp.WalletAppWPF.Transactions
             _goToWallets = goToWallets;
             _wallet = wallet;
             _service = new TransactionService(wallet);
-            Transactions = new ObservableCollection<TransactionDetailsViewModel>();
-            FillTransactions();
+            Transactions = FillTransactions();
             if (Transactions.Count > 0) CurrentTransaction = Transactions.First();
         }
 
-        private void FillTransactions()
+        private ObservableCollection<TransactionDetailsViewModel> FillTransactions()
         {
-            Transactions = new ObservableCollection<TransactionDetailsViewModel>();
+            var transactions = new ObservableCollection<TransactionDetailsViewModel>();
             foreach (var transaction in _wallet.Transactions)
             {
-                Transactions.Add(new TransactionDetailsViewModel(transaction, _wallet, _goToAddingTransaction, _goToWallets, new Action<Wallet>(UpdateWallet)));
+                transactions.Add(new TransactionDetailsViewModel(transaction, _wallet, _user, _goToAddingTransaction, _goToWallets, new Action<Wallet>(UpdateWallet)));
             }
+            return transactions;
         }
 
         WalletNavigatableTypes INavigatable<WalletNavigatableTypes>.Type => WalletNavigatableTypes.Transactions;
@@ -74,7 +74,7 @@ namespace WalletApp.WalletAppWPF.Transactions
         {
             _wallet = wallet;
             Guid currentGuid = CurrentTransaction.Transaction.Guid;
-            FillTransactions();
+            Transactions = FillTransactions();
             foreach(TransactionDetailsViewModel tr in Transactions)
             {
                 if(tr.Transaction.Guid == currentGuid)
