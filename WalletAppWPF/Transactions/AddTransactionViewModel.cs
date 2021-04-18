@@ -11,24 +11,39 @@ using WalletApp.WalletAppWPF.Models.Categories;
 using WalletApp.WalletAppWPF.Models.Wallets;
 using WalletApp.WalletAppWPF.Services;
 using WalletApp.WalletAppWPF.Models.Users;
+using WalletApp.WalletAppWPF.Navigation;
 
 namespace WalletApp.WalletAppWPF.Transactions
 {
-    public class AddTransactionViewModel : BindableBase
+    public class AddTransactionViewModel : BindableBase, INavigatable<WalletNavigatableTypes>
     {
         private Transaction _transaction;
         private readonly Wallet _wallet;
         private User _user;
-        private readonly Action<Wallet> _update;
         private List<Category> _categories;
         private List<Category> _allCategories;
-        private Currency.currencyType _currency;
         private TransactionService _transactionService;
         private AuthenticationService _userService;
-        private DateTimeOffset _dateTimeOffset;
+        Action<Wallet> _goBackToTransactions;
 
-        public string Description { get; set; }
-        public decimal Sum { get; set; }
+        public string Description
+        {
+            get => _transaction.Description;
+            set
+            {
+                _transaction.Description = value;
+                ConfirmCreationCommand.RaiseCanExecuteChanged();
+            }
+        }
+        public decimal Sum
+        {
+            get => _transaction.Sum;
+            set
+            {
+                _transaction.Sum = value;
+                ConfirmCreationCommand.RaiseCanExecuteChanged();
+            }
+        }
 
 
         public List<Category> Categories
@@ -37,95 +52,75 @@ namespace WalletApp.WalletAppWPF.Transactions
             set
             {
                 _categories = value;
-            }
-        }
-
-
-        public List<File> Files
-        {
-            get
-            {
-                return _transaction.Files;
+                ConfirmCreationCommand.RaiseCanExecuteChanged();
             }
         }
 
         public bool IsUAHChecked
         {
-            get => _currency == Models.Common.Currency.currencyType.UAH;
-            set => _currency = value ? Models.Common.Currency.currencyType.UAH : Models.Common.Currency.currencyType.USD;
+            get => _transaction.CurrencyType == Models.Common.Currency.currencyType.UAH;
+            set
+            {
+                _transaction.CurrencyType = value ? Models.Common.Currency.currencyType.UAH : Models.Common.Currency.currencyType.USD;
+                ConfirmCreationCommand.RaiseCanExecuteChanged();
+            }
         }
 
         public bool IsUSDChecked
         {
-            get => _currency == Models.Common.Currency.currencyType.USD;
-            set => _currency = value ? Models.Common.Currency.currencyType.USD : Models.Common.Currency.currencyType.UAH;
-        }
-
-        public string Date
-        {
-            get => _dateTimeOffset.Date.ToString();
-        }
-
-        public string Time
-        {
-            get => _dateTimeOffset.TimeOfDay.ToString();
-        }
-
-        public DateTimeOffset DateTimeOffset
-        {
+            get => _transaction.CurrencyType == Models.Common.Currency.currencyType.USD;
             set
             {
-                _dateTimeOffset = value;
-                RaisePropertyChanged(nameof(Date));
-                RaisePropertyChanged(nameof(Time));
+                _transaction.CurrencyType = value ? Models.Common.Currency.currencyType.USD : Models.Common.Currency.currencyType.UAH;
+                ConfirmCreationCommand.RaiseCanExecuteChanged();
+            }
+        }
+
+
+        public DateTime DateTime
+        {
+            get => _transaction.DateTime.DateTime;
+            set
+            {
+                _transaction.DateTime = new DateTimeOffset(value);
+                ConfirmCreationCommand.RaiseCanExecuteChanged();
             }
         }
 
         public Transaction Transaction => _transaction;
 
-        public AddTransactionViewModel(Transaction transaction, Wallet wallet, User user, Action goToAddingTransaction, Action goToWallets, Action<Wallet> update)
+
+        public AddTransactionViewModel(Wallet wallet, User user, Action<Wallet> goBackToTransactions)
         {
-            _transaction = transaction;
+            _transaction = new Transaction(0, wallet.Categories.First(), Currency.currencyType.UAH, "", new DateTimeOffset(), new List<File>(), user.Guid);
             _user = user;
             _wallet = wallet;
-            _update = update;
             _allCategories = _wallet.Categories;
-            _currency = transaction.CurrencyType;
-            SaveEditCommand = new DelegateCommand(SaveEdit, CanSaveEdit);
+            _goBackToTransactions = goBackToTransactions;
+            ConfirmCreationCommand = new DelegateCommand(CreateNewTransaction, CanCreate);
             _transactionService = new TransactionService(_wallet);
             _userService = new AuthenticationService();
-            _dateTimeOffset = _transaction.DateTime;
-            Sum = transaction.Sum;
-            Description = transaction.Description;
         }
 
 
-        public DelegateCommand SaveEditCommand { get; }
+        public DelegateCommand ConfirmCreationCommand { get; }
 
-        public DelegateCommand DeleteTransactionCommand { get => new DelegateCommand(DeleteTransaction); }
+        public DelegateCommand GoBackCommand => new DelegateCommand(() => _goBackToTransactions(_wallet));
 
-        private bool CanSaveEdit()
+        public WalletNavigatableTypes Type => WalletNavigatableTypes.AddTransaction;
+
+        private async void CreateNewTransaction()
         {
-            return Sum > 0 && !String.IsNullOrEmpty(Description);
+            _goBackToTransactions.Invoke(await _transactionService.Add(_transaction));
         }
 
-        private async void SaveEdit()
+        private bool CanCreate()
         {
-            if (_categories != null) _transaction.Category = _categories.First();
-            _transaction.Description = Description;
-            _transaction.Sum = Sum;
-            _transaction.CurrencyType = _currency;
-            _update.Invoke(await _transactionService.Update(_transaction));
+            return Sum > 0 && !String.IsNullOrEmpty(Description) && _categories != null && _categories.Count != 0;
         }
 
-
-        private async void DeleteTransaction()
+        public void ClearSensitiveData()
         {
-            Wallet wallet = await _transactionService.Delete(_transaction);
-            _update.Invoke(wallet);
-
-            //RaisePropertyChanged("Wallets");
-            //RaisePropertyChanged("CurrentWallet");
         }
     }
 }

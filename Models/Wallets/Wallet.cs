@@ -49,6 +49,7 @@ namespace WalletApp.WalletAppWPF.Models.Wallets
             get => _description;
             set => _description = value;
         }
+
         public Currency.currencyType Currency
         {
             get => _currency;
@@ -105,6 +106,11 @@ namespace WalletApp.WalletAppWPF.Models.Wallets
             _name = wallet._name;
             _ownerId = wallet._ownerId;
             _transactions = wallet._transactions;
+        }
+
+        public void AddTransaction(Transaction t)
+        {
+            AddTransaction(t.Sum, t.Category, t.Description, t.DateTime, t.Files, t.CreatorId);
         }
 
         public bool AddTransaction(decimal sum, Category category, string description, DateTimeOffset dateTime, List<File> files, Guid userId)

@@ -40,8 +40,8 @@ namespace WalletApp.WalletAppWPF.Wallets
                     _currentViewModel = new AddWalletViewModel(() => Navigate(WalletNavigatableTypes.Wallets), _user, new Action(DeleteAllOtherViewModels)); break;
                 case WalletNavigatableTypes.Transactions:
                     _currentViewModel = new TransactionsViewModel(_user, _currentWallet, () => Navigate(WalletNavigatableTypes.Wallets), () => Navigate(WalletNavigatableTypes.AddTransaction)); break;
-                //case WalletNavigatableTypes.AddTransaction:
-                //    _currentViewModel = new AddTransactionViewModel(_user, )
+                case WalletNavigatableTypes.AddTransaction:
+                    _currentViewModel = new AddTransactionViewModel(_currentWallet, _user, new Action<Wallet>(_goToTransactions)); break;
             }
             return _currentViewModel;
         }

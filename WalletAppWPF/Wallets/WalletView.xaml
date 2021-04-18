@@ -17,6 +17,9 @@
         <DataTemplate DataType="{ x:Type transactions:TransactionsViewModel}">
             <transactions:TransactionsView></transactions:TransactionsView>
         </DataTemplate>
+        <DataTemplate DataType="{ x:Type transactions:AddTransactionViewModel}">
+            <transactions:AddTransactionView></transactions:AddTransactionView>
+        </DataTemplate>
     </UserControl.Resources>
     <ContentControl Content="{Binding CurrentViewModel}"></ContentControl>
 </UserControl>

@@ -25,15 +25,16 @@ namespace WalletApp.WalletAppWPF.Services
         //    return await _transactionStorage.GetAllAsync();
         //}
 
-        public async Task<Wallet> Add(Transaction transaction)
-        {
-            _wallet.AddTransaction(transaction.Sum, transaction.Category, transaction.Description, transaction.DateTime, transaction.Files, transaction.CreatorId);
-            await _walletService.AddOrUpdate(_wallet);
-            return _wallet;
-        }
         public async Task<Wallet> Update(Transaction t)
         {
             _wallet.UpdateTransaction(t.CreatorId, t.Guid, t.Sum, t.Description, t.DateTime, t.Files);
+            await _walletService.AddOrUpdate(_wallet);
+            return _wallet;
+        }
+
+        public async Task<Wallet> Add(Transaction t)
+        {
+            _wallet.AddTransaction(t);
             await _walletService.AddOrUpdate(_wallet);
             return _wallet;
         }

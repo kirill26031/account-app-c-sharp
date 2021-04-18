@@ -42,6 +42,8 @@ namespace WalletApp.WalletAppWPF.Transactions
 
         public DelegateCommand GoToWallets => new DelegateCommand(_goToWallets);
 
+        public DelegateCommand AddTransaction => new DelegateCommand(_goToAddingTransaction);
+
         public TransactionsViewModel(User user, Wallet wallet, Action goToWallets, Action goToAddingTransaction)
         {
             _user = user;
@@ -83,6 +85,7 @@ namespace WalletApp.WalletAppWPF.Transactions
                     break;
                 }
             }
+            if (CurrentTransaction == null && Transactions.Count > 0) CurrentTransaction = Transactions.First();
             RaisePropertyChanged(nameof(Transactions));
         }
     }

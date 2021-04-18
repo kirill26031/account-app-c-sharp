@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:WalletApp.WalletAppWPF.Transactions"
+             xmlns:wpfx="http://schemas.xceed.com/wpf/xaml/toolkit"
              mc:Ignorable="d" 
              Loaded="Window_Loaded"
              Unloaded="Window_Unloaded"
@@ -16,18 +17,20 @@
             <RowDefinition Height="Auto"></RowDefinition>
             <RowDefinition Height="Auto"></RowDefinition>
             <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
             <RowDefinition Height="50"></RowDefinition>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition></ColumnDefinition>
             <ColumnDefinition></ColumnDefinition>
         </Grid.ColumnDefinitions>
-        <StackPanel Grid.Row="0" Grid.ColumnSpan="2">
+        <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2">New Transaction</TextBlock>
+        <StackPanel Grid.Row="1" Grid.ColumnSpan="1">
             <TextBlock Margin="10, 10, 10, 0">Transaction Sum</TextBlock>
             <TextBox Name="Sum" MinWidth="300" Margin="10" HorizontalAlignment="Stretch" 
                      PreviewTextInput="NumberValidationTextBox" Text="{Binding Sum, UpdateSourceTrigger=PropertyChanged}"></TextBox>
         </StackPanel>
-        <StackPanel Margin="10" Grid.Row="1"  Grid.ColumnSpan="3">
+        <StackPanel Margin="10" Grid.Row="1" Grid.Column="1"  Grid.ColumnSpan="1">
             <TextBlock>Currency</TextBlock>
             <RadioButton Content="UAH" 
                          IsChecked="{Binding IsUAHChecked}"/>
@@ -50,10 +53,15 @@
             <TextBox MinWidth="300" Margin="10" HorizontalAlignment="Stretch" Height="70"
                      Text="{Binding Description, UpdateSourceTrigger=PropertyChanged}"/>
         </StackPanel>
-
-        <Button Name="EditWallet" Grid.Column="0" Margin="10,10,10,10" 
-                Command="{Binding SaveEditCommand}" Grid.Row="4">Save changes</Button>
-        <Button Name="DeleteWallet" Grid.Column="1" Margin="10,10,10,10" 
-                Command="{Binding DeleteTransactionCommand}" Grid.Row="4">Delete Transaction</Button>
+        <StackPanel Margin="10" Grid.Row="4" Grid.ColumnSpan="2" Grid.Column="0">
+            <TextBlock>Date and Time</TextBlock>
+            <wpfx:DateTimePicker 
+                x:Name="DateTimePicker"
+                Value="{Binding DateTime}"/>
+        </StackPanel>
+        <Button Name="ConfirmWalletCreation" Grid.Column="0" Margin="10,10,10,10" 
+                Command="{Binding ConfirmCreationCommand}" Grid.Row="5">Confirm transaction creation</Button>
+        <Button Name="GoBack" Grid.Column="1" Margin="10,10,10,10" 
+                Command="{Binding GoBackCommand}"  Grid.Row="5">Go back</Button>
     </Grid>
 </UserControl>

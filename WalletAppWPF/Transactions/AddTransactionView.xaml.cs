@@ -49,9 +49,16 @@ namespace WalletApp.WalletAppWPF.Transactions
 
         private void SetCategory()
         {
-            int index = ((AddTransactionViewModel)DataContext).Categories.FindIndex(
-                    cat => cat.Name == ((AddTransactionViewModel)DataContext).Transaction.Category.Name);
-            CategoriesListBox.SelectedItem = CategoriesListBox.Items[index];
+            if (DataContext != null)
+            {
+                int index = ((AddTransactionViewModel)DataContext).Categories.FindIndex(
+                        cat => cat.Name == ((AddTransactionViewModel)DataContext).Transaction.Category.Name);
+                CategoriesListBox.SelectedItem = CategoriesListBox.Items[index];
+            }
+            else
+            {
+                //MessageBox.Show("Set category with null context");
+            }
         }
 
         private void Checked_CategoryCheckBox(object sender, System.EventArgs e)
