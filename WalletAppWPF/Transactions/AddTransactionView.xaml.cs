@@ -20,10 +20,10 @@ namespace WalletApp.WalletAppWPF.Transactions
     /// <summary>
     /// Interaction logic for TransactionDetailsView.xaml
     /// </summary>
-    public partial class TransactionDetailsView : UserControl
+    public partial class AddTransactionView : UserControl
     {
         private bool IsLoaded { get; set; }
-        public TransactionDetailsView()
+        public AddTransactionView()
         {
             IsLoaded = false;
             InitializeComponent();
@@ -49,14 +49,14 @@ namespace WalletApp.WalletAppWPF.Transactions
 
         private void SetCategory()
         {
-            int index = ((TransactionDetailsViewModel)DataContext).Categories.FindIndex(
-                    cat => cat.Name == ((TransactionDetailsViewModel)DataContext).Transaction.Category.Name);
+            int index = ((AddTransactionViewModel)DataContext).Categories.FindIndex(
+                    cat => cat.Name == ((AddTransactionViewModel)DataContext).Transaction.Category.Name);
             CategoriesListBox.SelectedItem = CategoriesListBox.Items[index];
         }
 
         private void Checked_CategoryCheckBox(object sender, System.EventArgs e)
         {
-            ((TransactionDetailsViewModel)DataContext).Categories = 
+            ((AddTransactionViewModel)DataContext).Categories = 
                 new() { (Category)CategoriesListBox.SelectedItem };
         }
 
@@ -67,14 +67,6 @@ namespace WalletApp.WalletAppWPF.Transactions
             e.Handled = !(regex.IsMatch(possibleNext) &&
                 regex.Match(possibleNext).Value.Count<char>() == possibleNext.Length &&
                 regex.Matches(possibleNext).Count == 1);
-        }
-
-        private void DateTimeChanged(object sender, object e)
-        {
-            if (IsLoaded)
-            {
-                ((TransactionDetailsViewModel)DataContext).DateTime = DateTimePicker.Value.Value;
-            }
         }
     }
 }

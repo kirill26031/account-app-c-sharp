@@ -14,7 +14,7 @@ using WalletApp.WalletAppWPF.Models.Users;
 
 namespace WalletApp.WalletAppWPF.Transactions
 {
-    public class TransactionDetailsViewModel : BindableBase
+    public class AddTransactionViewModel : BindableBase
     {
         private Transaction _transaction;
         private readonly Wallet _wallet;
@@ -40,7 +40,7 @@ namespace WalletApp.WalletAppWPF.Transactions
             }
         }
 
-      
+
         public List<File> Files
         {
             get
@@ -61,19 +61,29 @@ namespace WalletApp.WalletAppWPF.Transactions
             set => _currency = value ? Models.Common.Currency.currencyType.USD : Models.Common.Currency.currencyType.UAH;
         }
 
-
-        public DateTime DateTime
+        public string Date
         {
-            get => _dateTimeOffset.DateTime;
+            get => _dateTimeOffset.Date.ToString();
+        }
+
+        public string Time
+        {
+            get => _dateTimeOffset.TimeOfDay.ToString();
+        }
+
+        public DateTimeOffset DateTimeOffset
+        {
             set
             {
-                _dateTimeOffset = new DateTimeOffset(value);
+                _dateTimeOffset = value;
+                RaisePropertyChanged(nameof(Date));
+                RaisePropertyChanged(nameof(Time));
             }
         }
 
         public Transaction Transaction => _transaction;
 
-        public TransactionDetailsViewModel(Transaction transaction, Wallet wallet, User user, Action goToAddingTransaction, Action goToWallets, Action<Wallet> update)
+        public AddTransactionViewModel(Transaction transaction, Wallet wallet, User user, Action goToAddingTransaction, Action goToWallets, Action<Wallet> update)
         {
             _transaction = transaction;
             _user = user;
@@ -101,11 +111,10 @@ namespace WalletApp.WalletAppWPF.Transactions
 
         private async void SaveEdit()
         {
-            if (_categories != null) _transaction.Category = _categories.First(); 
+            if (_categories != null) _transaction.Category = _categories.First();
             _transaction.Description = Description;
             _transaction.Sum = Sum;
             _transaction.CurrencyType = _currency;
-            _transaction.DateTime = _dateTimeOffset;
             _update.Invoke(await _transactionService.Update(_transaction));
         }
 
