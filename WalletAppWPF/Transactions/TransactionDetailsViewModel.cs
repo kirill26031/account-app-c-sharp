@@ -131,12 +131,12 @@ namespace WalletApp.WalletAppWPF.Transactions
 
         private bool CanDeleteTransaction()
         {
-            return _wallet.CanDeleteTransaction();
+            return _wallet.CanDeleteTransaction(Transaction);
         }
 
         private bool CanSaveEdit()
         {
-            return _wallet.CanUpdateTransaction(UpdatedTransaction()) && !String.IsNullOrEmpty(Description) && AreChangesExist();
+            return _wallet.CanUpdateTransaction(Transaction, UpdatedTransaction()) && !String.IsNullOrEmpty(Description) && AreChangesExist();
         }
 
         private async void SaveEdit()

@@ -117,36 +117,42 @@ namespace WalletApp.WalletAppWPF.Models.Wallets
 
         public bool AddTransaction(Guid guid, decimal sum, Currency.currencyType currencyType, Category category, string description, DateTimeOffset dateTime, List<File> files, Guid userId)
         {
-            decimal transformedSum = Models.Common.Currency.Convert(currencyType, Currency, sum);
-            if (_balance >= -sum || true)
+            if (Categories.Contains(category))
             {
-                if (Categories.Contains(category))
+                Transaction temp = new Transaction(guid, sum, category, currencyType, description, dateTime, files, userId);
+                if (CanAddTransaction(temp))
                 {
+                    decimal transformedSum = Models.Common.Currency.Convert(currencyType, Currency, sum);
                     _balance += transformedSum;
-                    Transaction temp = new Transaction(guid, sum, category, currencyType, description, dateTime, files, userId);
                     _transactions.Add(temp);
                     return true;
                 }
-                else
-                    throw new AccessViolationException();
+                else return false;
             }
             else
-                throw new ArithmeticException();
+                throw new AccessViolationException();
         }
 
         public bool CanAddTransaction(Transaction transaction)
         {
-            return true;
+            decimal transformedSum = Models.Common.Currency.Convert(transaction.CurrencyType, Currency, transaction.Sum);
+            return transformedSum >= 0 || Balance >= -transformedSum;
         }
 
-        public bool CanDeleteTransaction()
+        public bool CanDeleteTransaction(Transaction transaction)
         {
-            return true;
+            decimal transformedSum = Models.Common.Currency.Convert(transaction.CurrencyType, Currency, transaction.Sum);
+            return transformedSum <= 0 || Balance >= transformedSum;
         }
 
-        public bool CanUpdateTransaction(Transaction transaction)
+        public bool CanUpdateTransaction(Transaction fromTransaction, Transaction toTransaction)
         {
-            return true;
+            var balance = Balance;
+            decimal fromTransformedSum = Models.Common.Currency.Convert(fromTransaction.CurrencyType, Currency, fromTransaction.Sum);
+            decimal toTransformedSum = Models.Common.Currency.Convert(toTransaction.CurrencyType, Currency, toTransaction.Sum);
+            balance += toTransformedSum - fromTransformedSum;
+
+            return balance >= 0;
         }
 
         public List<Transaction> ShowTransactions(int startPos, int amountToShow)
@@ -173,25 +179,30 @@ namespace WalletApp.WalletAppWPF.Models.Wallets
                 int indexToRemove = Transactions.FindIndex(Tr => Tr.Guid == idTransaction);
                 if (indexToRemove == -1) return false;
                 Transaction tr = Transactions[indexToRemove];
-                decimal transformedSum = Models.Common.Currency.Convert(tr.CurrencyType, Currency, tr.Sum);
-                Balance -= transformedSum;
-                Transactions.RemoveAt(indexToRemove);
+                if (CanDeleteTransaction(tr))
+                {
+                    decimal transformedSum = Models.Common.Currency.Convert(tr.CurrencyType, Currency, tr.Sum);
+                    Balance -= transformedSum;
+                    Transactions.RemoveAt(indexToRemove);
+                    return true;
+                }
             }
-            return true;
+            return false;
         }
 
         public bool UpdateTransaction(Guid userId, Guid idTransaction, decimal sum, Currency.currencyType currency, string description, DateTimeOffset dateTime, List<File> files)
         {
             if (userId != OwnerId)
                 throw new AccessViolationException();
-            decimal transformedSum = Models.Common.Currency.Convert(currency, Currency, sum);
             foreach (Transaction transaction in Transactions)
             {
                 if (transaction.Guid == idTransaction)
                 {
+                    Transaction temp = new Transaction(sum, transaction.Category, currency, description, dateTime, files, userId);
+                    if (!CanUpdateTransaction(transaction, temp))
+                        return false;
                     decimal diff = sum - Models.Common.Currency.Convert(transaction.CurrencyType, currency, transaction.Sum);
                     decimal newBalance = Balance + Models.Common.Currency.Convert(currency, Currency, diff);
-                    //if (newBalance < 0) return false;
                     Balance = newBalance;
                     return transaction.UpdateTransaction(sum, currency, description, dateTime, files);
                 }

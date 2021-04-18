@@ -6,7 +6,7 @@
         xmlns:wallets="clr-namespace:WalletApp.WalletAppWPF.Wallets"
         xmlns:authentication="clr-namespace:WalletApp.WalletAppWPF.Authentication"
         mc:Ignorable="d" 
-        Title="MainWindow" Height="450" Width="800" SizeToContent="WidthAndHeight">
+        Title="Wallet application" Height="450" Width="800" SizeToContent="WidthAndHeight">
     <Window.Resources>
         <DataTemplate DataType="{ x:Type authentication:AuthViewModel}">
             <authentication:AuthView></authentication:AuthView>
