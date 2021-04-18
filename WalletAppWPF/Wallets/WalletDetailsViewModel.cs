@@ -23,6 +23,8 @@ namespace WalletApp.WalletAppWPF.Wallets
         private string _description;
         private User _user;
         private Action<Wallet> _goToTransactions;
+        private decimal _expenses;
+        private decimal _income;
 
         public string Name
         {
@@ -57,7 +59,7 @@ namespace WalletApp.WalletAppWPF.Wallets
                 return _wallet.Balance;
             }
         }
-
+        
         public string Currency
         {
             get
@@ -79,6 +81,22 @@ namespace WalletApp.WalletAppWPF.Wallets
             get
             {
                 return $"{_wallet.Name} ({_wallet.Balance} {WalletApp.WalletAppWPF.Models.Common.Currency.PrintCurrency(_wallet.Currency)})";
+            }
+        }
+
+        public decimal ExpensesLastMonth
+        {
+            get
+            {
+                return _wallet.BalanceChangesLastMonth(false);
+            }
+        }
+
+        public decimal IncomeLastMonth
+        {
+            get
+            {
+                return _wallet.BalanceChangesLastMonth(true);
             }
         }
 
@@ -104,6 +122,8 @@ namespace WalletApp.WalletAppWPF.Wallets
             _description = _wallet.Description;
             _user = user;
             _goToTransactions = goToTransactions;
+            _expenses = ExpensesLastMonth;
+            _income = IncomeLastMonth;
         }
 
         private bool AreChangesExist() => _name != _wallet.Name || _description != _wallet.Description;
