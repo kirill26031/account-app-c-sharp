@@ -12,15 +12,17 @@ using System.Text.Json.Serialization;
 
 namespace WalletApp.WalletAppWPF.Models.Wallets
 {
+
+    //Currently suppports transactions in result of which can have negative balance. (lines 119, 192)
     public class Wallet : IStorable
     {
         public Guid Guid { get; }
         private string _name;
         private decimal _balance;
-        public Currency.currencyType _currency;
+        private Currency.currencyType _currency;
         
-        public List<Transaction> _transactions = new List<Transaction>();
-        public List<Category> _categories = new List<Category>();
+        private List<Transaction> _transactions = new List<Transaction>();
+        private List<Category> _categories = new List<Category>();
         Guid _ownerId;
         string _description;
 
@@ -49,20 +51,20 @@ namespace WalletApp.WalletAppWPF.Models.Wallets
             get => _description;
             set => _description = value;
         }
+
         public Currency.currencyType Currency
         {
             get => _currency;
             set => _currency = value;
         }
-        [JsonIgnore]
-        List<Transaction> Transactions
+        public List<Transaction> Transactions
         {
             // They have private accessibility level
             get => _transactions;
             set => _transactions = value;
         }
 
-        [JsonConstructor]
+        
         public Wallet(Guid guid, string name, decimal balance, Currency.currencyType currency, List<Category> categories, Guid ownerId, string description)
         {
             Guid = guid;
@@ -70,14 +72,15 @@ namespace WalletApp.WalletAppWPF.Models.Wallets
             Balance = balance;
             Currency = currency;
             Categories = new List<Category>(categories);
+            Transactions = new List<Transaction>();
             OwnerId = ownerId;
             Description = description;
         }
 
-        
-        public Wallet(string name, decimal balance, Currency.currencyType currency, List<Category> categories, List<Transaction> transactions, Guid ownerId, string description)
+        [JsonConstructor]
+        public Wallet(Guid guid, string name, decimal balance, Currency.currencyType currency, List<Category> categories, List<Transaction> transactions, Guid ownerId, string description)
         {
-            Guid = Guid.NewGuid();
+            Guid = guid;
             Name = name;
             Balance = balance;
             Currency = currency;
@@ -95,22 +98,61 @@ namespace WalletApp.WalletAppWPF.Models.Wallets
             Description = description;
         }
 
-        public bool AddTransaction(decimal sum, Category category, string description, DateTimeOffset dateTime, List<File> files, Guid userId)
+        public Wallet(Wallet wallet)
         {
-            if (_balance >= -sum)
+            _balance = wallet._balance;
+            _categories = wallet._categories;
+            Guid = wallet.Guid;
+            _currency = wallet._currency;
+            _description = wallet._description;
+            _name = wallet._name;
+            _ownerId = wallet._ownerId;
+            _transactions = wallet._transactions;
+        }
+
+        public void AddTransaction(Transaction t)
+        {
+            AddTransaction(t.Guid, t.Sum, t.CurrencyType, t.Category, t.Description, t.DateTime, t.Files, t.CreatorId);
+        }
+
+        public bool AddTransaction(Guid guid, decimal sum, Currency.currencyType currencyType, Category category, string description, DateTimeOffset dateTime, List<File> files, Guid userId)
+        {
+            if (Categories.Contains(category))
             {
-                if (Categories.Contains(category))
+                Transaction temp = new Transaction(guid, sum, category, currencyType, description, dateTime, files, userId);
+                if (CanAddTransaction(temp))
                 {
-                    _balance += sum;
-                    Transaction temp = new Transaction(sum, category, _currency, description, dateTime, files, userId);
+                    decimal transformedSum = Models.Common.Currency.Convert(currencyType, Currency, sum);
+                    _balance += transformedSum;
                     _transactions.Add(temp);
                     return true;
                 }
-                else
-                    throw new AccessViolationException();
+                else return false;
             }
             else
-                throw new ArithmeticException();
+                throw new AccessViolationException();
+        }
+
+        public bool CanAddTransaction(Transaction transaction)
+        {
+            decimal transformedSum = Models.Common.Currency.Convert(transaction.CurrencyType, Currency, transaction.Sum);
+            return transformedSum >= 0 || Balance >= -transformedSum;
+        }
+
+        public bool CanDeleteTransaction(Transaction transaction)
+        {
+            decimal transformedSum = Models.Common.Currency.Convert(transaction.CurrencyType, Currency, transaction.Sum);
+            return transformedSum <= 0 || Balance >= transformedSum;
+        }
+
+        public bool CanUpdateTransaction(Transaction fromTransaction, Transaction toTransaction)
+        {
+            var balance = Balance;
+            decimal fromTransformedSum = Models.Common.Currency.Convert(fromTransaction.CurrencyType, Currency, fromTransaction.Sum);
+            decimal toTransformedSum = Models.Common.Currency.Convert(toTransaction.CurrencyType, Currency, toTransaction.Sum);
+            balance += toTransformedSum - fromTransformedSum;
+
+            return balance >= 0;
         }
 
         public List<Transaction> ShowTransactions(int startPos, int amountToShow)
@@ -137,13 +179,18 @@ namespace WalletApp.WalletAppWPF.Models.Wallets
                 int indexToRemove = Transactions.FindIndex(Tr => Tr.Guid == idTransaction);
                 if (indexToRemove == -1) return false;
                 Transaction tr = Transactions[indexToRemove];
-                Balance -= tr.Sum;
-                Transactions.RemoveAt(indexToRemove);
+                if (CanDeleteTransaction(tr))
+                {
+                    decimal transformedSum = Models.Common.Currency.Convert(tr.CurrencyType, Currency, tr.Sum);
+                    Balance -= transformedSum;
+                    Transactions.RemoveAt(indexToRemove);
+                    return true;
+                }
             }
-            return true;
+            return false;
         }
 
-        public bool UpdateTransaction(Guid userId, Guid idTransaction, decimal sum, string description, DateTimeOffset dateTime, List<File> files)
+        public bool UpdateTransaction(Guid userId, Guid idTransaction, decimal sum, Currency.currencyType currency, string description, DateTimeOffset dateTime, List<File> files)
         {
             if (userId != OwnerId)
                 throw new AccessViolationException();
@@ -151,11 +198,13 @@ namespace WalletApp.WalletAppWPF.Models.Wallets
             {
                 if (transaction.Guid == idTransaction)
                 {
-                    decimal diff = sum - transaction.Sum;
-                    decimal newBalance = Balance + diff;
-                    if (newBalance < 0) return false;
+                    Transaction temp = new Transaction(sum, transaction.Category, currency, description, dateTime, files, userId);
+                    if (!CanUpdateTransaction(transaction, temp))
+                        return false;
+                    decimal diff = sum - Models.Common.Currency.Convert(transaction.CurrencyType, currency, transaction.Sum);
+                    decimal newBalance = Balance + Models.Common.Currency.Convert(currency, Currency, diff);
                     Balance = newBalance;
-                    return transaction.UpdateTransaction(sum, description, dateTime, files);
+                    return transaction.UpdateTransaction(sum, currency, description, dateTime, files);
                 }
             }
             throw new ArgumentException();
@@ -167,7 +216,7 @@ namespace WalletApp.WalletAppWPF.Models.Wallets
             decimal sum = 0;
             foreach (Transaction transaction in Transactions)
             {
-                if (DateTimeOffset.Compare(DateTimeOffset.Now.AddMonths(-1), transaction.dateTime) <= 0)
+                if (DateTimeOffset.Compare(DateTimeOffset.Now.AddMonths(-1), transaction.DateTime) <= 0)
                 {
                     var expense = transaction.Sum;
                     if (income)

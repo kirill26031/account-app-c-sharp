@@ -23,9 +23,9 @@ namespace WalletApp.WalletAppWPF.Models.Users
 
         public List<Guid> WalletGuids { get; }
 
-        public DBUser(string firstName, string lastName, string email, string login, string hash, List<Category> categories, List<Wallet> wallets)
+        public DBUser(Guid guid, string firstName, string lastName, string email, string login, string hash, List<Category> categories, List<Wallet> wallets)
         {
-            Guid = Guid.NewGuid();
+            Guid = guid;
             FirstName = firstName;
             LastName = lastName;
             Email = email;

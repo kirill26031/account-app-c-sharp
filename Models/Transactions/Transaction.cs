@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using WalletApp.WalletAppWPF.Models.Common;
 using WalletApp.WalletAppWPF.Models.Categories;
 using DataStorage;
+using System.Text.Json.Serialization;
 
 namespace WalletApp.WalletAppWPF.Models.Transactions
 {
@@ -13,7 +14,6 @@ namespace WalletApp.WalletAppWPF.Models.Transactions
         Category _category;
         Currency.currencyType _currencyType;
         string _description;
-        public DateTimeOffset dateTime { get; set; }
         List<File> _files;
         Guid _creatorId;
 
@@ -47,6 +47,19 @@ namespace WalletApp.WalletAppWPF.Models.Transactions
             CreatorId = creatorId;
         }
 
+        [JsonConstructor]
+        public Transaction(Guid guid, decimal sum, Category category, Currency.currencyType currencyType, string description, DateTimeOffset dateTime, List<File> files, Guid creatorId)
+        {
+            Guid = guid;
+            Sum = sum;
+            Category = category;
+            CurrencyType = currencyType;
+            Description = description;
+            DateTime = dateTime;
+            Files = new List<File>(files);
+            CreatorId = creatorId;
+        }
+
         public List<File> Files
         {
             get
@@ -71,13 +84,14 @@ namespace WalletApp.WalletAppWPF.Models.Transactions
             get => _description;
             set => _description = value;
         }
-        public DateTimeOffset DateTime { get; private set; }
+        public DateTimeOffset DateTime { get; set; }
 
-        public bool UpdateTransaction(decimal sum, string description, DateTimeOffset dateTime, List<File> files)
+        public bool UpdateTransaction(decimal sum, Currency.currencyType currency, string description, DateTimeOffset dateTime, List<File> files)
         {
             _sum = sum;
             _description = description;
-            this.dateTime = dateTime;
+            _currencyType = currency;
+            DateTime = dateTime;
             _files = new List<File>(files);
             return true;
         }
@@ -86,7 +100,7 @@ namespace WalletApp.WalletAppWPF.Models.Transactions
 
         public override string ToString()
         {
-            return $"Transaction ${Guid.ToString()} used ${Sum.ToString()} of ${_currencyType} at ${dateTime.ToString()}. Description: ${Description}";
+            return $"Transaction ${Guid.ToString()} used ${Sum.ToString()} of ${_currencyType} at ${DateTime.ToString()}. Description: ${Description}";
         }
     }
 }

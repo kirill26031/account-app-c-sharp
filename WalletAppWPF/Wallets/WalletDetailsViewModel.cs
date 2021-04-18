@@ -22,6 +22,9 @@ namespace WalletApp.WalletAppWPF.Wallets
         private string _name;
         private string _description;
         private User _user;
+        private Action<Wallet> _goToTransactions;
+        private decimal _expenses;
+        private decimal _income;
 
         public string Name
         {
@@ -32,6 +35,7 @@ namespace WalletApp.WalletAppWPF.Wallets
             set
             {
                 _name = value;
+                ConfirmEditCommand.RaiseCanExecuteChanged();
             }
         }
 
@@ -44,6 +48,7 @@ namespace WalletApp.WalletAppWPF.Wallets
             set
             {
                 _description = value;
+                ConfirmEditCommand.RaiseCanExecuteChanged();
             }
         }
 
@@ -54,7 +59,7 @@ namespace WalletApp.WalletAppWPF.Wallets
                 return _wallet.Balance;
             }
         }
-
+        
         public string Currency
         {
             get
@@ -75,28 +80,53 @@ namespace WalletApp.WalletAppWPF.Wallets
         {
             get
             {
-                return $"{_wallet.Name} ({_wallet.Balance} {WalletApp.WalletAppWPF.Models.Common.Currency.PrintCurrency(_wallet._currency)})";
+                return $"{_wallet.Name} ({_wallet.Balance} {WalletApp.WalletAppWPF.Models.Common.Currency.PrintCurrency(_wallet.Currency)})";
             }
         }
 
-        public DelegateCommand ConfirmEditCommand        {            get;        }
+        public decimal ExpensesLastMonth
+        {
+            get
+            {
+                return _wallet.BalanceChangesLastMonth(false);
+            }
+        }
+
+        public decimal IncomeLastMonth
+        {
+            get
+            {
+                return _wallet.BalanceChangesLastMonth(true);
+            }
+        }
+
+        public DelegateCommand ViewTransactionsCommand => new DelegateCommand(() => _goToTransactions(_wallet));
+
+        public DelegateCommand ConfirmEditCommand { get; }
         public DelegateCommand AddWalletCommand { get; }
         public DelegateCommand DeleteWalletCommand { get; }
 
         public WalletNavigatableTypes Type => WalletNavigatableTypes.Wallets;
 
-        public WalletDetailsViewModel(Wallet wallet, Action shouldUpdate, User user)
+        public Wallet Wallet => _wallet;
+
+        public WalletDetailsViewModel(Wallet wallet, Action shouldUpdate, User user, Action<Wallet> goToTransactions)
         {
             _wallet = wallet;
             _shouldUpdate = shouldUpdate;
             _userService = new AuthenticationService();
             _walletService = new WalletService();
-            ConfirmEditCommand = new DelegateCommand(ConfirmEdit);
+            ConfirmEditCommand = new DelegateCommand(ConfirmEdit, AreChangesExist);
             DeleteWalletCommand = new DelegateCommand(DeleteWallet);
             _name = _wallet.Name;
             _description = _wallet.Description;
             _user = user;
+            _goToTransactions = goToTransactions;
+            _expenses = ExpensesLastMonth;
+            _income = IncomeLastMonth;
         }
+
+        private bool AreChangesExist() => _name != _wallet.Name || _description != _wallet.Description;
 
         private async void ConfirmEdit()
         {
@@ -104,6 +134,7 @@ namespace WalletApp.WalletAppWPF.Wallets
             _wallet.Description = _description;
             RaisePropertyChanged(nameof(DisplayName));
             await _walletService.AddOrUpdate(_wallet);
+            ConfirmEditCommand.RaiseCanExecuteChanged();
         }
 
         private async void DeleteWallet()

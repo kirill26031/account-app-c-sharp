@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using WalletApp.WalletAppWPF.Models.Categories;
 using WalletApp.WalletAppWPF.Models.Common;
+using WalletApp.WalletAppWPF.Models.Transactions;
 using WalletApp.WalletAppWPF.Models.Users;
 using WalletApp.WalletAppWPF.Models.Wallets;
 using WalletApp.WalletAppWPF.Navigation;
@@ -128,7 +129,10 @@ namespace WalletApp.WalletAppWPF.Wallets
 
         public async void Confirm()
         {
-            Wallet wallet = new Wallet(Guid.NewGuid(), Name, Balance, _currency, _categories, _user.Guid, Description);
+            Wallet wallet = new Wallet(Guid.NewGuid(), Name, Balance, _currency, _categories, new List<Transaction>(), _user.Guid, Description);
+            //wallet.AddTransaction(28, wallet.Categories.First(), "hdh", new DateTimeOffset(), new List<File>(), _user.Guid);
+            //wallet.AddTransaction(58, wallet.Categories.First(), "hdh", new DateTimeOffset(), new List<File>(), _user.Guid);
+            //wallet.AddTransaction(99, wallet.Categories.First(), "hdh", new DateTimeOffset(), new List<File>(), _user.Guid);
             await _walletService.AddOrUpdate(wallet);
             _user.AddWallet(wallet);
             await _userService.UpdateUser(_user);
@@ -144,7 +148,11 @@ namespace WalletApp.WalletAppWPF.Wallets
 
         public void ClearSensitiveData()
         {
-            
+            _categories = null;
+            _balance = 0;
+            _currency = Models.Common.Currency.currencyType.UAH;
+            _description = null;
+            _name = null;
         }
     }
 }

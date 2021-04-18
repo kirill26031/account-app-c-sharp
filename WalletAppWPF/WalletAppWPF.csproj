@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Extended.Wpf.Toolkit" Version="4.0.2" />
     <PackageReference Include="Paket.Core" Version="5.257.0" />
     <PackageReference Include="Prism.Wpf" Version="8.0.0.1909" />
   </ItemGroup>
@@ -15,6 +16,12 @@
     <ProjectReference Include="..\DataStorage\DataStorage.csproj" />
     <ProjectReference Include="..\Models\Models.csproj" />
     <ProjectReference Include="..\Services\Services.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="Transactions\AddTransactionView.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+    </Page>
   </ItemGroup>
 
 </Project>
