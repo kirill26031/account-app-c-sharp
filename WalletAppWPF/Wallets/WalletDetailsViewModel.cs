@@ -33,6 +33,7 @@ namespace WalletApp.WalletAppWPF.Wallets
             set
             {
                 _name = value;
+                ConfirmEditCommand.RaiseCanExecuteChanged();
             }
         }
 
@@ -45,6 +46,7 @@ namespace WalletApp.WalletAppWPF.Wallets
             set
             {
                 _description = value;
+                ConfirmEditCommand.RaiseCanExecuteChanged();
             }
         }
 
@@ -96,7 +98,7 @@ namespace WalletApp.WalletAppWPF.Wallets
             _shouldUpdate = shouldUpdate;
             _userService = new AuthenticationService();
             _walletService = new WalletService();
-            ConfirmEditCommand = new DelegateCommand(ConfirmEdit);
+            ConfirmEditCommand = new DelegateCommand(ConfirmEdit, AreChangesExist);
             DeleteWalletCommand = new DelegateCommand(DeleteWallet);
             _name = _wallet.Name;
             _description = _wallet.Description;
@@ -104,12 +106,15 @@ namespace WalletApp.WalletAppWPF.Wallets
             _goToTransactions = goToTransactions;
         }
 
+        private bool AreChangesExist() => _name != _wallet.Name || _description != _wallet.Description;
+
         private async void ConfirmEdit()
         {
             _wallet.Name = _name;
             _wallet.Description = _description;
             RaisePropertyChanged(nameof(DisplayName));
             await _walletService.AddOrUpdate(_wallet);
+            ConfirmEditCommand.RaiseCanExecuteChanged();
         }
 
         private async void DeleteWallet()

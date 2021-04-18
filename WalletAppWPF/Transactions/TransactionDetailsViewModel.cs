@@ -27,8 +27,26 @@ namespace WalletApp.WalletAppWPF.Transactions
         private AuthenticationService _userService;
         private DateTimeOffset _dateTimeOffset;
 
-        public string Description { get; set; }
-        public decimal Sum { get; set; }
+        private string _description;
+        private decimal _sum;
+
+        public string Description
+        {
+            get => _description;
+            set
+            {
+                _description = value;
+                SaveEditCommand.RaiseCanExecuteChanged();
+            }
+        }
+        public decimal Sum 
+        { get => _sum;
+            set
+            {
+                _sum = value;
+                SaveEditCommand.RaiseCanExecuteChanged();
+            }
+        }
 
 
         public List<Category> Categories
@@ -37,6 +55,7 @@ namespace WalletApp.WalletAppWPF.Transactions
             set
             {
                 _categories = value;
+                SaveEditCommand.RaiseCanExecuteChanged();
             }
         }
 
@@ -52,13 +71,21 @@ namespace WalletApp.WalletAppWPF.Transactions
         public bool IsUAHChecked
         {
             get => _currency == Models.Common.Currency.currencyType.UAH;
-            set => _currency = value ? Models.Common.Currency.currencyType.UAH : Models.Common.Currency.currencyType.USD;
+            set 
+            {
+                _currency = value ? Models.Common.Currency.currencyType.UAH : Models.Common.Currency.currencyType.USD;
+                SaveEditCommand.RaiseCanExecuteChanged();
+            }
         }
 
         public bool IsUSDChecked
         {
             get => _currency == Models.Common.Currency.currencyType.USD;
-            set => _currency = value ? Models.Common.Currency.currencyType.USD : Models.Common.Currency.currencyType.UAH;
+            set
+            {
+                _currency = value ? Models.Common.Currency.currencyType.USD : Models.Common.Currency.currencyType.UAH;
+                SaveEditCommand.RaiseCanExecuteChanged();
+            }
         }
 
 
@@ -68,10 +95,16 @@ namespace WalletApp.WalletAppWPF.Transactions
             set
             {
                 _dateTimeOffset = new DateTimeOffset(value);
+                SaveEditCommand.RaiseCanExecuteChanged();
             }
         }
 
         public Transaction Transaction => _transaction;
+
+        private bool AreChangesExist() => 
+            ((_categories == null || _categories.Count == 0) ? false : _categories.First().Name != _transaction.Category.Name) ||
+                    _currency != _transaction.CurrencyType || Sum != _transaction.Sum || Description != _transaction.Description ||
+                    _dateTimeOffset != _transaction.DateTime;
 
         public TransactionDetailsViewModel(Transaction transaction, Wallet wallet, User user, Action goToAddingTransaction, Action goToWallets, Action<Wallet> update)
         {
@@ -96,7 +129,7 @@ namespace WalletApp.WalletAppWPF.Transactions
 
         private bool CanSaveEdit()
         {
-            return Sum > 0 && !String.IsNullOrEmpty(Description);
+            return Sum > 0 && !String.IsNullOrEmpty(Description) && AreChangesExist();
         }
 
         private async void SaveEdit()
@@ -106,6 +139,7 @@ namespace WalletApp.WalletAppWPF.Transactions
             _transaction.Sum = Sum;
             _transaction.CurrencyType = _currency;
             _transaction.DateTime = _dateTimeOffset;
+            SaveEditCommand.RaiseCanExecuteChanged();
             _update.Invoke(await _transactionService.Update(_transaction));
         }
 
