@@ -27,7 +27,7 @@ namespace WalletApp.WalletAppWPF.Services
 
         public async Task<Wallet> Update(Transaction t)
         {
-            _wallet.UpdateTransaction(t.CreatorId, t.Guid, t.Sum, t.Description, t.DateTime, t.Files);
+            _wallet.UpdateTransaction(t.CreatorId, t.Guid, t.Sum, t.CurrencyType, t.Description, t.DateTime, t.Files);
             await _walletService.AddOrUpdate(_wallet);
             return _wallet;
         }

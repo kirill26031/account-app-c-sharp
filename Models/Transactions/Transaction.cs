@@ -86,10 +86,11 @@ namespace WalletApp.WalletAppWPF.Models.Transactions
         }
         public DateTimeOffset DateTime { get; set; }
 
-        public bool UpdateTransaction(decimal sum, string description, DateTimeOffset dateTime, List<File> files)
+        public bool UpdateTransaction(decimal sum, Currency.currencyType currency, string description, DateTimeOffset dateTime, List<File> files)
         {
             _sum = sum;
             _description = description;
+            _currencyType = currency;
             DateTime = dateTime;
             _files = new List<File>(files);
             return true;

@@ -36,6 +36,7 @@ namespace WalletApp.WalletAppWPF.Transactions
             set
             {
                 _currentTransaction = value;
+                if(_currentTransaction != null) _currentTransaction.ClearSensitive();
                 RaisePropertyChanged();
             }
         }
@@ -87,6 +88,7 @@ namespace WalletApp.WalletAppWPF.Transactions
             }
             if (CurrentTransaction == null && Transactions.Count > 0) CurrentTransaction = Transactions.First();
             RaisePropertyChanged(nameof(Transactions));
+            RaisePropertyChanged(nameof(CurrentTransaction));
         }
     }
 }

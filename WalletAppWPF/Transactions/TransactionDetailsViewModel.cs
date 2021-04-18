@@ -39,6 +39,16 @@ namespace WalletApp.WalletAppWPF.Transactions
                 SaveEditCommand.RaiseCanExecuteChanged();
             }
         }
+
+        internal void ClearSensitive()
+        {
+            _dateTimeOffset = _transaction.DateTime;
+            _sum = _transaction.Sum;
+            _description = _transaction.Description;
+            _currency = _transaction.CurrencyType;
+            _categories = null;
+        }
+
         public decimal Sum 
         { get => _sum;
             set
@@ -59,14 +69,6 @@ namespace WalletApp.WalletAppWPF.Transactions
             }
         }
 
-      
-        public List<File> Files
-        {
-            get
-            {
-                return _transaction.Files;
-            }
-        }
 
         public bool IsUAHChecked
         {
@@ -134,13 +136,15 @@ namespace WalletApp.WalletAppWPF.Transactions
 
         private async void SaveEdit()
         {
-            if (_categories != null) _transaction.Category = _categories.First(); 
-            _transaction.Description = Description;
-            _transaction.Sum = Sum;
-            _transaction.CurrencyType = _currency;
-            _transaction.DateTime = _dateTimeOffset;
+            if (_categories != null) _transaction.Category = _categories.First();
+            Transaction transaction = new Transaction(_transaction.Guid ,Sum, (_categories != null) ? _categories.First() : _transaction.Category, _currency, Description, _dateTimeOffset, _transaction.Files, _transaction.CreatorId);
+            //_transaction.Description = Description;
+            //_transaction.Sum = Sum;
+            //_transaction.CurrencyType = _currency;
+            //_transaction.DateTime = _dateTimeOffset;
+            
+            _update.Invoke(await _transactionService.Update(transaction));
             SaveEditCommand.RaiseCanExecuteChanged();
-            _update.Invoke(await _transactionService.Update(_transaction));
         }
 
 
@@ -152,5 +156,6 @@ namespace WalletApp.WalletAppWPF.Transactions
             //RaisePropertyChanged("Wallets");
             //RaisePropertyChanged("CurrentWallet");
         }
+
     }
 }

@@ -4,6 +4,7 @@ using WalletApp.WalletAppWPF.Models.Wallets;
 using WalletApp.WalletAppWPF.Models.Categories;
 using WalletApp.WalletAppWPF.Models.Transactions;
 using DataStorage;
+using WalletApp.WalletAppWPF.Models.Common;
 
 namespace WalletApp.WalletAppWPF.Models.Users
 {
@@ -70,12 +71,12 @@ namespace WalletApp.WalletAppWPF.Models.Users
         }
 
 
-        public bool AddTransaction(Wallet wallet, decimal sum, Category category, string description, DateTimeOffset dateTime, 
+        public bool AddTransaction(Wallet wallet, Guid guid, decimal sum, Currency.currencyType currency, Category category, string description, DateTimeOffset dateTime, 
             List<Common.File> files)
         {
             if (!Wallets.Contains(wallet))
                 throw new AccessViolationException();
-            return wallet.AddTransaction(sum, category, description, dateTime, files, Guid);
+            return wallet.AddTransaction(guid, sum, currency, category, description, dateTime, files, Guid);
         }
 
         public List<Transaction> ShowTransactions(Wallet wallet, int startPos = 0, int amountToShow = 10)
@@ -92,12 +93,12 @@ namespace WalletApp.WalletAppWPF.Models.Users
             wallet.DeleteTransaction(Guid, idTransaction);
         }
 
-        public void UpdateTransaction(Wallet wallet, Guid idTransaction, int sum, string description, DateTimeOffset dateTime, 
+        public void UpdateTransaction(Wallet wallet, Guid idTransaction, int sum, Currency.currencyType currency, string description, DateTimeOffset dateTime, 
             List<Common.File> files)
         {
             if (!Wallets.Contains(wallet))
                 throw new AccessViolationException();
-            wallet.UpdateTransaction(Guid, idTransaction, sum, description, dateTime, files);
+            wallet.UpdateTransaction(Guid, idTransaction, sum, currency, description, dateTime, files);
         }
 
         public void DeleteWallet(Wallet wallet)
