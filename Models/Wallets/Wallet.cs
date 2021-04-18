@@ -12,6 +12,8 @@ using System.Text.Json.Serialization;
 
 namespace WalletApp.WalletAppWPF.Models.Wallets
 {
+
+    //Currently suppports transactions in result of which can have negative balance. (lines 119, 192)
     public class Wallet : IStorable
     {
         public Guid Guid { get; }
@@ -116,7 +118,7 @@ namespace WalletApp.WalletAppWPF.Models.Wallets
         public bool AddTransaction(Guid guid, decimal sum, Currency.currencyType currencyType, Category category, string description, DateTimeOffset dateTime, List<File> files, Guid userId)
         {
             decimal transformedSum = Models.Common.Currency.Convert(currencyType, Currency, sum);
-            if (_balance >= -sum)
+            if (_balance >= -sum || true)
             {
                 if (Categories.Contains(category))
                 {
@@ -130,6 +132,21 @@ namespace WalletApp.WalletAppWPF.Models.Wallets
             }
             else
                 throw new ArithmeticException();
+        }
+
+        public bool CanAddTransaction(Transaction transaction)
+        {
+            return true;
+        }
+
+        public bool CanDeleteTransaction()
+        {
+            return true;
+        }
+
+        public bool CanUpdateTransaction(Transaction transaction)
+        {
+            return true;
         }
 
         public List<Transaction> ShowTransactions(int startPos, int amountToShow)
@@ -172,9 +189,9 @@ namespace WalletApp.WalletAppWPF.Models.Wallets
             {
                 if (transaction.Guid == idTransaction)
                 {
-                    decimal diff = transformedSum - transaction.Sum;
-                    decimal newBalance = Balance + diff;
-                    if (newBalance < 0) return false;
+                    decimal diff = sum - Models.Common.Currency.Convert(transaction.CurrencyType, currency, transaction.Sum);
+                    decimal newBalance = Balance + Models.Common.Currency.Convert(currency, Currency, diff);
+                    //if (newBalance < 0) return false;
                     Balance = newBalance;
                     return transaction.UpdateTransaction(sum, currency, description, dateTime, files);
                 }

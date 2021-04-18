@@ -127,17 +127,22 @@ namespace WalletApp.WalletAppWPF.Transactions
 
         public DelegateCommand SaveEditCommand { get; }
 
-        public DelegateCommand DeleteTransactionCommand { get => new DelegateCommand(DeleteTransaction); }
+        public DelegateCommand DeleteTransactionCommand { get => new DelegateCommand(DeleteTransaction, CanDeleteTransaction); }
+
+        private bool CanDeleteTransaction()
+        {
+            return _wallet.CanDeleteTransaction();
+        }
 
         private bool CanSaveEdit()
         {
-            return Sum > 0 && !String.IsNullOrEmpty(Description) && AreChangesExist();
+            return _wallet.CanUpdateTransaction(UpdatedTransaction()) && !String.IsNullOrEmpty(Description) && AreChangesExist();
         }
 
         private async void SaveEdit()
         {
             if (_categories != null) _transaction.Category = _categories.First();
-            Transaction transaction = new Transaction(_transaction.Guid ,Sum, (_categories != null) ? _categories.First() : _transaction.Category, _currency, Description, _dateTimeOffset, _transaction.Files, _transaction.CreatorId);
+            Transaction transaction = UpdatedTransaction();
             //_transaction.Description = Description;
             //_transaction.Sum = Sum;
             //_transaction.CurrencyType = _currency;
@@ -147,6 +152,10 @@ namespace WalletApp.WalletAppWPF.Transactions
             SaveEditCommand.RaiseCanExecuteChanged();
         }
 
+        private Transaction UpdatedTransaction()
+        {
+            return new Transaction(_transaction.Guid, Sum, (_categories != null) ? _categories.First() : _transaction.Category, _currency, Description, _dateTimeOffset, _transaction.Files, _transaction.CreatorId);
+        }
 
         private async void DeleteTransaction()
         {

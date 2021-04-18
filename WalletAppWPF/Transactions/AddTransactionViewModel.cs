@@ -116,7 +116,7 @@ namespace WalletApp.WalletAppWPF.Transactions
 
         private bool CanCreate()
         {
-            return Sum > 0 && !String.IsNullOrEmpty(Description) && _categories != null && _categories.Count != 0;
+            return _wallet.CanAddTransaction(_transaction) && !String.IsNullOrEmpty(Description) && _categories != null && _categories.Count != 0;
         }
 
         public void ClearSensitiveData()

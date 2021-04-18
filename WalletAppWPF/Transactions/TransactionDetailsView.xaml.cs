@@ -68,11 +68,10 @@ namespace WalletApp.WalletAppWPF.Transactions
 
         private void NumberValidationTextBox(object sender, TextCompositionEventArgs e)
         {
-            Regex regex = new Regex("[0-9]+(?:\\.[0-9]*)?");
+            Regex regex = new Regex("-?(?:[0-9]+(?:\\.[0-9]*)?)?");
             var possibleNext = Sum.Text + e.Text;
             e.Handled = !(regex.IsMatch(possibleNext) &&
-                regex.Match(possibleNext).Value.Count<char>() == possibleNext.Length &&
-                regex.Matches(possibleNext).Count == 1);
+                regex.Match(possibleNext).Value.Count<char>() == possibleNext.Length);
         }
     }
 }
